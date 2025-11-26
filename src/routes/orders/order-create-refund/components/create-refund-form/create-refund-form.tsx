@@ -104,12 +104,18 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
   });
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form
+      form={form}
+      data-testid="order-create-refund-form"
+    >
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex size-full flex-col overflow-hidden"
       >
-        <RouteDrawer.Body className="flex-1 overflow-auto">
+        <RouteDrawer.Body
+          className="flex-1 overflow-auto"
+          data-testid="order-create-refund-body"
+        >
           <div className="flex flex-col gap-y-6">
             {!hasPaymentIdInSearchParams && (
               <Select
@@ -118,16 +124,20 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
                 onValueChange={value => {
                   setPaymentId(value);
                 }}
+                data-testid="order-create-refund-payment-select"
               >
-                <Label className="txt-compact-small -mb-4 font-sans font-medium">
+                <Label
+                  className="txt-compact-small -mb-4 font-sans font-medium"
+                  data-testid="order-create-refund-payment-label"
+                >
                   {t('orders.payment.selectPaymentToRefund')}
                 </Label>
 
-                <Select.Trigger>
+                <Select.Trigger data-testid="order-create-refund-payment-trigger">
                   <Select.Value placeholder={t('orders.payment.selectPaymentToRefund')} />
                 </Select.Trigger>
 
-                <Select.Content>
+                <Select.Content data-testid="order-create-refund-payment-content">
                   {payments.map(payment => {
                     const totalRefunded =
                       payment.refunds?.reduce((acc, next) => next.amount + acc, 0) || 0;
@@ -137,7 +147,8 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
                         value={payment!.id}
                         key={payment.id}
                         disabled={!!payment.canceled_at || totalRefunded >= payment.amount}
-                        className="flex items-center"
+                        className="flex items-center justify-center"
+                        data-testid={`order-create-refund-payment-option-${payment.id}`}
                       >
                         <span>
                           {getLocaleAmount(payment.amount as number, payment.currency_code)}
@@ -152,7 +163,10 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
               </Select>
             )}
             {hasPaymentIdInSearchParams && (
-              <Heading level="h2">
+              <Heading
+                level="h2"
+                data-testid="order-create-refund-payment-display"
+              >
                 {getLocaleAmount(payment!.amount as number, payment!.currency_code)} - (#
                 {payment!.id.substring(23)})
               </Heading>
@@ -168,10 +182,12 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
               }}
               render={({ field: { onChange, ...field } }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t('fields.amount')}</Form.Label>
+                  <Form.Item data-testid="order-create-refund-amount-item">
+                    <Form.Label data-testid="order-create-refund-amount-label">
+                      {t('fields.amount')}
+                    </Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="order-create-refund-amount-control">
                       <CurrencyInput
                         {...field}
                         min={0}
@@ -190,10 +206,11 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
                           })
                         }
                         autoFocus
+                        data-testid="order-create-refund-amount-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="order-create-refund-amount-error" />
                   </Form.Item>
                 );
               }}
@@ -204,27 +221,31 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
               name="refund_reason_id"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>
-                      {t('fields.reason')}{' '}
-                      <span className="font-normal text-ui-fg-muted">({t('fields.optional')})</span>
+                  <Form.Item data-testid="order-create-refund-reason-item">
+                    <Form.Label
+                      data-testid="order-create-refund-reason-label"
+                      optional
+                    >
+                      {t('fields.refundReason')}
                     </Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="order-create-refund-reason-control">
                       <Select
                         dir={direction}
                         value={field.value}
                         onValueChange={field.onChange}
+                        data-testid="order-create-refund-reason-select"
                       >
-                        <Select.Trigger>
+                        <Select.Trigger data-testid="order-create-refund-reason-trigger">
                           <Select.Value />
                         </Select.Trigger>
 
-                        <Select.Content>
-                          {refund_reasons?.map((reason: HttpTypes.AdminRefundReason) => (
+                        <Select.Content data-testid="order-create-refund-reason-content">
+                          {refund_reasons?.map(reason => (
                             <Select.Item
                               key={reason.id}
                               value={reason.id}
+                              data-testid={`order-create-refund-reason-option-${reason.id}`}
                             >
                               {reason.label}
                             </Select.Item>
@@ -233,7 +254,7 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
                       </Select>
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="order-create-refund-reason-error" />
                   </Form.Item>
                 );
               }}
@@ -244,17 +265,22 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
               name={`note`}
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>
-                      {t('fields.note')}{' '}
-                      <span className="font-normal text-ui-fg-muted">({t('fields.optional')})</span>
+                  <Form.Item data-testid="order-create-refund-note-item">
+                    <Form.Label
+                      data-testid="order-create-refund-note-label"
+                      optional
+                    >
+                      {t('fields.note')}
                     </Form.Label>
 
-                    <Form.Control>
-                      <Textarea {...field} />
+                    <Form.Control data-testid="order-create-refund-note-control">
+                      <Textarea
+                        {...field}
+                        data-testid="order-create-refund-note-input"
+                      />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="order-create-refund-note-error" />
                   </Form.Item>
                 );
               }}
@@ -262,12 +288,13 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
           </div>
         </RouteDrawer.Body>
 
-        <RouteDrawer.Footer>
+        <RouteDrawer.Footer data-testid="order-create-refund-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
               <Button
                 variant="secondary"
                 size="small"
+                data-testid="order-create-refund-cancel-button"
               >
                 {t('actions.cancel')}
               </Button>
@@ -279,6 +306,7 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
               variant="primary"
               size="small"
               disabled={!!Object.keys(form.formState.errors || {}).length}
+              data-testid="order-create-refund-save-button"
             >
               {t('actions.save')}
             </Button>

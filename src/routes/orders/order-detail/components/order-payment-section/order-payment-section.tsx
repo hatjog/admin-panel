@@ -37,7 +37,10 @@ export const OrderPaymentSection = ({ order, plugins }: OrderPaymentSectionProps
     .filter(Boolean) as HttpTypes.AdminRefund[];
 
   return (
-    <Container className="divide-y divide-dashed p-0">
+    <Container
+      className="divide-y divide-dashed p-0"
+      data-testid="order-payment-section"
+    >
       <Header order={order} />
 
       <PaymentBreakdown
@@ -58,12 +61,21 @@ const Header = ({ order }: { order: HttpTypes.AdminOrder }) => {
   const { label, color } = getOrderPaymentStatus(t, order.payment_status);
 
   return (
-    <div className="flex items-center justify-between px-6 py-4">
-      <Heading level="h2">{t('orders.payment.title')}</Heading>
+    <div
+      className="flex items-center justify-between px-6 py-4"
+      data-testid="order-payment-header"
+    >
+      <Heading
+        level="h2"
+        data-testid="order-payment-heading"
+      >
+        {t('orders.payment.title')}
+      </Heading>
 
       <StatusBadge
         color={color}
         className="text-nowrap"
+        data-testid="order-payment-status-badge"
       >
         {label}
       </StatusBadge>
@@ -202,20 +214,28 @@ const Payment = ({
   const totalRefunded = payment.refunds?.reduce((acc, next) => next.amount + acc, 0) ?? 0;
 
   return (
-    <div className="divide-y divide-dashed">
-      <div className="grid grid-cols-[1fr_1fr_1fr_20px] items-center gap-x-4 px-6 py-4 text-ui-fg-subtle sm:grid-cols-[1fr_1fr_1fr_1fr_20px]">
+    <div
+      className="divide-y divide-dashed"
+      data-testid={`order-payment-${payment.id}`}
+    >
+      <div
+        className="grid grid-cols-[1fr_1fr_1fr_20px] items-center gap-x-4 px-6 py-4 text-ui-fg-subtle sm:grid-cols-[1fr_1fr_1fr_1fr_20px]"
+        data-testid={`order-payment-${payment.id}-row`}
+      >
         <div className="w-full min-w-[60px] overflow-hidden">
           <Text
             size="small"
             leading="compact"
             weight="plus"
             className="truncate"
+            data-testid={`order-payment-${payment.id}-id`}
           >
             <DisplayId id={payment.id} />
           </Text>
           <Text
             size="small"
             leading="compact"
+            data-testid={`order-payment-${payment.id}-date`}
           >
             {payment.created_at
               ? format(new Date(payment.created_at), 'dd MMM, yyyy, HH:mm:ss')
@@ -235,6 +255,7 @@ const Payment = ({
           <StatusBadge
             color={color}
             className="text-nowrap"
+            data-testid={`order-payment-${payment.id}-status`}
           >
             {status}
           </StatusBadge>
@@ -243,6 +264,7 @@ const Payment = ({
           <Text
             size="small"
             leading="compact"
+            data-testid={`order-payment-${payment.id}-amount`}
           >
             {getLocaleAmount(payment.amount as number, payment.currency_code)}
           </Text>
@@ -261,10 +283,14 @@ const Payment = ({
               ]
             }
           ]}
+          data-testid={`order-payment-${payment.id}-action-menu`}
         />
       </div>
       {showCapture && (
-        <div className="flex items-center justify-between bg-ui-bg-subtle px-6 py-4">
+        <div
+          className="flex items-center justify-between bg-ui-bg-subtle px-6 py-4"
+          data-testid={`order-payment-${payment.id}-capture-section`}
+        >
           <div className="flex items-center gap-x-2">
             <ArrowDownRightMini className="shrink-0 text-ui-fg-muted" />
             <Text
@@ -288,6 +314,7 @@ const Payment = ({
             size="small"
             variant="secondary"
             onClick={handleCapture}
+            data-testid={`order-payment-${payment.id}-capture-button`}
           >
             <span className="hidden sm:block">{t('orders.payment.capture')}</span>
             <span className="sm:hidden">{t('orders.payment.capture_short')}</span>
@@ -423,7 +450,10 @@ const PaymentBreakdown = ({
   )[];
 
   return (
-    <div className="flex flex-col divide-y divide-dashed">
+    <div
+      className="flex flex-col divide-y divide-dashed"
+      data-testid="order-payment-breakdown"
+    >
       {entries.map(({ type, event }) => {
         switch (type) {
           case 'payment':
@@ -464,8 +494,14 @@ const Total = ({ order }: { order: AdminOrder }) => {
   const totalPending = getTotalPending(order.payment_collections);
 
   return (
-    <div className="flex flex-col gap-y-4 px-6 py-4">
-      <div className="flex items-center justify-between">
+    <div
+      className="flex flex-col gap-y-4 px-6 py-4"
+      data-testid="order-payment-total"
+    >
+      <div
+        className="flex items-center justify-between"
+        data-testid="order-payment-total-paid"
+      >
         <Text
           size="small"
           weight="plus"
@@ -484,7 +520,10 @@ const Total = ({ order }: { order: AdminOrder }) => {
       </div>
 
       {order.status !== 'canceled' && totalPending > 0 && (
-        <div className="flex items-center justify-between">
+        <div
+          className="flex items-center justify-between"
+          data-testid="order-payment-total-pending"
+        >
           <Text
             size="small"
             weight="plus"
