@@ -28,7 +28,7 @@ const EditCustomerSchema = zod.object({
 export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
   const { t } = useTranslation()
   const { handleSuccess } = useRouteModal()
-
+  
   const form = useForm<zod.infer<typeof EditCustomerSchema>>({
     defaultValues: {
       email: customer.email || "",

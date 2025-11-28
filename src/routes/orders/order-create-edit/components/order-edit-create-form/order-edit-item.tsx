@@ -105,7 +105,8 @@ function OrderEditItem({ item, currencyCode, orderId }: OrderEditItemProps) {
 
   const onDuplicate = async () => {
     if (!item.variant_id) {
-      toast.error("Cannot duplicate item: variant ID is missing")
+      toast.error(t("orders.edits.duplicateItemErrorToast"))
+      
       return
     }
 

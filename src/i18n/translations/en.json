@@ -863,7 +863,8 @@
       "deleteSuccessToast": "Reservation was successfully deleted.",
       "errors": {
         "noAvaliableQuantity": "Stock location doesn't have available quantity.",
-        "quantityOutOfRange": "Minimum quantity is 1 and maximum quantity is {{max}}"
+        "quantityOutOfRange": "Minimum quantity is 1 and maximum quantity is {{max}}",
+        "idRequired": "Inventory item ID is required"
       }
     },
     "adjustInventory": {
@@ -1143,6 +1144,7 @@
       "noteHint": "Add an internal note for the edit",
       "cancelSuccessToast": "Order edit canceled",
       "createSuccessToast": "Order edit request created",
+      "duplicateItemErrorToast": "Cannot duplicate item: variant ID is missing",
       "activeChangeError": "There is already active order change on the order (return, claim, exchange etc.). Please finish or cancel the change before editing the order.",
       "panel": {
         "title": "Order edit requested",
