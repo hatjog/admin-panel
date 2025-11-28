@@ -51,6 +51,7 @@ export const useOrderTableFilters = (): Filter[] => {
     filters = [...filters, salesChannelFilter]
   }
 
+  // Commented out as it's not used yet. Seems it might be helpful in future
   // const paymentStatusFilter: Filter = {
   //   key: "payment_status",
   //   label: t("orders.payment.statusLabel"),
