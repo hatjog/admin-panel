@@ -41,18 +41,19 @@ export const ActionMenu = ({
   groups,
   variant = "transparent",
   children,
-}: ActionMenuProps) => {
+  "data-testid": dataTestId,
+}: ActionMenuProps & { "data-testid"?: string }) => {
   const direction = useDocumentDirection();
   const inner = children ?? (
-    <IconButton size="small" variant={variant}>
+    <IconButton size="small" variant={variant} data-testid={dataTestId ? `${dataTestId}-trigger` : undefined}>
       <EllipsisHorizontal />
     </IconButton>
   );
 
   return (
-    <DropdownMenu dir={direction}>
+    <DropdownMenu dir={direction} data-testid={dataTestId}>
       <DropdownMenu.Trigger asChild>{inner}</DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content data-testid={dataTestId ? `${dataTestId}-content` : undefined}>
         {groups.map((group, index) => {
           if (!group.actions.length) {
             return null;
@@ -61,8 +62,8 @@ export const ActionMenu = ({
           const isLast = index === groups.length - 1;
 
           return (
-            <DropdownMenu.Group key={index}>
-              {group.actions.map((action, index) => {
+            <DropdownMenu.Group key={index} data-testid={dataTestId ? `${dataTestId}-group-${index}` : undefined}>
+              {group.actions.map((action, actionIndex) => {
                 const Wrapper = action.disabledTooltip
                   ? ({ children }: { children: ReactNode }) => (
                       <ConditionalTooltip
@@ -77,7 +78,7 @@ export const ActionMenu = ({
 
                 if (action.onClick) {
                   return (
-                    <Wrapper key={index}>
+                    <Wrapper key={actionIndex}>
                       <DropdownMenu.Item
                         disabled={action.disabled}
                         onClick={(e) => {
@@ -90,6 +91,7 @@ export const ActionMenu = ({
                             "[&_svg]:text-ui-fg-disabled": action.disabled,
                           },
                         )}
+                        data-testid={dataTestId ? `${dataTestId}-action-${actionIndex}-${action.label.toLowerCase().replace(/\s+/g, "-")}` : undefined}
                       >
                         {action.icon}
                         <span>{action.label}</span>
@@ -99,7 +101,7 @@ export const ActionMenu = ({
                 }
 
                 return (
-                  <Wrapper key={index}>
+                  <Wrapper key={actionIndex}>
                     <DropdownMenu.Item
                       className={clx(
                         "flex items-center gap-x-2 [&_svg]:text-ui-fg-subtle",
@@ -109,6 +111,7 @@ export const ActionMenu = ({
                       )}
                       asChild
                       disabled={action.disabled}
+                      data-testid={dataTestId ? `${dataTestId}-action-${actionIndex}-${action.label.toLowerCase().replace(/\s+/g, "-")}` : undefined}
                     >
                       <Link to={action.to} onClick={(e) => e.stopPropagation()}>
                         {action.icon}

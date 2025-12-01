@@ -18,10 +18,10 @@ export const PriceListConfigurationSection = ({
   const { t } = useTranslation()
 
   return (
-    <Container className="flex flex-col gap-y-4">
-      <div className="flex items-center justify-between">
+    <Container className="flex flex-col gap-y-4" data-testid="price-list-configuration-section-container">
+      <div className="flex items-center justify-between" data-testid="price-list-configuration-section-header">
         <div>
-          <Heading level="h2">{t("priceLists.configuration.header")}</Heading>
+          <Heading level="h2" data-testid="price-list-configuration-section-heading">{t("priceLists.configuration.header")}</Heading>
           <CustomerGroupDisplay priceList={priceList} />
         </div>
         <ActionMenu
@@ -36,6 +36,7 @@ export const PriceListConfigurationSection = ({
               ],
             },
           ]}
+          data-testid="price-list-configuration-section-action-menu"
         />
       </div>
 
@@ -43,6 +44,7 @@ export const PriceListConfigurationSection = ({
         endsAt={priceList.ends_at}
         startsAt={priceList.starts_at}
         showTime
+        data-testid="price-list-configuration-section-date-range"
       />
     </Container>
   )

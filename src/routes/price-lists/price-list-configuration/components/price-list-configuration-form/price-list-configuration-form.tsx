@@ -117,7 +117,7 @@ export const PriceListConfigurationForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="price-list-configuration-form">
       <RouteDrawer.Description className="sr-only">
         {t("priceLists.configuration.edit.description")}
       </RouteDrawer.Description>
@@ -125,7 +125,7 @@ export const PriceListConfigurationForm = ({
         className="flex flex-1 flex-col overflow-hidden"
         onSubmit={handleSubmit}
       >
-        <RouteDrawer.Body className="flex flex-1 flex-col gap-y-8 overflow-auto">
+        <RouteDrawer.Body className="flex flex-1 flex-col gap-y-8 overflow-auto" data-testid="price-list-configuration-form-body">
           <Form.Field
             control={form.control}
             name="starts_at"
@@ -293,14 +293,14 @@ export const PriceListConfigurationForm = ({
             }}
           />
         </RouteDrawer.Body>
-        <RouteDrawer.Footer className="shrink-0">
+        <RouteDrawer.Footer className="shrink-0" data-testid="price-list-configuration-form-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="price-list-configuration-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" type="submit">
+            <Button size="small" type="submit" data-testid="price-list-configuration-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

@@ -16,11 +16,13 @@ export const CustomerGroupMetadata = () => {
   }
 
   return (
-    <MetadataForm
-      metadata={customer_group?.metadata}
-      hook={mutateAsync}
-      isPending={isPending}
-      isMutating={isMutating}
-    />
+    <div data-testid="customer-group-metadata">
+      <MetadataForm
+        metadata={customer_group?.metadata}
+        hook={mutateAsync}
+        isPending={isPending}
+        isMutating={isMutating}
+      />
+    </div>
   )
 }

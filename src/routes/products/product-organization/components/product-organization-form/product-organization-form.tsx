@@ -107,29 +107,30 @@ export const ProductOrganizationForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
-      <KeyboundForm onSubmit={handleSubmit} className="flex h-full flex-col">
-        <RouteDrawer.Body>
-          <div className="flex h-full flex-col gap-y-4">
+    <RouteDrawer.Form form={form} data-testid="product-organization-form">
+      <KeyboundForm onSubmit={handleSubmit} className="flex h-full flex-col" data-testid="product-organization-keybound-form">
+        <RouteDrawer.Body data-testid="product-organization-form-body">
+          <div className="flex h-full flex-col gap-y-4" data-testid="product-organization-form-fields">
             <Form.Field
               control={form.control}
               name="type_id"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="product-organization-form-type-item">
+                    <Form.Label optional data-testid="product-organization-form-type-label">
                       {t("products.fields.type.label")}
                     </Form.Label>
-                    <Form.Control>
+                    <Form.Control data-testid="product-organization-form-type-control">
                       <Combobox
                         {...field}
                         options={types.options}
                         searchValue={types.searchValue}
                         onSearchValueChange={types.onSearchValueChange}
                         fetchNextPage={types.fetchNextPage}
+                        data-testid="product-organization-form-type-combobox"
                       />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-organization-form-type-error" />
                   </Form.Item>
                 )
               }}
@@ -139,20 +140,21 @@ export const ProductOrganizationForm = ({
               name="collection_id"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="product-organization-form-collection-item">
+                    <Form.Label optional data-testid="product-organization-form-collection-label">
                       {t("products.fields.collection.label")}
                     </Form.Label>
-                    <Form.Control>
+                    <Form.Control data-testid="product-organization-form-collection-control">
                       <Combobox
                         {...field}
                         multiple={false}
                         options={collections.options}
                         onSearchValueChange={collections.onSearchValueChange}
                         searchValue={collections.searchValue}
+                        data-testid="product-organization-form-collection-combobox"
                       />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-organization-form-collection-error" />
                   </Form.Item>
                 )
               }}
@@ -162,14 +164,14 @@ export const ProductOrganizationForm = ({
               name="category_ids"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="product-organization-form-categories-item">
+                    <Form.Label optional data-testid="product-organization-form-categories-label">
                       {t("products.fields.categories.label")}
                     </Form.Label>
-                    <Form.Control>
-                      <CategoryCombobox {...field} />
+                    <Form.Control data-testid="product-organization-form-categories-control">
+                      <CategoryCombobox {...field} data-testid="product-organization-form-categories-combobox" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-organization-form-categories-error" />
                   </Form.Item>
                 )
               }}
@@ -179,35 +181,36 @@ export const ProductOrganizationForm = ({
               name="tag_ids"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="product-organization-form-tags-item">
+                    <Form.Label optional data-testid="product-organization-form-tags-label">
                       {t("products.fields.tags.label")}
                     </Form.Label>
-                    <Form.Control>
+                    <Form.Control data-testid="product-organization-form-tags-control">
                       <Combobox
                         {...field}
                         multiple
                         options={tags.options}
                         onSearchValueChange={tags.onSearchValueChange}
                         searchValue={tags.searchValue}
+                        data-testid="product-organization-form-tags-combobox"
                       />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-organization-form-tags-error" />
                   </Form.Item>
                 )
               }}
             />
-            <FormExtensionZone fields={fields} form={form} />
+            <FormExtensionZone fields={fields} form={form} data-testid="product-organization-form-extension-zone" />
           </div>
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
+        <RouteDrawer.Footer data-testid="product-organization-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="product-organization-form-footer-actions">
+            <RouteDrawer.Close asChild data-testid="product-organization-form-cancel-button-wrapper">
+              <Button size="small" variant="secondary" data-testid="product-organization-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" type="submit" isLoading={isPending}>
+            <Button size="small" type="submit" isLoading={isPending} data-testid="product-organization-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

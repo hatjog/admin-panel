@@ -22,6 +22,7 @@ interface SwitchBoxProps<
    * This does not intercept the form control, it is only used for injecting side-effects.
    */
   onCheckedChange?: (checked: boolean) => void
+  "data-testid"?: string
 }
 
 /**
@@ -39,6 +40,7 @@ export const SwitchBox = <
   optional = false,
   tooltip,
   onCheckedChange,
+  "data-testid": dataTestId,
   ...props
 }: SwitchBoxProps<TFieldValues, TName>) => {
   return (
@@ -46,9 +48,9 @@ export const SwitchBox = <
       {...props}
       render={({ field: { value, onChange, ...field } }) => {
         return (
-          <Form.Item>
-            <div className="bg-ui-bg-component shadow-elevation-card-rest flex items-start gap-x-3 rounded-lg p-3">
-              <Form.Control>
+          <Form.Item data-testid={dataTestId ? `${dataTestId}-item` : undefined}>
+            <div className="bg-ui-bg-component shadow-elevation-card-rest flex items-start gap-x-3 rounded-lg p-3" data-testid={dataTestId ? `${dataTestId}-container` : undefined}>
+              <Form.Control data-testid={dataTestId ? `${dataTestId}-control` : undefined}>
                 <Switch
                   className="rtl:rotate-180"
                   dir="ltr"
@@ -58,16 +60,17 @@ export const SwitchBox = <
                     onCheckedChange?.(e)
                     onChange(e)
                   }}
+                  data-testid={dataTestId ? `${dataTestId}-switch` : undefined}
                 />
               </Form.Control>
-              <div>
-                <Form.Label optional={optional} tooltip={tooltip}>
+              <div data-testid={dataTestId ? `${dataTestId}-label-container` : undefined}>
+                <Form.Label optional={optional} tooltip={tooltip} data-testid={dataTestId ? `${dataTestId}-label` : undefined}>
                   {label}
                 </Form.Label>
-                <Form.Hint>{description}</Form.Hint>
+                <Form.Hint data-testid={dataTestId ? `${dataTestId}-hint` : undefined}>{description}</Form.Hint>
               </div>
             </div>
-            <Form.ErrorMessage />
+            <Form.ErrorMessage data-testid={dataTestId ? `${dataTestId}-error` : undefined} />
           </Form.Item>
         )
       }}

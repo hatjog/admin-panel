@@ -81,20 +81,20 @@ export const ProductShippingProfileForm = ({
   }, [selectedShippingProfile])
 
   return (
-    <RouteDrawer.Form form={form}>
-      <KeyboundForm onSubmit={handleSubmit} className="flex h-full flex-col">
-        <RouteDrawer.Body>
-          <div className="flex h-full flex-col gap-y-4">
+    <RouteDrawer.Form form={form} data-testid="product-shipping-profile-form">
+      <KeyboundForm onSubmit={handleSubmit} className="flex h-full flex-col" data-testid="product-shipping-profile-keybound-form">
+        <RouteDrawer.Body data-testid="product-shipping-profile-form-body">
+          <div className="flex h-full flex-col gap-y-4" data-testid="product-shipping-profile-form-fields">
             <Form.Field
               control={form.control}
               name="shipping_profile_id"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>
+                  <Form.Item data-testid="product-shipping-profile-form-shipping-profile-item">
+                    <Form.Label data-testid="product-shipping-profile-form-shipping-profile-label">
                       {t("products.fields.shipping_profile.label")}
                     </Form.Label>
-                    <Form.Control>
+                    <Form.Control data-testid="product-shipping-profile-form-shipping-profile-control">
                       <Combobox
                         {...field}
                         allowClear
@@ -104,9 +104,10 @@ export const ProductShippingProfileForm = ({
                           shippingProfiles.onSearchValueChange
                         }
                         fetchNextPage={shippingProfiles.fetchNextPage}
+                        data-testid="product-shipping-profile-form-shipping-profile-combobox"
                       />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-shipping-profile-form-shipping-profile-error" />
                   </Form.Item>
                 )
               }}
@@ -115,14 +116,14 @@ export const ProductShippingProfileForm = ({
             {/* <FormExtensionZone fields={fields} form={form} /> */}
           </div>
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
+        <RouteDrawer.Footer data-testid="product-shipping-profile-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="product-shipping-profile-form-footer-actions">
+            <RouteDrawer.Close asChild data-testid="product-shipping-profile-form-cancel-button-wrapper">
+              <Button size="small" variant="secondary" data-testid="product-shipping-profile-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" type="submit" isLoading={isPending}>
+            <Button size="small" type="submit" isLoading={isPending} data-testid="product-shipping-profile-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

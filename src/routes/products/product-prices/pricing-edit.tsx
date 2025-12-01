@@ -120,16 +120,18 @@ export const PricingEdit = ({
   })
 
   return (
-    <RouteFocusModal.Form form={form}>
-      <KeyboundForm onSubmit={handleSubmit} className="flex size-full flex-col">
-        <RouteFocusModal.Header />
-        <RouteFocusModal.Body className="flex flex-col overflow-hidden">
-          <VariantPricingForm form={form as any} />
+    <RouteFocusModal.Form form={form} data-testid="product-prices-form">
+      <KeyboundForm onSubmit={handleSubmit} className="flex size-full flex-col" data-testid="product-prices-keybound-form">
+        <RouteFocusModal.Header data-testid="product-prices-form-header" />
+        <RouteFocusModal.Body className="flex flex-col overflow-hidden" data-testid="product-prices-form-body">
+          <div data-testid="product-prices-form-variant-pricing-wrapper">
+            <VariantPricingForm form={form as any} data-testid="product-prices-form-variant-pricing" />
+          </div>
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
-          <div className="flex w-full items-center justify-end gap-x-2">
-            <RouteFocusModal.Close asChild>
-              <Button variant="secondary" size="small">
+        <RouteFocusModal.Footer data-testid="product-prices-form-footer">
+          <div className="flex w-full items-center justify-end gap-x-2" data-testid="product-prices-form-footer-actions">
+            <RouteFocusModal.Close asChild data-testid="product-prices-form-cancel-button-wrapper">
+              <Button variant="secondary" size="small" data-testid="product-prices-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
@@ -138,6 +140,7 @@ export const PricingEdit = ({
               variant="primary"
               size="small"
               isLoading={isPending}
+              data-testid="product-prices-form-save-button"
             >
               {t("actions.save")}
             </Button>

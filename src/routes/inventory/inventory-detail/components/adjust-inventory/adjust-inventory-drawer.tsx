@@ -39,9 +39,9 @@ export const AdjustInventoryDrawer = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <Heading>{t("inventory.manageLocationQuantity")}</Heading>
+    <RouteDrawer data-testid="inventory-adjust-inventory-drawer">
+      <RouteDrawer.Header data-testid="inventory-adjust-inventory-drawer-header">
+        <Heading data-testid="inventory-adjust-inventory-drawer-title">{t("inventory.manageLocationQuantity")}</Heading>
       </RouteDrawer.Header>
       {ready && (
         <AdjustInventoryForm

@@ -5,9 +5,10 @@ import { HttpTypes } from "@medusajs/types"
 
 type ProductStatusCellProps = {
   status: HttpTypes.AdminProductStatus
+  "data-testid"?: string
 }
 
-export const ProductStatusCell = ({ status }: ProductStatusCellProps) => {
+export const ProductStatusCell = ({ status, "data-testid": dataTestId }: ProductStatusCellProps) => {
   const { t } = useTranslation()
 
   const [color, text] = {
@@ -17,15 +18,15 @@ export const ProductStatusCell = ({ status }: ProductStatusCellProps) => {
     rejected: ["red", t("products.productStatus.rejected")],
   }[status] as ["grey" | "orange" | "green" | "red", string]
 
-  return <StatusCell color={color}>{text}</StatusCell>
+  return <StatusCell color={color} data-testid={dataTestId}>{text}</StatusCell>
 }
 
 export const ProductStatusHeader = () => {
   const { t } = useTranslation()
 
   return (
-    <div className="flex h-full w-full items-center">
-      <span>{t("fields.status")}</span>
+    <div className="flex h-full w-full items-center" data-testid="products-table-header-status">
+      <span data-testid="products-table-header-status-text">{t("fields.status")}</span>
     </div>
   )
 }

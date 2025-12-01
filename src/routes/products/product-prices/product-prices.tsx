@@ -14,7 +14,7 @@ export const ProductPrices = () => {
   }
 
   return (
-    <RouteFocusModal>
+    <RouteFocusModal data-testid="product-prices-modal">
       {!isLoading && product && (
         <PricingEdit product={product} variantId={variant_id} />
       )}

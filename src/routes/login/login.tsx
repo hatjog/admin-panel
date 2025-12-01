@@ -1,28 +1,29 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Alert, Button, Heading, Hint, Input, Text } from "@medusajs/ui"
-import { useForm } from "react-hook-form"
-import { Trans, useTranslation } from "react-i18next"
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import * as z from "zod"
+import { Alert, Button, Heading, Hint, Input, Text } from "@medusajs/ui";
 
-import { Form } from "../../components/common/form"
-import AvatarBox from "../../components/common/logo-box/avatar-box"
-import { useSignInWithEmailPass } from "../../hooks/api"
-import { isFetchError } from "../../lib/is-fetch-error"
-import { useExtension } from "../../providers/extension-provider"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Trans, useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import * as z from "zod";
+
+import { Form } from "../../components/common/form";
+import AvatarBox from "../../components/common/logo-box/avatar-box";
+import { useSignInWithEmailPass } from "../../hooks/api";
+import { isFetchError } from "../../lib/is-fetch-error";
+import { useExtension } from "../../providers/extension-provider";
 
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
-})
+});
 
 export const Login = () => {
-  const { t } = useTranslation()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { getWidgets } = useExtension()
+  const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { getWidgets } = useExtension();
 
-  const from = location.state?.from?.pathname || "/orders"
+  const from = location.state?.from?.pathname || "/orders";
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -30,9 +31,9 @@ export const Login = () => {
       email: "",
       password: "",
     },
-  })
+  });
 
-  const { mutateAsync, isPending } = useSignInWithEmailPass()
+  const { mutateAsync, isPending } = useSignInWithEmailPass();
 
   const handleSubmit = form.handleSubmit(async ({ email, password }) => {
     await mutateAsync(
@@ -47,47 +48,61 @@ export const Login = () => {
               form.setError("email", {
                 type: "manual",
                 message: error.message,
-              })
+              });
 
-              return
+              return;
             }
           }
 
           form.setError("root.serverError", {
             type: "manual",
             message: error.message,
-          })
+          });
         },
         onSuccess: () => {
-          navigate(from, { replace: true })
+          navigate(from, { replace: true });
         },
-      }
-    )
-  })
+      },
+    );
+  });
 
-  const serverError = form.formState.errors?.root?.serverError?.message
+  const serverError = form.formState.errors?.root?.serverError?.message;
   const validationError =
     form.formState.errors.email?.message ||
-    form.formState.errors.password?.message
+    form.formState.errors.password?.message;
 
   return (
-    <div className="bg-ui-bg-subtle flex min-h-dvh w-dvw items-center justify-center">
-      <div className="m-4 flex w-full max-w-[280px] flex-col items-center">
+    <div
+      className="flex min-h-dvh w-dvw items-center justify-center bg-ui-bg-subtle"
+      data-testid="login-page"
+    >
+      <div
+        className="m-4 flex w-full max-w-[280px] flex-col items-center"
+        data-testid="login-container"
+      >
         <AvatarBox />
-        <div className="mb-4 flex flex-col items-center">
-          <Heading>{t("login.title")}</Heading>
-          <Text size="small" className="text-ui-fg-subtle text-center">
+        <div
+          className="mb-4 flex flex-col items-center"
+          data-testid="login-header"
+        >
+          <Heading data-testid="login-title">{t("login.title")}</Heading>
+          <Text
+            size="small"
+            className="text-center text-ui-fg-subtle"
+            data-testid="login-hint"
+          >
             {t("login.hint")}
           </Text>
         </div>
         <div className="flex w-full flex-col gap-y-3">
           {getWidgets("login.before").map((Component, i) => {
-            return <Component key={i} />
+            return <Component key={i} />;
           })}
           <Form {...form}>
             <form
               onSubmit={handleSubmit}
               className="flex w-full flex-col gap-y-6"
+              data-testid="login-form"
             >
               <div className="flex flex-col gap-y-1">
                 <Form.Field
@@ -102,10 +117,11 @@ export const Login = () => {
                             {...field}
                             className="bg-ui-bg-field-component"
                             placeholder={t("fields.email")}
+                            data-testid="login-email-input"
                           />
                         </Form.Control>
                       </Form.Item>
-                    )
+                    );
                   }}
                 />
                 <Form.Field
@@ -122,51 +138,69 @@ export const Login = () => {
                             {...field}
                             className="bg-ui-bg-field-component"
                             placeholder={t("fields.password")}
+                            data-testid="login-password-input"
                           />
                         </Form.Control>
                       </Form.Item>
-                    )
+                    );
                   }}
                 />
               </div>
               {validationError && (
-                <div className="text-center">
-                  <Hint className="inline-flex" variant={"error"}>
+                <div
+                  className="text-center"
+                  data-testid="login-validation-error"
+                >
+                  <Hint
+                    className="inline-flex"
+                    variant={"error"}
+                    data-testid="login-validation-error-message"
+                  >
                     {validationError}
                   </Hint>
                 </div>
               )}
               {serverError && (
                 <Alert
-                  className="bg-ui-bg-base items-center p-2"
+                  className="items-center bg-ui-bg-base p-2"
                   dismissible
                   variant="error"
+                  data-testid="login-server-error"
                 >
                   {serverError}
                 </Alert>
               )}
-              <Button className="w-full" type="submit" isLoading={isPending}>
+              <Button
+                className="w-full"
+                type="submit"
+                isLoading={isPending}
+                data-testid="login-submit-button"
+              >
                 {t("actions.continueWithEmail")}
               </Button>
             </form>
           </Form>
           {getWidgets("login.after").map((Component, i) => {
-            return <Component key={i} />
+            return <Component key={i} />;
           })}
         </div>
-        <span className="text-ui-fg-muted txt-small my-6">
+        <span
+          className="txt-small my-6 text-ui-fg-muted"
+          data-testid="login-forgot-password-section"
+        >
           <Trans
             i18nKey="login.forgotPassword"
             components={[
               <Link
                 key="reset-password-link"
                 to="/reset-password"
-                className="text-ui-fg-interactive transition-fg hover:text-ui-fg-interactive-hover focus-visible:text-ui-fg-interactive-hover font-medium outline-none"
+                className="font-medium text-ui-fg-interactive outline-none transition-fg hover:text-ui-fg-interactive-hover focus-visible:text-ui-fg-interactive-hover"
+                data-testid="login-reset-password-link"
               />,
             ]}
           />
         </span>
       </div>
     </div>
-  )
-}
+  );
+};

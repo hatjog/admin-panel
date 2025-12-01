@@ -25,9 +25,9 @@ export const InventoryItemGeneralSection = ({
     return "-"
   }
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading>
+    <Container className="divide-y p-0" data-testid="inventory-item-general-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="inventory-item-general-header">
+        <Heading data-testid="inventory-item-general-title">
           {inventoryItem.title ?? inventoryItem.sku} {t("fields.details")}
         </Heading>
         <ActionMenu
@@ -42,23 +42,27 @@ export const InventoryItemGeneralSection = ({
               ],
             },
           ]}
+          data-testid="inventory-item-general-action-menu"
         />
       </div>
-      <SectionRow title={t("fields.sku")} value={inventoryItem.sku ?? "-"} />
+      <SectionRow title={t("fields.sku")} value={inventoryItem.sku ?? "-"} data-testid="inventory-item-sku-row" />
       <SectionRow
         title={t("fields.inStock")}
         value={getQuantityFormat(inventoryItem.stocked_quantity)}
+        data-testid="inventory-item-in-stock-row"
       />
 
       <SectionRow
         title={t("inventory.reserved")}
         value={getQuantityFormat(inventoryItem.reserved_quantity)}
+        data-testid="inventory-item-reserved-row"
       />
       <SectionRow
         title={t("inventory.available")}
         value={getQuantityFormat(
           inventoryItem.stocked_quantity - inventoryItem.reserved_quantity
         )}
+        data-testid="inventory-item-available-row"
       />
     </Container>
   )

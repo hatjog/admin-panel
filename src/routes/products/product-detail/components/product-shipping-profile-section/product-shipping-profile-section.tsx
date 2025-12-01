@@ -20,9 +20,9 @@ export const ProductShippingProfileSection = ({
   const shippingProfile = product.shipping_profile
 
   return (
-    <Container className="p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("products.shippingProfile.header")}</Heading>
+    <Container className="p-0" data-testid="product-shipping-profile-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="product-shipping-profile-header">
+        <Heading level="h2" data-testid="product-shipping-profile-title">{t("products.shippingProfile.header")}</Heading>
         <ActionMenu
           groups={[
             {
@@ -35,16 +35,20 @@ export const ProductShippingProfileSection = ({
               ],
             },
           ]}
+          data-testid="product-shipping-profile-action-menu"
         />
       </div>
 
       {shippingProfile && (
-        <SidebarLink
-          to={`/settings/locations/shipping-profiles/${shippingProfile.id}`}
-          labelKey={shippingProfile.name}
-          descriptionKey={shippingProfile.type}
-          icon={<ShoppingBag />}
-        />
+        <div data-testid="product-shipping-profile-link-container">
+          <SidebarLink
+            to={`/settings/locations/shipping-profiles/${shippingProfile.id}`}
+            labelKey={shippingProfile.name}
+            descriptionKey={shippingProfile.type}
+            icon={<ShoppingBag />}
+            data-testid="product-shipping-profile-link"
+          />
+        </div>
       )}
     </Container>
   )

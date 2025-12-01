@@ -10,16 +10,19 @@ type Props = {
 
 export function ReturnRequestMenu({ handleDetail, request }: Props) {
   return (
-    <DropdownMenu>
+    <DropdownMenu data-testid={`return-request-menu-${request.id}`}>
       <DropdownMenu.Trigger asChild>
-        <EllipsisHorizontal />
+        <div data-testid={`return-request-menu-${request.id}-trigger`}>
+          <EllipsisHorizontal />
+        </div>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content data-testid={`return-request-menu-${request.id}-content`}>
         <DropdownMenu.Item
           className="gap-x-2"
           onClick={() => {
             handleDetail(request);
           }}
+          data-testid={`return-request-menu-${request.id}-action-review`}
         >
           <Eye className="text-ui-fg-subtle" />
           Review

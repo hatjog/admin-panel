@@ -51,10 +51,11 @@ export const CustomerGroupGeneralSection = ({
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading>{group.name}</Heading>
+    <Container className="divide-y p-0" data-testid="customer-group-general-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="customer-group-general-section-header">
+        <Heading data-testid="customer-group-general-section-name">{group.name}</Heading>
         <ActionMenu
+          data-testid="customer-group-general-section-action-menu"
           groups={[
             {
               actions: [
@@ -77,11 +78,11 @@ export const CustomerGroupGeneralSection = ({
           ]}
         />
       </div>
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4" data-testid="customer-group-general-section-customers-row">
+        <Text size="small" leading="compact" weight="plus" data-testid="customer-group-general-section-customers-label">
           {t("customers.domain")}
         </Text>
-        <Text size="small" leading="compact">
+        <Text size="small" leading="compact" data-testid="customer-group-general-section-customers-value">
           {group.customers?.length || "-"}
         </Text>
       </div>

@@ -1,26 +1,27 @@
+import { useEffect, useState } from "react";
+
+import { InformationCircleSolid, PencilSquare } from "@medusajs/icons";
 import {
   Button,
   Container,
   Heading,
   Label,
   Table,
-  toast,
   Tooltip,
+  toast,
 } from "@medusajs/ui";
 
-import { InformationCircleSolid, PencilSquare } from "@medusajs/icons";
-import { useState, useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
-import { useForm, FormProvider } from "react-hook-form";
+import { ActionMenu } from "../../../../../components/common/action-menu";
+import { RouteDrawer } from "../../../../../components/modals";
 import {
   useProduct,
   useProductAttributes,
   useUpdateProduct,
 } from "../../../../../hooks/api";
-import { ActionMenu } from "../../../../../components/common/action-menu";
-import { RouteDrawer } from "../../../../../components/modals";
 import { FormComponents } from "./components/form-components";
-import { useParams } from "react-router-dom";
 
 export const ProductAdditionalAttributeSection = () => {
   const { id } = useParams();
@@ -51,10 +52,10 @@ export const ProductAdditionalAttributeSection = () => {
   const onSubmit = (data: any) => {
     const formattedData = Object.keys(data).map((key) => {
       const attribute = attributes.find(
-        (a: any) => a.id === key && a.ui_component === "select"
+        (a: any) => a.id === key && a.ui_component === "select",
       );
       const value = attribute?.possible_values?.find(
-        (pv: any) => pv.id === data[key]
+        (pv: any) => pv.id === data[key],
       )?.value;
 
       return (
@@ -73,7 +74,7 @@ export const ProductAdditionalAttributeSection = () => {
         acc.push({ attribute_id: key, value: payload[key] });
         return acc;
       },
-      []
+      [],
     );
 
     updateProduct(
@@ -85,7 +86,7 @@ export const ProductAdditionalAttributeSection = () => {
           toast.success("Product updated successfully");
           setOpen(false);
         },
-      }
+      },
     );
   };
 
@@ -94,9 +95,20 @@ export const ProductAdditionalAttributeSection = () => {
   return (
     <>
       <div>
-        <Container className="divide-y p-0 pb-2">
-          <div className="flex items-center justify-between px-6 py-4">
-            <Heading level="h2">Additional Attributes</Heading>
+        <Container
+          className="divide-y p-0 pb-2"
+          data-testid="product-additional-attributes-section"
+        >
+          <div
+            className="flex items-center justify-between px-6 py-4"
+            data-testid="product-additional-attributes-header"
+          >
+            <Heading
+              level="h2"
+              data-testid="product-additional-attributes-title"
+            >
+              Additional Attributes
+            </Heading>
             <ActionMenu
               groups={[
                 {
@@ -109,16 +121,31 @@ export const ProductAdditionalAttributeSection = () => {
                   ],
                 },
               ]}
+              data-testid="product-additional-attributes-action-menu"
             />
           </div>
 
-          <div className="mb-6">
-            <Table>
-              <Table.Body>
+          <div
+            className="mb-6"
+            data-testid="product-additional-attributes-table-container"
+          >
+            <Table data-testid="product-additional-attributes-table">
+              <Table.Body data-testid="product-additional-attributes-table-body">
                 {product?.attribute_values?.map((attribute: any) => (
-                  <Table.Row key={attribute?.id}>
-                    <Table.Cell>{attribute?.attribute?.name}</Table.Cell>
-                    <Table.Cell>{attribute?.value}</Table.Cell>
+                  <Table.Row
+                    key={attribute?.id}
+                    data-testid={`product-additional-attribute-row-${attribute?.id}`}
+                  >
+                    <Table.Cell
+                      data-testid={`product-additional-attribute-name-cell-${attribute?.id}`}
+                    >
+                      {attribute?.attribute?.name}
+                    </Table.Cell>
+                    <Table.Cell
+                      data-testid={`product-additional-attribute-value-cell-${attribute?.id}`}
+                    >
+                      {attribute?.value}
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
@@ -127,45 +154,94 @@ export const ProductAdditionalAttributeSection = () => {
         </Container>
       </div>
       {open && (
-        <RouteDrawer>
-          <RouteDrawer.Header>
-            <Heading level="h2">Additional Attributes</Heading>
+        <RouteDrawer data-testid="product-additional-attributes-drawer">
+          <RouteDrawer.Header data-testid="product-additional-attributes-drawer-header">
+            <Heading
+              level="h2"
+              data-testid="product-additional-attributes-drawer-title"
+            >
+              Additional Attributes
+            </Heading>
           </RouteDrawer.Header>
-          <RouteDrawer.Body className="max-h-[calc(86vh)] overflow-y-auto py-2 m-4">
+          <RouteDrawer.Body
+            className="m-4 max-h-[calc(86vh)] overflow-y-auto py-2"
+            data-testid="product-additional-attributes-drawer-body"
+          >
             <FormProvider {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="p-0">
+              <form
+                id="product-additional-attributes-form"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="p-0"
+                data-testid="product-additional-attributes-form"
+              >
                 {attributes.map((a: any) => (
                   <div
                     key={`form-field-${a.handle}-${a.id}`}
-                    className="mb-4 -mx-4"
+                    className="-mx-4 mb-4"
+                    data-testid={`product-additional-attribute-field-${a.id}`}
                   >
-                    <Label className="flex items-center gap-x-2 mb-2">
+                    <Label
+                      className="mb-2 flex items-center gap-x-2"
+                      data-testid={`product-additional-attribute-label-${a.id}`}
+                    >
                       {a.name}
                       {a.description && (
-                        <Tooltip content={a.description}>
+                        <Tooltip
+                          content={a.description}
+                          data-testid={`product-additional-attribute-tooltip-${a.id}`}
+                        >
                           <InformationCircleSolid />
                         </Tooltip>
                       )}
                     </Label>
-                    <FormComponents
-                      attribute={a}
-                      field={{
-                        name: a.id,
-                        value: form.watch(a.id),
-                        defaultValue: form.getValues(a.id),
-                        onChange: (e: any) => {
-                          form.setValue(a.id, e.target.value);
-                        },
-                      }}
-                    />
+                    <div
+                      data-testid={`product-additional-attribute-input-${a.id}`}
+                    >
+                      <FormComponents
+                        attribute={a}
+                        field={{
+                          name: a.id,
+                          value: form.watch(a.id),
+                          defaultValue: form.getValues(a.id),
+                          onChange: (e: any) => {
+                            form.setValue(a.id, e.target.value);
+                          },
+                        }}
+                        data-testid={`product-additional-attribute-input-${a.id}-component`}
+                      />
+                    </div>
                   </div>
                 ))}
-                <div className="flex justify-end mt-4 -mx-4">
-                  <Button>Save</Button>
-                </div>
               </form>
             </FormProvider>
           </RouteDrawer.Body>
+          <RouteDrawer.Footer data-testid="product-additional-attributes-drawer-footer">
+            <div
+              className="flex items-center justify-end gap-x-2"
+              data-testid="product-additional-attributes-form-actions"
+            >
+              <RouteDrawer.Close
+                asChild
+                data-testid="product-additional-attributes-cancel-button-wrapper"
+              >
+                <Button
+                  variant="secondary"
+                  size="small"
+                  data-testid="product-additional-attributes-cancel-button"
+                >
+                  Cancel
+                </Button>
+              </RouteDrawer.Close>
+              <Button
+                size="small"
+                type="submit"
+                form="product-additional-attributes-form"
+                data-testid="product-additional-attributes-save-button"
+              >
+                Save
+              </Button>
+            </div>
+          </RouteDrawer.Footer>
         </RouteDrawer>
       )}
     </>

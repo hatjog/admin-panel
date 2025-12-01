@@ -53,11 +53,11 @@ export const PromotionListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("promotions.domain")}</Heading>
+    <Container className="divide-y p-0" data-testid="promotion-list-table-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="promotion-list-table-header">
+        <Heading level="h2" data-testid="promotion-list-table-heading">{t("promotions.domain")}</Heading>
 
-        <Button size="small" variant="secondary" asChild>
+        <Button size="small" variant="secondary" asChild data-testid="promotion-list-table-create-button">
           <Link to="create">{t("actions.create")}</Link>
         </Button>
       </div>
@@ -77,6 +77,7 @@ export const PromotionListTable = () => {
           { key: "created_at", label: t("fields.createdAt") },
           { key: "updated_at", label: t("fields.updatedAt") },
         ]}
+        data-testid="promotion-list-table"
       />
       <Outlet />
     </Container>
@@ -134,6 +135,7 @@ const PromotionActions = ({ promotion }: { promotion: PromotionDTO }) => {
           ],
         },
       ]}
+      data-testid={`promotion-list-table-action-menu-${promotion.id}`}
     />
   )
 }

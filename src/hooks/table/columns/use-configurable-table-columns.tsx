@@ -51,7 +51,11 @@ export function useConfigurableTableColumns<TData = any>(
 
       return columnHelper.accessor(accessor, {
         id: apiColumn.field,
-        header: () => apiColumn.name,
+        header: () => (
+          <div className="flex h-full w-full items-center" data-testid={`${entity}-table-header-${apiColumn.field}`}>
+            <span data-testid={`${entity}-table-header-${apiColumn.field}-text`}>{apiColumn.name}</span>
+          </div>
+        ),
         cell: ({ getValue, row }: { getValue: any, row: any }) => {
           const value = getValue()
 
@@ -62,7 +66,21 @@ export function useConfigurableTableColumns<TData = any>(
             }
           }
 
-          return renderer(value, row.original, apiColumn, t)
+          const dataTestId = `${entity}-table-cell-${row.id}-${apiColumn.field}-value`
+          const rendered = renderer(value, row.original, apiColumn, t, dataTestId)
+
+          // If the rendered value is a string or number, wrap it in a span with data-testid
+          if (typeof rendered === 'string' || typeof rendered === 'number') {
+            return (
+              <div className="flex size-full items-center overflow-hidden">
+                <span className="truncate" data-testid={dataTestId}>
+                  {rendered}
+                </span>
+              </div>
+            )
+          }
+
+          return rendered
         },
         meta: {
           name: apiColumn.name,

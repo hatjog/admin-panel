@@ -109,21 +109,21 @@ export const AddCampaignPromotionsForm = ({
   })
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="campaign-add-promotions-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex h-full flex-col overflow-hidden"
       >
-        <RouteFocusModal.Header>
+        <RouteFocusModal.Header data-testid="campaign-add-promotions-form-header">
           <div className="flex items-center justify-end gap-x-2">
             {form.formState.errors.promotion_ids && (
-              <Hint variant="error">
+              <Hint variant="error" data-testid="campaign-add-promotions-form-error-hint">
                 {form.formState.errors.promotion_ids.message}
               </Hint>
             )}
           </div>
         </RouteFocusModal.Header>
-        <RouteFocusModal.Body className="flex size-full flex-col overflow-y-auto">
+        <RouteFocusModal.Body className="flex size-full flex-col overflow-y-auto" data-testid="campaign-add-promotions-form-body">
           <_DataTable
             table={table}
             count={count}
@@ -144,16 +144,17 @@ export const AddCampaignPromotionsForm = ({
             noRecords={{
               message: t("campaigns.promotions.add.list.noRecordsMessage"),
             }}
+            data-testid="campaign-add-promotions-form-table"
           />
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
+        <RouteFocusModal.Footer data-testid="campaign-add-promotions-form-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="campaign-add-promotions-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
-            <Button size="small" type="submit" isLoading={isPending}>
+            <Button size="small" type="submit" isLoading={isPending} data-testid="campaign-add-promotions-form-save-button">
               {t("actions.save")}
             </Button>
           </div>
@@ -182,6 +183,7 @@ const useColumns = () => {
                   : table.getIsAllPageRowsSelected()
               }
               onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+              data-testid="campaign-add-promotions-form-select-all-checkbox"
             />
           )
         },
@@ -212,6 +214,7 @@ const useColumns = () => {
               onClick={(e) => {
                 e.stopPropagation()
               }}
+              data-testid={`campaign-add-promotions-form-select-checkbox-${row.original.id}`}
             />
           )
 

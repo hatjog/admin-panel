@@ -379,54 +379,65 @@ export const DataTable = <TData,>({
         className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center"
         translations={toolbarTranslations}
         filterBarContent={filterBarContent}
+        data-testid="data-table-toolbar"
       >
-        <div className="flex w-full items-center justify-between gap-2">
-          <div className="flex items-center gap-x-4">
+        <div className="flex w-full items-center justify-between gap-2" data-testid="data-table-toolbar-content">
+          <div className="flex items-center gap-x-4" data-testid="data-table-toolbar-left">
             {shouldRenderHeading && (
-              <div>
-                {heading && <Heading>{heading}</Heading>}
+              <div data-testid="data-table-heading-container">
+                {heading && <Heading data-testid="data-table-heading">{heading}</Heading>}
                 {subHeading && (
-                  <Text size="small" className="text-ui-fg-subtle">
+                  <Text size="small" className="text-ui-fg-subtle" data-testid="data-table-subheading">
                     {subHeading}
                   </Text>
                 )}
               </div>
             )}
             {effectiveEnableViewSelector && entity && (
-              <ViewPills
-                entity={entity}
-                currentColumns={currentColumns}
-                currentConfiguration={currentConfiguration}
-              />
+              <div data-testid="data-table-view-selector">
+                <ViewPills
+                  entity={entity}
+                  currentColumns={currentColumns}
+                  currentConfiguration={currentConfiguration}
+                />
+              </div>
             )}
           </div>
-          <div className="flex items-center gap-x-2">
-            {showFilterMenu && <UiDataTable.FilterMenu />}
-            {enableSorting && <UiDataTable.SortingMenu />}
+          <div className="flex items-center gap-x-2" data-testid="data-table-toolbar-right">
+            {showFilterMenu && <div data-testid="data-table-filter-menu"><UiDataTable.FilterMenu /></div>}
+            {enableSorting && <div data-testid="data-table-sorting-menu"><UiDataTable.SortingMenu /></div>}
             {enableSearch && (
-              <div className="w-full md:w-auto">
+              <div className="w-full md:w-auto" data-testid="data-table-search">
                 <UiDataTable.Search
                   placeholder={t("filters.searchLabel")}
                   autoFocus={autoFocusSearch}
                 />
               </div>
             )}
-            {actionMenu && <ActionMenu variant="primary" {...actionMenu} />}
+            {actionMenu && <ActionMenu variant="primary" {...actionMenu} data-testid="data-table-action-menu" />}
             {actions && actions.length > 0 && (
-              <DataTableActions actions={actions} />
+              <div data-testid="data-table-actions">
+                <DataTableActions actions={actions} />
+              </div>
             )}
             {!actions && action && <DataTableAction {...action} />}
           </div>
         </div>
       </UiDataTable.Toolbar>
-      <UiDataTable.Table emptyState={emptyState} />
+      <div data-testid="data-table-table">
+        <UiDataTable.Table emptyState={emptyState} />
+      </div>
       {enablePagination && (
-        <UiDataTable.Pagination translations={paginationTranslations} />
+        <div data-testid="data-table-pagination">
+          <UiDataTable.Pagination translations={paginationTranslations} />
+        </div>
       )}
       {enableCommands && (
-        <UiDataTable.CommandBar
-          selectedLabel={(count) => `${count} selected`}
-        />
+        <div data-testid="data-table-command-bar">
+          <UiDataTable.CommandBar
+            selectedLabel={(count) => `${count} selected`}
+          />
+        </div>
       )}
     </UiDataTable>
   )
@@ -513,12 +524,13 @@ const DataTableAction = ({
     disabled: disabled ?? false,
     type: "button" as const,
     variant: "secondary" as const,
+    "data-testid": `data-table-action-${label.toLowerCase().replace(/\s+/g, "-")}`,
   }
 
   if ("to" in props) {
     return (
       <Button {...buttonProps} asChild>
-        <Link to={props.to}>{label}</Link>
+        <Link to={props.to} data-testid={`data-table-action-link-${label.toLowerCase().replace(/\s+/g, "-")}`}>{label}</Link>
       </Button>
     )
   }

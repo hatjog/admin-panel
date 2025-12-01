@@ -140,21 +140,22 @@ export const AddCustomerGroupsForm = ({
   }
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="add-customer-groups-form">
       <KeyboundForm
         className="flex h-full flex-col overflow-hidden"
         onSubmit={handleSubmit}
+        data-testid="add-customer-groups-form-keybound"
       >
-        <RouteFocusModal.Header>
-          <div className="flex items-center justify-end gap-x-2">
+        <RouteFocusModal.Header data-testid="add-customer-groups-form-header">
+          <div className="flex items-center justify-end gap-x-2" data-testid="add-customer-groups-form-header-errors">
             {form.formState.errors.customer_group_ids && (
-              <Hint variant="error">
+              <Hint variant="error" data-testid="add-customer-groups-form-error-hint">
                 {form.formState.errors.customer_group_ids.message}
               </Hint>
             )}
           </div>
         </RouteFocusModal.Header>
-        <RouteFocusModal.Body className="size-full overflow-hidden">
+        <RouteFocusModal.Body className="size-full overflow-hidden" data-testid="add-customer-groups-form-body">
           <_DataTable
             table={table}
             columns={columns}
@@ -175,9 +176,9 @@ export const AddCustomerGroupsForm = ({
             }}
           />
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
+        <RouteFocusModal.Footer data-testid="add-customer-groups-form-footer">
           <RouteFocusModal.Close asChild>
-            <Button variant="secondary" size="small">
+            <Button variant="secondary" size="small" data-testid="add-customer-groups-form-cancel-button">
               {t("actions.cancel")}
             </Button>
           </RouteFocusModal.Close>
@@ -186,6 +187,7 @@ export const AddCustomerGroupsForm = ({
             variant="primary"
             size="small"
             isLoading={isPending}
+            data-testid="add-customer-groups-form-submit-button"
           >
             {t("actions.save")}
           </Button>

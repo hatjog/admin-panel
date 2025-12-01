@@ -4,9 +4,9 @@ import { InformationCircle } from "@medusajs/icons";
 import type { ProductTagDTO } from "@medusajs/types";
 import { Button, Container, Drawer, Text } from "@medusajs/ui";
 
-import { formatDate } from "@lib/date";
-
 import type { AdminRequest } from "@custom-types/requests";
+
+import { formatDate } from "@lib/date";
 
 import { ResolveRequestPrompt } from "@routes/requests/common/components/resolve-request";
 
@@ -31,7 +31,11 @@ export function ProductTagRequestDetail({ request, open, close }: Props) {
   };
 
   return (
-    <Drawer open={open} onOpenChange={close}>
+    <Drawer
+      open={open}
+      onOpenChange={close}
+      data-testid={`product-tag-detail-${request.id}`}
+    >
       <ResolveRequestPrompt
         close={() => {
           setPromptOpen(false);
@@ -43,44 +47,94 @@ export function ProductTagRequestDetail({ request, open, close }: Props) {
           close();
         }}
       />
-      <Drawer.Content>
-        <Drawer.Header>
-          <Drawer.Title>Product tag request</Drawer.Title>
+      <Drawer.Content data-testid={`product-tag-detail-${request.id}-content`}>
+        <Drawer.Header data-testid={`product-tag-detail-${request.id}-header`}>
+          <Drawer.Title data-testid={`product-tag-detail-${request.id}-title`}>
+            Product tag request
+          </Drawer.Title>
         </Drawer.Header>
-        <Drawer.Body className="p-4">
-          <fieldset>
-            <legend className="mb-2">Product tag value</legend>
-            <Container>
-              <Text>{requestData.value}</Text>
+        <Drawer.Body
+          className="p-4"
+          data-testid={`product-tag-detail-${request.id}-body`}
+        >
+          <fieldset
+            data-testid={`product-tag-detail-${request.id}-value-fieldset`}
+          >
+            <legend
+              className="mb-2"
+              data-testid={`product-tag-detail-${request.id}-value-legend`}
+            >
+              Product tag value
+            </legend>
+            <Container
+              data-testid={`product-tag-detail-${request.id}-value-container`}
+            >
+              <Text
+                data-testid={`product-tag-detail-${request.id}-value-value`}
+              >
+                {requestData.value}
+              </Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Submitted by</legend>
-            <Container>
-              <Text>{request.seller?.name}</Text>
+          <fieldset
+            className="mt-2"
+            data-testid={`product-tag-detail-${request.id}-submitted-by-fieldset`}
+          >
+            <legend
+              className="mb-2"
+              data-testid={`product-tag-detail-${request.id}-submitted-by-legend`}
+            >
+              Submitted by
+            </legend>
+            <Container
+              data-testid={`product-tag-detail-${request.id}-submitted-by-container`}
+            >
+              <Text
+                data-testid={`product-tag-detail-${request.id}-submitted-by-value`}
+              >
+                {request.seller?.name}
+              </Text>
             </Container>
           </fieldset>
-          <Container className="mt-4">
-            <div className="flex items-center gap-2">
+          <Container
+            className="mt-4"
+            data-testid={`product-tag-detail-${request.id}-request-information`}
+          >
+            <div
+              className="flex items-center gap-2"
+              data-testid={`product-tag-detail-${request.id}-request-information-header`}
+            >
               <InformationCircle />
-              <Text className="font-semibold">Request information</Text>
+              <Text
+                className="font-semibold"
+                data-testid={`product-tag-detail-${request.id}-request-information-title`}
+              >
+                Request information
+              </Text>
             </div>
-            <Text>{`Submitted on ${formatDate(request.created_at)}`}</Text>
+            <Text
+              data-testid={`product-tag-detail-${request.id}-submitted-on`}
+            >{`Submitted on ${formatDate(request.created_at)}`}</Text>
             {request.reviewer_id && (
-              <Text>{`Reviewed on ${formatDate(request.updated_at)}`}</Text>
+              <Text
+                data-testid={`product-tag-detail-${request.id}-reviewed-on`}
+              >{`Reviewed on ${formatDate(request.updated_at)}`}</Text>
             )}
             {request.reviewer_note && (
-              <Text>{`Reviewer note: ${request.reviewer_note}`}</Text>
+              <Text
+                data-testid={`product-tag-detail-${request.id}-reviewer-note`}
+              >{`Reviewer note: ${request.reviewer_note}`}</Text>
             )}
           </Container>
         </Drawer.Body>
-        <Drawer.Footer>
+        <Drawer.Footer data-testid={`product-tag-detail-${request.id}-footer`}>
           {request.status === "pending" && (
             <>
               <Button
                 onClick={() => {
                   handlePrompt(request.id!, true);
                 }}
+                data-testid={`product-tag-detail-${request.id}-accept-button`}
               >
                 Accept
               </Button>
@@ -89,10 +143,15 @@ export function ProductTagRequestDetail({ request, open, close }: Props) {
                   handlePrompt(request.id!, false);
                 }}
                 variant="danger"
+                data-testid={`product-tag-detail-${request.id}-reject-button`}
               >
                 Reject
               </Button>
-              <Button variant="secondary" onClick={close}>
+              <Button
+                variant="secondary"
+                onClick={close}
+                data-testid={`product-tag-detail-${request.id}-cancel-button`}
+              >
                 Cancel
               </Button>
             </>

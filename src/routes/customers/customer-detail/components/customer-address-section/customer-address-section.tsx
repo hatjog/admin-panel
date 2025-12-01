@@ -55,48 +55,52 @@ export const CustomerAddressSection = ({
   }
 
   return (
-    <Container className="p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("addresses.title")}</Heading>
-        <Link to={`create-address`} className="text-ui-fg-muted text-xs">
+    <Container className="p-0" data-testid="customer-address-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="customer-address-section-header">
+        <Heading level="h2" data-testid="customer-address-section-heading">{t("addresses.title")}</Heading>
+        <Link to={`create-address`} className="text-ui-fg-muted text-xs" data-testid="customer-address-section-add-link">
           Add
         </Link>
       </div>
 
       {addresses.length === 0 && (
-        <NoRecords
-          className={clx({
-            "flex h-full flex-col overflow-hidden border-t p-6": true,
-          })}
-          icon={null}
-          title={t("general.noRecordsTitle")}
-          message={t("general.noRecordsMessage")}
-        />
+        <div data-testid="customer-address-section-no-records">
+          <NoRecords
+            className={clx({
+              "flex h-full flex-col overflow-hidden border-t p-6": true,
+            })}
+            icon={null}
+            title={t("general.noRecordsTitle")}
+            message={t("general.noRecordsMessage")}
+          />
+        </div>
       )}
 
       {addresses.map((address) => {
         return (
-          <Listicle
-            key={address.id}
-            labelKey={address.address_name ?? "n/a"}
-            descriptionKey={[address.address_1, address.address_2].join(" ")}
-          >
-            <ActionMenu
-              groups={[
-                {
-                  actions: [
-                    {
-                      icon: <Trash />,
-                      label: t("actions.delete"),
-                      onClick: async () => {
-                        await handleDelete(address)
+          <div key={address.id} data-testid={`customer-address-section-address-${address.id}`}>
+            <Listicle
+              labelKey={address.address_name ?? "n/a"}
+              descriptionKey={[address.address_1, address.address_2].join(" ")}
+            >
+              <ActionMenu
+                data-testid={`customer-address-section-address-${address.id}-actions`}
+                groups={[
+                  {
+                    actions: [
+                      {
+                        icon: <Trash />,
+                        label: t("actions.delete"),
+                        onClick: async () => {
+                          await handleDelete(address)
+                        },
                       },
-                    },
-                  ],
-                },
-              ]}
-            />
-          </Listicle>
+                    ],
+                  },
+                ]}
+              />
+            </Listicle>
+          </div>
         )
       })}
     </Container>

@@ -122,11 +122,11 @@ export const CustomerGroupSection = ({
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("customerGroups.domain")}</Heading>
-        <Link to={`/customers/${customer.id}/add-customer-groups`}>
-          <Button variant="secondary" size="small">
+    <Container className="divide-y p-0" data-testid="customer-group-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="customer-group-section-header">
+        <Heading level="h2" data-testid="customer-group-section-heading">{t("customerGroups.domain")}</Heading>
+        <Link to={`/customers/${customer.id}/add-customer-groups`} data-testid="customer-group-section-add-link">
+          <Button variant="secondary" size="small" data-testid="customer-group-section-add-button">
             {t("general.add")}
           </Button>
         </Link>
@@ -198,6 +198,7 @@ const CustomerGroupRowActions = ({
 
   return (
     <ActionMenu
+      data-testid={`customer-group-section-row-actions-${group.id}`}
       groups={[
         {
           actions: [

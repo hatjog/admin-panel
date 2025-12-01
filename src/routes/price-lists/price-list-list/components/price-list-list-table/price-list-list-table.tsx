@@ -41,15 +41,15 @@ export const PriceListListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container className="divide-y p-0" data-testid="price-list-list-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="price-list-list-header">
         <div>
-          <Heading>{t("priceLists.domain")}</Heading>
-          <Text className="text-ui-fg-subtle" size="small">
+          <Heading data-testid="price-list-list-heading">{t("priceLists.domain")}</Heading>
+          <Text className="text-ui-fg-subtle" size="small" data-testid="price-list-list-subtitle">
             {t("priceLists.subtitle")}
           </Text>
         </div>
-        <Button size="small" variant="secondary" asChild>
+        <Button size="small" variant="secondary" asChild data-testid="price-list-list-create-button">
           <Link to="create">{t("actions.create")}</Link>
         </Button>
       </div>
@@ -70,6 +70,7 @@ export const PriceListListTable = () => {
         isLoading={isLoading}
         pagination
         search
+        data-testid="price-list-list-table"
       />
     </Container>
   )

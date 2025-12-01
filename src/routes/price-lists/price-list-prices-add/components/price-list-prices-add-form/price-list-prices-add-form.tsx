@@ -198,27 +198,30 @@ export const PriceListPricesAddForm = ({
   }
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="price-list-prices-add-form">
       <ProgressTabs
         dir={direction}
         value={tab}
         onValueChange={(tab) => handleChangeTab(tab as Tab)}
         className="flex h-full flex-col overflow-hidden"
+        data-testid="price-list-prices-add-form-tabs"
       >
         <KeyboundForm onSubmit={handleSubmit} className="flex h-full flex-col">
-          <RouteFocusModal.Header>
+          <RouteFocusModal.Header data-testid="price-list-prices-add-form-header">
             <div className="flex w-full items-center justify-between gap-x-4">
               <div className="-my-2 w-full max-w-[600px] border-l">
-                <ProgressTabs.List className="grid w-full grid-cols-3">
+                <ProgressTabs.List className="grid w-full grid-cols-3" data-testid="price-list-prices-add-form-tabs-list">
                   <ProgressTabs.Trigger
                     status={tabState.product}
                     value={Tab.PRODUCT}
+                    data-testid="price-list-prices-add-form-tab-products"
                   >
                     {t("priceLists.create.tabs.products")}
                   </ProgressTabs.Trigger>
                   <ProgressTabs.Trigger
                     status={tabState.price}
                     value={Tab.PRICE}
+                    data-testid="price-list-prices-add-form-tab-prices"
                   >
                     {t("priceLists.create.tabs.prices")}
                   </ProgressTabs.Trigger>
@@ -226,10 +229,11 @@ export const PriceListPricesAddForm = ({
               </div>
             </div>
           </RouteFocusModal.Header>
-          <RouteFocusModal.Body className="size-full overflow-hidden">
+          <RouteFocusModal.Body className="size-full overflow-hidden" data-testid="price-list-prices-add-form-body">
             <ProgressTabs.Content
               className="size-full overflow-y-auto"
               value={Tab.PRODUCT}
+              data-testid="price-list-prices-add-form-content-products"
             >
               <PriceListPricesAddProductIdsForm
                 form={form}
@@ -239,6 +243,7 @@ export const PriceListPricesAddForm = ({
             <ProgressTabs.Content
               className="size-full overflow-hidden"
               value={Tab.PRICE}
+              data-testid="price-list-prices-add-form-content-prices"
             >
               <PriceListPricesAddPricesForm
                 form={form}
@@ -248,10 +253,10 @@ export const PriceListPricesAddForm = ({
               />
             </ProgressTabs.Content>
           </RouteFocusModal.Body>
-          <RouteFocusModal.Footer>
+          <RouteFocusModal.Footer data-testid="price-list-prices-add-form-footer">
             <div className="flex items-center justify-end gap-x-2">
               <RouteFocusModal.Close asChild>
-                <Button variant="secondary" size="small">
+                <Button variant="secondary" size="small" data-testid="price-list-prices-add-form-cancel-button">
                   {t("actions.cancel")}
                 </Button>
               </RouteFocusModal.Close>
@@ -285,6 +290,7 @@ const PrimaryButton = ({ tab, next, isLoading }: PrimaryButtonProps) => {
         variant="primary"
         size="small"
         isLoading={isLoading}
+        data-testid="price-list-prices-add-form-save-button"
       >
         {t("actions.save")}
       </Button>
@@ -298,6 +304,7 @@ const PrimaryButton = ({ tab, next, isLoading }: PrimaryButtonProps) => {
       variant="primary"
       size="small"
       onClick={() => next(tab)}
+      data-testid="price-list-prices-add-form-continue-button"
     >
       {t("actions.continue")}
     </Button>

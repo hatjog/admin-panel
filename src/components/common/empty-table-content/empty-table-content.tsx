@@ -38,6 +38,7 @@ type ActionProps = {
     to: string
     label: string
   }
+  dataTestId?: string
 }
 
 type NoRecordsProps = {
@@ -46,21 +47,22 @@ type NoRecordsProps = {
   className?: string
   buttonVariant?: string
   icon?: React.ReactNode
+  dataTestId?: string
 } & ActionProps
 
-const DefaultButton = ({ action }: ActionProps) =>
+const DefaultButton = ({ action, dataTestId }: ActionProps) =>
   action && (
     <Link to={action.to}>
-      <Button variant="secondary" size="small">
+      <Button variant="secondary" size="small" data-testid={dataTestId}>
         {action.label}
       </Button>
     </Link>
   )
 
-const TransparentIconLeftButton = ({ action }: ActionProps) =>
+const TransparentIconLeftButton = ({ action, dataTestId }: ActionProps) =>
   action && (
     <Link to={action.to}>
-      <Button variant="transparent" className="text-ui-fg-interactive">
+      <Button variant="transparent" className="text-ui-fg-interactive" data-testid={dataTestId}>
         <PlusMini /> {action.label}
       </Button>
     </Link>
@@ -73,6 +75,7 @@ export const NoRecords = ({
   className,
   buttonVariant = "default",
   icon = <ExclamationCircle className="text-ui-fg-subtle" />,
+  dataTestId,
 }: NoRecordsProps) => {
   const { t } = useTranslation()
 
@@ -97,9 +100,9 @@ export const NoRecords = ({
         </div>
       </div>
 
-      {buttonVariant === "default" && <DefaultButton action={action} />}
+      {buttonVariant === "default" && <DefaultButton action={action} dataTestId={dataTestId} />}
       {buttonVariant === "transparentIconLeft" && (
-        <TransparentIconLeftButton action={action} />
+        <TransparentIconLeftButton action={action} dataTestId={dataTestId} />
       )}
     </div>
   )

@@ -32,7 +32,7 @@ export type AdminUpdateAttributeType = z.infer<typeof AdminUpdateAttribute>;
 export const AdminUpdateAttribute = z
   .object({
     name: z.string().optional(),
-    description: z.string().optional(),
+    description: z.string().max(250, { message: "Description must be at most 250 characters" }).optional(),
     handle: z.string().optional(),
     is_filterable: z.boolean().optional(),
     is_required: z.boolean().optional(),
@@ -46,7 +46,7 @@ export const AdminUpdateAttribute = z
 export type AdminCreateAttributeType = z.infer<typeof CreateAttribute>;
 export const CreateAttribute = z.object({
   name: z.string().min(1),
-  description: z.string().optional(),
+  description: z.string().max(250, { message: "Description must be at most 250 characters" }).optional(),
   is_filterable: z.boolean().optional(),
   is_required: z.boolean().optional(),
   ui_component: z

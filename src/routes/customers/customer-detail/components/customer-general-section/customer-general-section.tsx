@@ -69,12 +69,13 @@ export const CustomerGeneralSection = ({
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading>{customer.email}</Heading>
-        <div className="flex items-center gap-x-2">
-          <StatusBadge color={statusColor}>{statusText}</StatusBadge>
+    <Container className="divide-y p-0" data-testid="customer-general-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="customer-general-section-header">
+        <Heading data-testid="customer-general-section-email">{customer.email}</Heading>
+        <div className="flex items-center gap-x-2" data-testid="customer-general-section-actions">
+          <StatusBadge color={statusColor} data-testid="customer-general-section-status-badge">{statusText}</StatusBadge>
           <ActionMenu
+            data-testid="customer-general-section-action-menu"
             groups={[
               {
                 actions: [
@@ -98,27 +99,27 @@ export const CustomerGeneralSection = ({
           />
         </div>
       </div>
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4" data-testid="customer-general-section-name-row">
+        <Text size="small" leading="compact" weight="plus" data-testid="customer-general-section-name-label">
           {t("fields.name")}
         </Text>
-        <Text size="small" leading="compact">
+        <Text size="small" leading="compact" data-testid="customer-general-section-name-value">
           {name || "-"}
         </Text>
       </div>
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4" data-testid="customer-general-section-company-row">
+        <Text size="small" leading="compact" weight="plus" data-testid="customer-general-section-company-label">
           {t("fields.company")}
         </Text>
-        <Text size="small" leading="compact">
+        <Text size="small" leading="compact" data-testid="customer-general-section-company-value">
           {customer.company_name || "-"}
         </Text>
       </div>
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" leading="compact" weight="plus">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4" data-testid="customer-general-section-phone-row">
+        <Text size="small" leading="compact" weight="plus" data-testid="customer-general-section-phone-label">
           {t("fields.phone")}
         </Text>
-        <Text size="small" leading="compact">
+        <Text size="small" leading="compact" data-testid="customer-general-section-phone-value">
           {customer.phone || "-"}
         </Text>
       </div>

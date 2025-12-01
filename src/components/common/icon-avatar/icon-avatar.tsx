@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react"
 type IconAvatarProps = PropsWithChildren<{
   className?: string
   size?: "small" | "large" | "xlarge"
+  "data-testid"?: string
 }>
 
 /**
@@ -15,6 +16,7 @@ export const IconAvatar = ({
   size = "small",
   children,
   className,
+  "data-testid": dataTestId,
 }: IconAvatarProps) => {
   return (
     <div
@@ -31,8 +33,9 @@ export const IconAvatar = ({
         },
         className
       )}
+      data-testid={dataTestId}
     >
-      <div>{children}</div>
+      <div data-testid={dataTestId ? `${dataTestId}-inner` : undefined}>{children}</div>
     </div>
   )
 }

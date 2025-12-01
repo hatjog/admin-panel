@@ -34,16 +34,18 @@ export const ItemLocationListTable = ({
   }
 
   return (
-    <DataTable
-      data={inventory_levels ?? []}
-      columns={columns}
-      rowCount={count}
-      pageSize={PAGE_SIZE}
-      getRowId={(row) => row.id}
-      isLoading={isLoading}
-      prefix={PREFIX}
-      layout="fill"
-      enableSearch={false}
-    />
+    <div data-testid="inventory-location-levels-table">
+      <DataTable
+        data={inventory_levels ?? []}
+        columns={columns}
+        rowCount={count}
+        pageSize={PAGE_SIZE}
+        getRowId={(row) => row.id}
+        isLoading={isLoading}
+        prefix={PREFIX}
+        layout="fill"
+        enableSearch={false}
+      />
+    </div>
   )
 }

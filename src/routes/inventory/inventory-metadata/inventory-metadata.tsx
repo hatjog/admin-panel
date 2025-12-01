@@ -15,7 +15,7 @@ export const InventoryItemMetadata = () => {
   }
 
   return (
-    <RouteDrawer>
+    <RouteDrawer data-testid="inventory-metadata-drawer">
       <MetadataForm
         isPending={isPending}
         isMutating={isMutating}

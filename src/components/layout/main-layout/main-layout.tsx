@@ -18,21 +18,21 @@ import {
   Users,
 } from "@medusajs/icons";
 import { Avatar, Divider, DropdownMenu, Text, clx } from "@medusajs/ui";
+
 import { Collapsible as RadixCollapsible } from "radix-ui";
 import { useTranslation } from "react-i18next";
-
-import { useStore } from "../../../hooks/api/store";
-import { Skeleton } from "../../common/skeleton";
-import { INavItem, NavItem } from "../../layout/nav-item";
-import { Shell } from "../../layout/shell";
-
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import { useLogout } from "../../../hooks/api";
+import { useStore } from "../../../hooks/api/store";
+import { useDocumentDirection } from "../../../hooks/use-document-direction";
 import { queryClient } from "../../../lib/query-client";
 import { useExtension } from "../../../providers/extension-provider";
 import { useSearch } from "../../../providers/search-provider";
+import { Skeleton } from "../../common/skeleton";
+import { INavItem, NavItem } from "../../layout/nav-item";
+import { Shell } from "../../layout/shell";
 import { UserMenu } from "../user-menu";
-import { useDocumentDirection } from "../../../hooks/use-document-direction";
 
 export const MainLayout = () => {
   return (
@@ -44,9 +44,15 @@ export const MainLayout = () => {
 
 const MainSidebar = () => {
   return (
-    <aside className="flex flex-1 flex-col justify-between overflow-y-auto">
+    <aside
+      className="flex flex-1 flex-col justify-between overflow-y-auto"
+      data-testid="sidebar"
+    >
       <div className="flex flex-1 flex-col">
-        <div className="bg-ui-bg-subtle sticky top-0">
+        <div
+          className="sticky top-0 bg-ui-bg-subtle"
+          data-testid="sidebar-header-section"
+        >
           <Header />
           <div className="px-3">
             <Divider variant="dashed" />
@@ -59,7 +65,10 @@ const MainSidebar = () => {
           </div>
           <UtilitySection />
         </div>
-        <div className="bg-ui-bg-subtle sticky bottom-0">
+        <div
+          className="sticky bottom-0 bg-ui-bg-subtle"
+          data-testid="sidebar-user-section"
+        >
           <UserSection />
         </div>
       </div>
@@ -114,10 +123,10 @@ const Header = () => {
         <DropdownMenu.Trigger
           disabled={!isLoaded}
           className={clx(
-            "bg-ui-bg-subtle transition-fg grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3 rounded-md p-0.5 pe-2 outline-none",
+            "grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3 rounded-md bg-ui-bg-subtle p-0.5 pe-2 outline-none transition-fg",
             "hover:bg-ui-bg-subtle-hover",
             "data-[state=open]:bg-ui-bg-subtle-hover",
-            "focus-visible:shadow-borders-focus"
+            "focus-visible:shadow-borders-focus",
           )}
         >
           {fallback ? (
@@ -314,14 +323,15 @@ const Searchbar = () => {
   const { toggleSearch } = useSearch();
 
   return (
-    <div className="px-3">
+    <div className="px-3" data-testid="sidebar-search">
       <button
         onClick={toggleSearch}
         className={clx(
-          "bg-ui-bg-subtle text-ui-fg-subtle flex w-full items-center gap-x-2.5 rounded-md px-2 py-1 outline-none",
+          "flex w-full items-center gap-x-2.5 rounded-md bg-ui-bg-subtle px-2 py-1 text-ui-fg-subtle outline-none",
           "hover:bg-ui-bg-subtle-hover",
-          "focus-visible:shadow-borders-focus"
+          "focus-visible:shadow-borders-focus",
         )}
+        data-testid="sidebar-search-button"
       >
         <MagnifyingGlass />
         <div className="flex-1 text-start">
@@ -354,7 +364,10 @@ const CoreRouteSection = () => {
   });
 
   return (
-    <nav className="flex flex-col gap-y-1 py-3">
+    <nav
+      className="flex flex-col gap-y-1 py-3"
+      data-testid="sidebar-core-routes"
+    >
       <Searchbar />
       {coreRoutes.map((route) => {
         return <NavItem key={route.to} {...route} />;
@@ -382,7 +395,7 @@ const ExtensionRouteSection = () => {
         <RadixCollapsible.Root defaultOpen>
           <div className="px-4">
             <RadixCollapsible.Trigger asChild className="group/trigger">
-              <button className="text-ui-fg-subtle flex w-full items-center justify-between px-2">
+              <button className="flex w-full items-center justify-between px-2 text-ui-fg-subtle">
                 <Text size="xsmall" weight="plus" leading="compact">
                   {t("app.nav.common.extensions")}
                 </Text>

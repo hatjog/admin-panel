@@ -60,9 +60,9 @@ export const CampaignSection = ({
   }
 
   return (
-    <Container>
-      <div className="flex items-center justify-between">
-        <Heading level="h2">{t("promotions.fields.campaign")}</Heading>
+    <Container data-testid="promotion-campaign-section-container">
+      <div className="flex items-center justify-between" data-testid="promotion-campaign-section-header">
+        <Heading level="h2" data-testid="promotion-campaign-section-heading">{t("promotions.fields.campaign")}</Heading>
 
         <ActionMenu
           groups={[
@@ -70,22 +70,28 @@ export const CampaignSection = ({
               actions,
             },
           ]}
+          data-testid="promotion-campaign-section-action-menu"
         />
       </div>
 
       {campaign ? (
-        <CampaignDetailSection campaign={campaign} />
+        <div data-testid="promotion-campaign-section-detail">
+          <CampaignDetailSection campaign={campaign} />
+        </div>
       ) : (
-        <NoRecords
-          className="h-[180px] pt-4 text-center"
-          title="Not part of a campaign"
-          message="Add this promotion to an existing campaign"
-          action={{
-            to: `/promotions/${id}/add-to-campaign`,
-            label: "Add to Campaign",
-          }}
-          buttonVariant="transparentIconLeft"
-        />
+        <div data-testid="promotion-campaign-section-no-records">
+          <NoRecords
+            className="h-[180px] pt-4 text-center"
+            title="Not part of a campaign"
+            message="Add this promotion to an existing campaign"
+            action={{
+              to: `/promotions/${id}/add-to-campaign`,
+              label: "Add to Campaign",
+            }}
+            buttonVariant="transparentIconLeft"
+            dataTestId="promotion-campaign-section-add-to-campaign-button"
+          />
+        </div>
       )}
     </Container>
   )

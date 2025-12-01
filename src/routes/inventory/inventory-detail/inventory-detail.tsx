@@ -53,28 +53,30 @@ export const InventoryDetail = () => {
   }
 
   return (
-    <TwoColumnPage
-      widgets={{
-        after: getWidgets("inventory_item.details.after"),
-        before: getWidgets("inventory_item.details.before"),
-        sideAfter: getWidgets("inventory_item.details.side.after"),
-        sideBefore: getWidgets("inventory_item.details.side.before"),
-      }}
-      data={inventory_item}
-      showJSON
-      showMetadata
-    >
-      <TwoColumnPage.Main>
-        <InventoryItemGeneralSection inventoryItem={inventory_item} />
-        <InventoryItemLocationLevelsSection inventoryItem={inventory_item} />
-        <InventoryItemReservationsSection inventoryItem={inventory_item} />
-      </TwoColumnPage.Main>
-      <TwoColumnPage.Sidebar>
-        <InventoryItemVariantsSection
-          variants={(inventory_item as any).variants}
-        />
-        <InventoryItemAttributeSection inventoryItem={inventory_item as any} />
-      </TwoColumnPage.Sidebar>
-    </TwoColumnPage>
+    <div data-testid="inventory-detail-page">
+      <TwoColumnPage
+        widgets={{
+          after: getWidgets("inventory_item.details.after"),
+          before: getWidgets("inventory_item.details.before"),
+          sideAfter: getWidgets("inventory_item.details.side.after"),
+          sideBefore: getWidgets("inventory_item.details.side.before"),
+        }}
+        data={inventory_item}
+        showJSON
+        showMetadata
+      >
+        <TwoColumnPage.Main data-testid="inventory-detail-main">
+          <InventoryItemGeneralSection inventoryItem={inventory_item} />
+          <InventoryItemLocationLevelsSection inventoryItem={inventory_item} />
+          <InventoryItemReservationsSection inventoryItem={inventory_item} />
+        </TwoColumnPage.Main>
+        <TwoColumnPage.Sidebar data-testid="inventory-detail-sidebar">
+          <InventoryItemVariantsSection
+            variants={(inventory_item as any).variants}
+          />
+          <InventoryItemAttributeSection inventoryItem={inventory_item as any} />
+        </TwoColumnPage.Sidebar>
+      </TwoColumnPage>
+    </div>
   )
 }

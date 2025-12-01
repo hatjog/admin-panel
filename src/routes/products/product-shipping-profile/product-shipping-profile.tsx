@@ -20,10 +20,10 @@ export const ProductShippingProfile = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <RouteDrawer.Title asChild>
-          <Heading>{t("products.shippingProfile.edit.header")}</Heading>
+    <RouteDrawer data-testid="product-shipping-profile-drawer">
+      <RouteDrawer.Header data-testid="product-shipping-profile-drawer-header">
+        <RouteDrawer.Title asChild data-testid="product-shipping-profile-drawer-title">
+          <Heading data-testid="product-shipping-profile-drawer-title-text">{t("products.shippingProfile.edit.header")}</Heading>
         </RouteDrawer.Title>
       </RouteDrawer.Header>
       {!isLoading && product && (

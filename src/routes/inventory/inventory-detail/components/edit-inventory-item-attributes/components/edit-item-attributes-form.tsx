@@ -66,37 +66,41 @@ export const EditInventoryItemAttributesForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="inventory-edit-item-attributes-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex flex-1 flex-col overflow-hidden"
+        data-testid="inventory-edit-item-attributes-keybound-form"
       >
-        <RouteDrawer.Body className="flex flex-1 flex-col gap-y-4 overflow-auto">
+        <RouteDrawer.Body className="flex flex-1 flex-col gap-y-4 overflow-auto" data-testid="inventory-edit-item-attributes-form-body">
           <Form.Field
             control={form.control}
             name="height"
             render={({ field: { onChange, value, ...field } }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.height")}</Form.Label>
-                  <Form.Control>
-                    <Input
-                      type="number"
-                      min={0}
-                      value={value || ""}
-                      onChange={(e) => {
-                        const value = e.target.value
+                <Form.Item data-testid="inventory-edit-item-attributes-form-height-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-height-label">{t("fields.height")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-height-control">
+                    <div data-testid="inventory-edit-item-attributes-form-height-input-wrapper">
+                      <Input
+                        type="number"
+                        min={0}
+                        value={value || ""}
+                        onChange={(e) => {
+                          const value = e.target.value
 
-                        if (value === "") {
-                          onChange(null)
-                        } else {
-                          onChange(parseFloat(value))
-                        }
-                      }}
-                      {...field}
-                    />
+                          if (value === "") {
+                            onChange(null)
+                          } else {
+                            onChange(parseFloat(value))
+                          }
+                        }}
+                        {...field}
+                        data-testid="inventory-edit-item-attributes-form-height-input"
+                      />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-height-error" />
                 </Form.Item>
               )
             }}
@@ -106,26 +110,29 @@ export const EditInventoryItemAttributesForm = ({
             name="width"
             render={({ field: { onChange, value, ...field } }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.width")}</Form.Label>
-                  <Form.Control>
-                    <Input
-                      type="number"
-                      min={0}
-                      value={value || ""}
-                      onChange={(e) => {
-                        const value = e.target.value
+                <Form.Item data-testid="inventory-edit-item-attributes-form-width-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-width-label">{t("fields.width")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-width-control">
+                    <div data-testid="inventory-edit-item-attributes-form-width-input-wrapper">
+                      <Input
+                        type="number"
+                        min={0}
+                        value={value || ""}
+                        onChange={(e) => {
+                          const value = e.target.value
 
-                        if (value === "") {
-                          onChange(null)
-                        } else {
-                          onChange(parseFloat(value))
-                        }
-                      }}
-                      {...field}
-                    />
+                          if (value === "") {
+                            onChange(null)
+                          } else {
+                            onChange(parseFloat(value))
+                          }
+                        }}
+                        {...field}
+                        data-testid="inventory-edit-item-attributes-form-width-input"
+                      />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-width-error" />
                 </Form.Item>
               )
             }}
@@ -135,26 +142,29 @@ export const EditInventoryItemAttributesForm = ({
             name="length"
             render={({ field: { onChange, value, ...field } }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.length")}</Form.Label>
-                  <Form.Control>
-                    <Input
-                      type="number"
-                      min={0}
-                      value={value || ""}
-                      onChange={(e) => {
-                        const value = e.target.value
+                <Form.Item data-testid="inventory-edit-item-attributes-form-length-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-length-label">{t("fields.length")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-length-control">
+                    <div data-testid="inventory-edit-item-attributes-form-length-input-wrapper">
+                      <Input
+                        type="number"
+                        min={0}
+                        value={value || ""}
+                        onChange={(e) => {
+                          const value = e.target.value
 
-                        if (value === "") {
-                          onChange(null)
-                        } else {
-                          onChange(parseFloat(value))
-                        }
-                      }}
-                      {...field}
-                    />
+                          if (value === "") {
+                            onChange(null)
+                          } else {
+                            onChange(parseFloat(value))
+                          }
+                        }}
+                        {...field}
+                        data-testid="inventory-edit-item-attributes-form-length-input"
+                      />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-length-error" />
                 </Form.Item>
               )
             }}
@@ -164,26 +174,29 @@ export const EditInventoryItemAttributesForm = ({
             name="weight"
             render={({ field: { onChange, value, ...field } }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.weight")}</Form.Label>
-                  <Form.Control>
-                    <Input
-                      type="number"
-                      min={0}
-                      value={value || ""}
-                      onChange={(e) => {
-                        const value = e.target.value
+                <Form.Item data-testid="inventory-edit-item-attributes-form-weight-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-weight-label">{t("fields.weight")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-weight-control">
+                    <div data-testid="inventory-edit-item-attributes-form-weight-input-wrapper">
+                      <Input
+                        type="number"
+                        min={0}
+                        value={value || ""}
+                        onChange={(e) => {
+                          const value = e.target.value
 
-                        if (value === "") {
-                          onChange(null)
-                        } else {
-                          onChange(parseFloat(value))
-                        }
-                      }}
-                      {...field}
-                    />
+                          if (value === "") {
+                            onChange(null)
+                          } else {
+                            onChange(parseFloat(value))
+                          }
+                        }}
+                        {...field}
+                        data-testid="inventory-edit-item-attributes-form-weight-input"
+                      />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-weight-error" />
                 </Form.Item>
               )
             }}
@@ -193,12 +206,14 @@ export const EditInventoryItemAttributesForm = ({
             name="mid_code"
             render={({ field }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.midCode")}</Form.Label>
-                  <Form.Control>
-                    <Input {...field} />
+                <Form.Item data-testid="inventory-edit-item-attributes-form-mid-code-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-mid-code-label">{t("fields.midCode")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-mid-code-control">
+                    <div data-testid="inventory-edit-item-attributes-form-mid-code-input-wrapper">
+                      <Input {...field} data-testid="inventory-edit-item-attributes-form-mid-code-input" />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-mid-code-error" />
                 </Form.Item>
               )
             }}
@@ -208,12 +223,14 @@ export const EditInventoryItemAttributesForm = ({
             name="hs_code"
             render={({ field }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.hsCode")}</Form.Label>
-                  <Form.Control>
-                    <Input {...field} />
+                <Form.Item data-testid="inventory-edit-item-attributes-form-hs-code-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-hs-code-label">{t("fields.hsCode")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-hs-code-control">
+                    <div data-testid="inventory-edit-item-attributes-form-hs-code-input-wrapper">
+                      <Input {...field} data-testid="inventory-edit-item-attributes-form-hs-code-input" />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-hs-code-error" />
                 </Form.Item>
               )
             }}
@@ -223,12 +240,14 @@ export const EditInventoryItemAttributesForm = ({
             name="material"
             render={({ field }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>{t("fields.material")}</Form.Label>
-                  <Form.Control>
-                    <Input {...field} />
+                <Form.Item data-testid="inventory-edit-item-attributes-form-material-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-material-label">{t("fields.material")}</Form.Label>
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-material-control">
+                    <div data-testid="inventory-edit-item-attributes-form-material-input-wrapper">
+                      <Input {...field} data-testid="inventory-edit-item-attributes-form-material-input" />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-material-error" />
                 </Form.Item>
               )
             }}
@@ -239,27 +258,29 @@ export const EditInventoryItemAttributesForm = ({
             name="origin_country"
             render={({ field }) => {
               return (
-                <Form.Item>
-                  <Form.Label optional>
+                <Form.Item data-testid="inventory-edit-item-attributes-form-origin-country-item">
+                  <Form.Label optional data-testid="inventory-edit-item-attributes-form-origin-country-label">
                     {t("fields.countryOfOrigin")}
                   </Form.Label>
-                  <Form.Control>
-                    <CountrySelect {...field} />
+                  <Form.Control data-testid="inventory-edit-item-attributes-form-origin-country-control">
+                    <div data-testid="inventory-edit-item-attributes-form-origin-country-select-wrapper">
+                      <CountrySelect {...field} data-testid="inventory-edit-item-attributes-form-origin-country-select" />
+                    </div>
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="inventory-edit-item-attributes-form-origin-country-error" />
                 </Form.Item>
               )
             }}
           />
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small">
+        <RouteDrawer.Footer data-testid="inventory-edit-item-attributes-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="inventory-edit-item-attributes-form-footer-actions">
+            <RouteDrawer.Close asChild data-testid="inventory-edit-item-attributes-form-cancel-button-wrapper">
+              <Button variant="secondary" size="small" data-testid="inventory-edit-item-attributes-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button type="submit" size="small" isLoading={isLoading}>
+            <Button type="submit" size="small" isLoading={isLoading} data-testid="inventory-edit-item-attributes-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

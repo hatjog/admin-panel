@@ -41,12 +41,12 @@ export const EditRulesForm = ({
   const handleFormSubmit = form.handleSubmit(handleSubmit(rulesToRemove))
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid={`promotion-edit-rules-form-${ruleType}`}>
       <KeyboundForm
         onSubmit={handleFormSubmit}
         className="flex h-full flex-col"
       >
-        <RouteDrawer.Body>
+        <RouteDrawer.Body data-testid={`promotion-edit-rules-form-body-${ruleType}`}>
           <RulesFormField
             form={form as any}
             ruleType={ruleType}
@@ -57,15 +57,15 @@ export const EditRulesForm = ({
           />
         </RouteDrawer.Body>
 
-        <RouteDrawer.Footer>
+        <RouteDrawer.Footer data-testid={`promotion-edit-rules-form-footer-${ruleType}`}>
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary" disabled={isSubmitting}>
+              <Button size="small" variant="secondary" disabled={isSubmitting} data-testid={`promotion-edit-rules-form-cancel-button-${ruleType}`}>
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
 
-            <Button size="small" type="submit" isLoading={isSubmitting}>
+            <Button size="small" type="submit" isLoading={isSubmitting} data-testid={`promotion-edit-rules-form-save-button-${ruleType}`}>
               {t("actions.save")}
             </Button>
           </div>

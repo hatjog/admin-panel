@@ -52,36 +52,37 @@ export const CreateCustomerGroupForm = () => {
   })
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="create-customer-group-form">
       <KeyboundForm
         className="flex h-full flex-col overflow-hidden"
         onSubmit={handleSubmit}
+        data-testid="create-customer-group-form-keybound"
       >
-        <RouteFocusModal.Header />
-        <RouteFocusModal.Body className="flex flex-col items-center pt-[72px]">
-          <div className="flex size-full max-w-[720px] flex-col gap-y-8">
-            <div>
+        <RouteFocusModal.Header data-testid="create-customer-group-form-header" />
+        <RouteFocusModal.Body className="flex flex-col items-center pt-[72px]" data-testid="create-customer-group-form-body">
+          <div className="flex size-full max-w-[720px] flex-col gap-y-8" data-testid="create-customer-group-form-content">
+            <div data-testid="create-customer-group-form-header-section">
               <RouteFocusModal.Title asChild>
-                <Heading>{t("customerGroups.create.header")}</Heading>
+                <Heading data-testid="create-customer-group-form-title">{t("customerGroups.create.header")}</Heading>
               </RouteFocusModal.Title>
               <RouteFocusModal.Description asChild>
-                <Text size="small" className="text-ui-fg-subtle">
+                <Text size="small" className="text-ui-fg-subtle" data-testid="create-customer-group-form-hint">
                   {t("customerGroups.create.hint")}
                 </Text>
               </RouteFocusModal.Description>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4" data-testid="create-customer-group-form-fields">
               <Form.Field
                 control={form.control}
                 name="name"
                 render={({ field }) => {
                   return (
-                    <Form.Item>
-                      <Form.Label>{t("fields.name")}</Form.Label>
-                      <Form.Control>
-                        <Input {...field} />
+                    <Form.Item data-testid="create-customer-group-form-name-item">
+                      <Form.Label data-testid="create-customer-group-form-name-label">{t("fields.name")}</Form.Label>
+                      <Form.Control data-testid="create-customer-group-form-name-control">
+                        <Input {...field} data-testid="create-customer-group-form-name-input" />
                       </Form.Control>
-                      <Form.ErrorMessage />
+                      <Form.ErrorMessage data-testid="create-customer-group-form-name-error" />
                     </Form.Item>
                   )
                 }}
@@ -89,20 +90,23 @@ export const CreateCustomerGroupForm = () => {
             </div>
           </div>
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
-          <RouteFocusModal.Close asChild>
-            <Button variant="secondary" size="small">
-              {t("actions.cancel")}
+        <RouteFocusModal.Footer data-testid="create-customer-group-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="create-customer-group-form-footer-actions">
+            <RouteFocusModal.Close asChild>
+              <Button variant="secondary" size="small" data-testid="create-customer-group-form-cancel-button">
+                {t("actions.cancel")}
+              </Button>
+            </RouteFocusModal.Close>
+            <Button
+              type="submit"
+              variant="primary"
+              size="small"
+              isLoading={isPending}
+              data-testid="create-customer-group-form-submit-button"
+            >
+              {t("actions.create")}
             </Button>
-          </RouteFocusModal.Close>
-          <Button
-            type="submit"
-            variant="primary"
-            size="small"
-            isLoading={isPending}
-          >
-            {t("actions.create")}
-          </Button>
+          </div>
         </RouteFocusModal.Footer>
       </KeyboundForm>
     </RouteFocusModal.Form>

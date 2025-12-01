@@ -82,9 +82,9 @@ export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("products.media.label")}</Heading>
+    <Container className="divide-y p-0" data-testid="product-media-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="product-media-header">
+        <Heading level="h2" data-testid="product-media-title">{t("products.media.label")}</Heading>
         <ActionMenu
           groups={[
             {
@@ -97,10 +97,11 @@ export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
               ],
             },
           ]}
+          data-testid="product-media-action-menu"
         />
       </div>
       {media.length > 0 ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-4 px-6 py-4">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-4 px-6 py-4" data-testid="product-media-grid">
           {media.map((i, index) => {
             const isSelected = selection[i.id]
 
@@ -108,6 +109,7 @@ export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
               <div
                 className="shadow-elevation-card-rest hover:shadow-elevation-card-hover transition-fg group relative aspect-square size-full cursor-pointer overflow-hidden rounded-[8px]"
                 key={i.id}
+                data-testid={`product-media-item-${i.id}`}
               >
                 <div
                   className={clx(
@@ -116,24 +118,27 @@ export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
                       "visible opacity-100": isSelected,
                     }
                   )}
+                  data-testid={`product-media-checkbox-container-${i.id}`}
                 >
                   <Checkbox
                     checked={selection[i.id] || false}
                     onCheckedChange={() => handleCheckedChange(i.id)}
+                    data-testid={`product-media-checkbox-${i.id}`}
                   />
                 </div>
                 {i.isThumbnail && (
-                  <div className="absolute left-2 top-2">
+                  <div className="absolute left-2 top-2" data-testid={`product-media-thumbnail-badge-${i.id}`}>
                     <Tooltip content={t("fields.thumbnail")}>
                       <ThumbnailBadge />
                     </Tooltip>
                   </div>
                 )}
-                <Link to={`media`} state={{ curr: index }}>
+                <Link to={`media`} state={{ curr: index }} data-testid={`product-media-link-${i.id}`}>
                   <img
                     src={i.url}
                     alt={`${product.title} image`}
                     className="size-full object-cover"
+                    data-testid={`product-media-image-${i.id}`}
                   />
                 </Link>
               </div>
@@ -141,39 +146,41 @@ export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
           })}
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-y-4 pb-8 pt-6">
+        <div className="flex flex-col items-center gap-y-4 pb-8 pt-6" data-testid="product-media-empty-state">
           <div className="flex flex-col items-center">
             <Text
               size="small"
               leading="compact"
               weight="plus"
               className="text-ui-fg-subtle"
+              data-testid="product-media-empty-state-header"
             >
               {t("products.media.emptyState.header")}
             </Text>
-            <Text size="small" className="text-ui-fg-muted">
+            <Text size="small" className="text-ui-fg-muted" data-testid="product-media-empty-state-description">
               {t("products.media.emptyState.description")}
             </Text>
           </div>
-          <Button size="small" variant="secondary" asChild>
-            <Link to="media?view=edit">
+          <Button size="small" variant="secondary" asChild data-testid="product-media-empty-state-button">
+            <Link to="media?view=edit" data-testid="product-media-empty-state-link">
               {t("products.media.emptyState.action")}
             </Link>
           </Button>
         </div>
       )}
-      <CommandBar open={!!Object.keys(selection).length}>
-        <CommandBar.Bar>
-          <CommandBar.Value>
+      <CommandBar open={!!Object.keys(selection).length} data-testid="product-media-command-bar">
+        <CommandBar.Bar data-testid="product-media-command-bar-bar">
+          <CommandBar.Value data-testid="product-media-command-bar-value">
             {t("general.countSelected", {
               count: Object.keys(selection).length,
             })}
           </CommandBar.Value>
-          <CommandBar.Seperator />
+          <CommandBar.Seperator data-testid="product-media-command-bar-separator" />
           <CommandBar.Command
             action={handleDelete}
             label={t("actions.delete")}
             shortcut="d"
+            data-testid="product-media-command-bar-delete"
           />
         </CommandBar.Bar>
       </CommandBar>

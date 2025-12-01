@@ -20,10 +20,10 @@ export const ProductOrganization = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <RouteDrawer.Title asChild>
-          <Heading>{t("products.organization.edit.header")}</Heading>
+    <RouteDrawer data-testid="product-organization-drawer">
+      <RouteDrawer.Header data-testid="product-organization-drawer-header">
+        <RouteDrawer.Title asChild data-testid="product-organization-drawer-title">
+          <Heading data-testid="product-organization-drawer-title-text">{t("products.organization.edit.header")}</Heading>
         </RouteDrawer.Title>
       </RouteDrawer.Header>
       {!isLoading && product && <ProductOrganizationForm product={product} />}

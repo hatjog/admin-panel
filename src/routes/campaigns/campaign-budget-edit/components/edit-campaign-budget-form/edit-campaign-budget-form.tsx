@@ -58,21 +58,21 @@ export const EditCampaignBudgetForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="campaign-edit-budget-form">
       <KeyboundForm onSubmit={handleSubmit} className="flex flex-1 flex-col">
-        <RouteDrawer.Body>
+        <RouteDrawer.Body data-testid="campaign-edit-budget-form-body">
           <div className="flex flex-col gap-y-4">
             <Form.Field
               control={form.control}
               name="limit"
               render={({ field: { onChange, value, ...field } }) => {
                 return (
-                  <Form.Item className="basis-1/2">
-                    <Form.Label>
+                  <Form.Item className="basis-1/2" data-testid="campaign-edit-budget-form-limit-item">
+                    <Form.Label data-testid="campaign-edit-budget-form-limit-label">
                       {t("campaigns.budget.fields.limit")}
                     </Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="campaign-edit-budget-form-limit-control">
                       {campaign.budget?.type === "spend" ? (
                         <CurrencyInput
                           min={0}
@@ -89,6 +89,7 @@ export const EditCampaignBudgetForm = ({
                           }
                           {...field}
                           value={value || undefined}
+                          data-testid="campaign-edit-budget-form-limit-currency-input"
                         />
                       ) : (
                         <Input
@@ -103,10 +104,11 @@ export const EditCampaignBudgetForm = ({
                                 : parseInt(e.target.value)
                             )
                           }}
+                          data-testid="campaign-edit-budget-form-limit-number-input"
                         />
                       )}
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="campaign-edit-budget-form-limit-error" />
                   </Form.Item>
                 )
               }}
@@ -114,10 +116,10 @@ export const EditCampaignBudgetForm = ({
           </div>
         </RouteDrawer.Body>
 
-        <RouteDrawer.Footer>
+        <RouteDrawer.Footer data-testid="campaign-edit-budget-form-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="secondary" size="small" data-testid="campaign-edit-budget-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
@@ -127,6 +129,7 @@ export const EditCampaignBudgetForm = ({
               type="submit"
               variant="primary"
               size="small"
+              data-testid="campaign-edit-budget-form-save-button"
             >
               {t("actions.save")}
             </Button>

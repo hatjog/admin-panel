@@ -37,18 +37,18 @@ export const OrderReturnRequestsPage = () => {
     order_return_request: requests,
     isLoading,
     refetch,
-    count,
+    count = 0,
   } = useReturnRequests({
     offset: currentPage * PAGE_SIZE,
     limit: PAGE_SIZE,
     status: currentFilter !== "" ? currentFilter : undefined,
   });
-
+  
   return (
-    <Container>
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container data-testid="request-return-list-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="request-return-list-header">
         <div>
-          <Heading>Order return requests</Heading>
+          <Heading data-testid="request-return-list-heading">Order return requests</Heading>
           <ReturnRequestDetail
             request={detailRequest}
             open={detailOpen}
@@ -66,38 +66,38 @@ export const OrderReturnRequestsPage = () => {
           />
         </div>
       </div>
-      <div className="flex size-full flex-col overflow-hidden">
-        {isLoading && <Text>Loading...</Text>}
-        <Table>
-          <Table.Header>
+      <div className="flex size-full flex-col overflow-hidden" data-testid="request-return-list-content">
+        {isLoading && <Text data-testid="request-return-list-loading">Loading...</Text>}
+        <Table data-testid="request-return-list-table">
+          <Table.Header data-testid="request-return-list-table-header">
             <Table.Row>
-              <Table.HeaderCell>Order ID</Table.HeaderCell>
-              <Table.HeaderCell>Customer</Table.HeaderCell>
-              <Table.HeaderCell>Seller</Table.HeaderCell>
-              <Table.HeaderCell>Reason</Table.HeaderCell>
-              <Table.HeaderCell>Escalated Date</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Actions</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-order-id">Order ID</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-customer">Customer</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-seller">Seller</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-reason">Reason</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-escalated-date">Escalated Date</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-status">Status</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-return-list-table-header-actions">Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          <Table.Body>
+          <Table.Body data-testid="request-return-list-table-body">
             {requests?.map((request) => {
               return (
-                <Table.Row key={request.id}>
-                  <Table.Cell>{request.order?.id}</Table.Cell>
-                  <Table.Cell>{`${request.order?.customer?.first_name} ${request.order?.customer?.last_name}`}</Table.Cell>
-                  <Table.Cell>{request.seller?.name}</Table.Cell>
-                  <Table.Cell>{request.customer_note}</Table.Cell>
-                  <Table.Cell>
+                <Table.Row key={request.id} data-testid={`request-return-list-table-row-${request.id}`}>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-order-id`}>{request.order?.id}</Table.Cell>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-customer`}>{`${request.order?.customer?.first_name} ${request.order?.customer?.last_name}`}</Table.Cell>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-seller`}>{request.seller?.name}</Table.Cell>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-reason`}>{request.customer_note}</Table.Cell>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-escalated-date`}>
                     <div className="flex items-center gap-2">
                       <History />
                       {formatDate(request.vendor_reviewer_date)}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-status`}>
                     {getRequestStatusBadge(request.status!)}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell data-testid={`request-return-list-table-row-${request.id}-actions`}>
                     <ReturnRequestMenu
                       handleDetail={handleDetail}
                       request={request}
@@ -109,7 +109,7 @@ export const OrderReturnRequestsPage = () => {
           </Table.Body>
         </Table>
         <Table.Pagination
-          canNextPage={PAGE_SIZE * (currentPage + 1) < count!}
+          canNextPage={PAGE_SIZE * (currentPage + 1) < count}
           canPreviousPage={currentPage > 0}
           previousPage={() => {
             setCurrentPage(currentPage - 1);
@@ -117,10 +117,11 @@ export const OrderReturnRequestsPage = () => {
           nextPage={() => {
             setCurrentPage(currentPage + 1);
           }}
-          count={count!}
-          pageCount={Math.ceil(count! / PAGE_SIZE)}
+          count={count ?? 0}
+          pageCount={Math.ceil(count / PAGE_SIZE)}
           pageIndex={currentPage}
           pageSize={PAGE_SIZE}
+          data-testid="request-return-list-pagination"
         />
       </div>
     </Container>

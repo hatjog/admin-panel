@@ -9,6 +9,7 @@ type RouteModalFormProps<TFieldValues extends FieldValues> = PropsWithChildren<{
   form: UseFormReturn<TFieldValues>
   blockSearchParams?: boolean
   onClose?: (isSubmitSuccessful: boolean) => void
+  "data-testid"?: string
 }>
 
 export const RouteModalForm = <TFieldValues extends FieldValues = any>({
@@ -16,6 +17,7 @@ export const RouteModalForm = <TFieldValues extends FieldValues = any>({
   blockSearchParams: blockSearch = false,
   children,
   onClose,
+  "data-testid": dataTestId,
 }: RouteModalFormProps<TFieldValues>) => {
   const { t } = useTranslation()
 
@@ -63,7 +65,7 @@ export const RouteModalForm = <TFieldValues extends FieldValues = any>({
   }
 
   return (
-    <Form {...form}>
+    <Form {...form} data-testid={dataTestId}>
       {children}
       <Prompt open={blocker.state === "blocked"} variant="confirmation">
         <Prompt.Content>

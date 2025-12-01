@@ -66,41 +66,43 @@ export const ProductListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("products.domain")}</Heading>
-        <div className="flex items-center justify-center gap-x-2">
-          <Button size="small" variant="secondary" asChild>
-            <Link to={`export${location.search}`}>{t("actions.export")}</Link>
+    <Container className="divide-y p-0" data-testid="products-list-table">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="products-list-header">
+        <Heading level="h2" data-testid="products-list-title">{t("products.domain")}</Heading>
+        <div className="flex items-center justify-center gap-x-2" data-testid="products-list-actions">
+          <Button size="small" variant="secondary" asChild data-testid="products-export-button">
+            <Link to={`export${location.search}`} data-testid="products-export-link">{t("actions.export")}</Link>
           </Button>
-          <Button size="small" variant="secondary" asChild>
-            <Link to={`import${location.search}`}>{t("actions.import")}</Link>
+          <Button size="small" variant="secondary" asChild data-testid="products-import-button">
+            <Link to={`import${location.search}`} data-testid="products-import-link">{t("actions.import")}</Link>
           </Button>
-          <Button size="small" variant="secondary" asChild>
-            <Link to="create">{t("actions.create")}</Link>
+          <Button size="small" variant="secondary" asChild data-testid="products-create-button">
+            <Link to="create" data-testid="products-create-link">{t("actions.create")}</Link>
           </Button>
         </div>
       </div>
-      <_DataTable
-        table={table}
-        columns={columns}
-        count={count}
-        pageSize={PAGE_SIZE}
-        filters={filters}
-        search
-        pagination
-        isLoading={isLoading}
-        queryObject={raw}
-        navigateTo={(row) => `${row.original.id}`}
-        orderBy={[
-          { key: "title", label: t("fields.title") },
-          { key: "created_at", label: t("fields.createdAt") },
-          { key: "updated_at", label: t("fields.updatedAt") },
-        ]}
-        noRecords={{
-          message: t("products.list.noRecordsMessage"),
-        }}
-      />
+      <div data-testid="products-data-table">
+        <_DataTable
+          table={table}
+          columns={columns}
+          count={count}
+          pageSize={PAGE_SIZE}
+          filters={filters}
+          search
+          pagination
+          isLoading={isLoading}
+          queryObject={raw}
+          navigateTo={(row) => `${row.original.id}`}
+          orderBy={[
+            { key: "title", label: t("fields.title") },
+            { key: "created_at", label: t("fields.createdAt") },
+            { key: "updated_at", label: t("fields.updatedAt") },
+          ]}
+          noRecords={{
+            message: t("products.list.noRecordsMessage"),
+          }}
+        />
+      </div>
       <Outlet />
     </Container>
   )
@@ -163,6 +165,7 @@ const ProductActions = ({ product }: { product: HttpTypes.AdminProduct }) => {
           ],
         },
       ]}
+      data-testid={`product-actions-${product.id}`}
     />
   )
 }
@@ -177,6 +180,11 @@ const useColumns = () => {
       ...base,
       columnHelper.display({
         id: "actions",
+        header: () => (
+          <div className="flex h-full w-full items-center" data-testid="products-table-header-actions">
+            <span data-testid="products-table-header-actions-text"></span>
+          </div>
+        ),
         cell: ({ row }) => {
           return <ProductActions product={row.original} />
         },

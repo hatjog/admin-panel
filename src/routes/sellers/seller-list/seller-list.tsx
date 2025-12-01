@@ -84,14 +84,15 @@ export const SellersList = () => {
   };
 
   return (
-    <Container>
-      <div className="flex items-center justify-between">
+    <Container data-testid="seller-list-container">
+      <div className="flex items-center justify-between" data-testid="seller-list-header">
         <div>
-          <Heading>Sellers</Heading>
+          <Heading data-testid="seller-list-heading">Sellers</Heading>
         </div>
         <Drawer
           open={open}
           onOpenChange={(openChanged) => setOpen(openChanged)}
+          data-testid="seller-list-invite-drawer"
         >
           <Drawer.Trigger
             onClick={() => {
@@ -99,25 +100,26 @@ export const SellersList = () => {
             }}
             asChild
           >
-            <Button>Invite</Button>
+            <Button data-testid="seller-list-invite-button">Invite</Button>
           </Drawer.Trigger>
-          <Drawer.Content>
-            <Drawer.Header />
-            <Drawer.Body>
-              <Heading>Invite Seller</Heading>
-              <Text className="text-ui-fg-subtle" size="small">
+          <Drawer.Content data-testid="seller-list-invite-drawer-content">
+            <Drawer.Header data-testid="seller-list-invite-drawer-header" />
+            <Drawer.Body data-testid="seller-list-invite-drawer-body">
+              <Heading data-testid="seller-list-invite-drawer-title">Invite Seller</Heading>
+              <Text className="text-ui-fg-subtle" size="small" data-testid="seller-list-invite-drawer-description">
                 Invite a new seller to your store
               </Text>
-              <div className="mt-6 flex flex-col gap-2">
-                <Label>Email</Label>
+              <div className="mt-6 flex flex-col gap-2" data-testid="seller-list-invite-drawer-email-field">
+                <Label data-testid="seller-list-invite-drawer-email-label">Email</Label>
                 <Input
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  data-testid="seller-list-invite-drawer-email-input"
                 />
               </div>
-              <div className="flex justify-end">
-                <Button className="mt-6" onClick={handleInvite}>
+              <div className="flex justify-end" data-testid="seller-list-invite-drawer-footer">
+                <Button className="mt-6" onClick={handleInvite} data-testid="seller-list-invite-drawer-submit-button">
                   Invite
                 </Button>
               </div>
@@ -193,6 +195,7 @@ const useColumns = () => {
         cell: ({ row }) => {
           return (
             <ActionsButton
+              data-testid={`seller-list-row-actions-${row.original.id}`}
               actions={[
                 {
                   label: "Edit",

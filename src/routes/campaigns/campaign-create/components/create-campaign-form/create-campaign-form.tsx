@@ -74,12 +74,12 @@ export const CreateCampaignForm = () => {
   })
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="campaign-create-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex size-full flex-col overflow-hidden"
       >
-        <RouteFocusModal.Header>
+        <RouteFocusModal.Header data-testid="campaign-create-form-header">
           <RouteFocusModal.Title asChild>
             <VisuallyHidden>{t("campaigns.create.title")}</VisuallyHidden>
           </RouteFocusModal.Title>
@@ -87,13 +87,13 @@ export const CreateCampaignForm = () => {
             <VisuallyHidden>{t("campaigns.create.description")}</VisuallyHidden>
           </RouteFocusModal.Description>
         </RouteFocusModal.Header>
-        <RouteFocusModal.Body className="flex size-full flex-col items-center overflow-auto py-16">
+        <RouteFocusModal.Body className="flex size-full flex-col items-center overflow-auto py-16" data-testid="campaign-create-form-body">
           <CreateCampaignFormFields form={form} />
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
+        <RouteFocusModal.Footer data-testid="campaign-create-form-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="campaign-create-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
@@ -102,6 +102,7 @@ export const CreateCampaignForm = () => {
               variant="primary"
               type="submit"
               isLoading={isPending}
+              data-testid="campaign-create-form-create-button"
             >
               {t("actions.create")}
             </Button>

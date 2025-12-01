@@ -35,7 +35,7 @@ export function ReviewRemoveRequestDetail({ request, open, close }: Props) {
   };
 
   return (
-    <Drawer open={open} onOpenChange={close}>
+    <Drawer open={open} onOpenChange={close} data-testid={`review-remove-detail-${request.id}`}>
       <ResolveRequestPrompt
         close={() => {
           setPromptOpen(false);
@@ -47,56 +47,57 @@ export function ReviewRemoveRequestDetail({ request, open, close }: Props) {
           close();
         }}
       />
-      <Drawer.Content>
-        <Drawer.Header>
-          <Drawer.Title>Remove review request</Drawer.Title>
+      <Drawer.Content data-testid={`review-remove-detail-${request.id}-content`}>
+        <Drawer.Header data-testid={`review-remove-detail-${request.id}-header`}>
+          <Drawer.Title data-testid={`review-remove-detail-${request.id}-title`}>Remove review request</Drawer.Title>
         </Drawer.Header>
-        <Drawer.Body className="p-4">
-          <fieldset>
-            <legend className="mb-2">Seller</legend>
-            <Container>
-              <Text>{request.seller?.name}</Text>
+        <Drawer.Body className="p-4" data-testid={`review-remove-detail-${request.id}-body`}>
+          <fieldset data-testid={`review-remove-detail-${request.id}-seller-fieldset`}>
+            <legend className="mb-2" data-testid={`review-remove-detail-${request.id}-seller-legend`}>Seller</legend>
+            <Container data-testid={`review-remove-detail-${request.id}-seller-container`}>
+              <Text data-testid={`review-remove-detail-${request.id}-seller-value`}>{request.seller?.name}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Review note</legend>
-            <Container>
-              <Text>{review?.customer_note}</Text>
+          <fieldset className="mt-2" data-testid={`review-remove-detail-${request.id}-review-note-fieldset`}>
+            <legend className="mb-2" data-testid={`review-remove-detail-${request.id}-review-note-legend`}>Review note</legend>
+            <Container data-testid={`review-remove-detail-${request.id}-review-note-container`}>
+              <Text data-testid={`review-remove-detail-${request.id}-review-note-value`}>{review?.customer_note}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Review rating</legend>
-            <Container>
-              <Text>{review?.rating}</Text>
+          <fieldset className="mt-2" data-testid={`review-remove-detail-${request.id}-rating-fieldset`}>
+            <legend className="mb-2" data-testid={`review-remove-detail-${request.id}-rating-legend`}>Review rating</legend>
+            <Container data-testid={`review-remove-detail-${request.id}-rating-container`}>
+              <Text data-testid={`review-remove-detail-${request.id}-rating-value`}>{review?.rating}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Seller response</legend>
-            <Container>
-              <Text>{review?.seller_note}</Text>
+          <fieldset className="mt-2" data-testid={`review-remove-detail-${request.id}-seller-response-fieldset`}>
+            <legend className="mb-2" data-testid={`review-remove-detail-${request.id}-seller-response-legend`}>Seller response</legend>
+            <Container data-testid={`review-remove-detail-${request.id}-seller-response-container`}>
+              <Text data-testid={`review-remove-detail-${request.id}-seller-response-value`}>{review?.seller_note}</Text>
             </Container>
           </fieldset>
-          <Container className="mt-4">
-            <div className="flex items-center gap-2">
+          <Container className="mt-4" data-testid={`review-remove-detail-${request.id}-request-information`}>
+            <div className="flex items-center gap-2" data-testid={`review-remove-detail-${request.id}-request-information-header`}>
               <InformationCircle />
-              <Text className="font-semibold">Request information</Text>
+              <Text className="font-semibold" data-testid={`review-remove-detail-${request.id}-request-information-title`}>Request information</Text>
             </div>
-            <Text>{`Submitted on ${formatDate(request.created_at)}`}</Text>
+            <Text data-testid={`review-remove-detail-${request.id}-submitted-on`}>{`Submitted on ${formatDate(request.created_at)}`}</Text>
             {request.reviewer_id && (
-              <Text>{`Reviewed on ${formatDate(request.updated_at)}`}</Text>
+              <Text data-testid={`review-remove-detail-${request.id}-reviewed-on`}>{`Reviewed on ${formatDate(request.updated_at)}`}</Text>
             )}
             {request.reviewer_note && (
-              <Text>{`Reviewer note: ${request.reviewer_note}`}</Text>
+              <Text data-testid={`review-remove-detail-${request.id}-reviewer-note`}>{`Reviewer note: ${request.reviewer_note}`}</Text>
             )}
           </Container>
         </Drawer.Body>
-        <Drawer.Footer>
+        <Drawer.Footer data-testid={`review-remove-detail-${request.id}-footer`}>
           {request.status === "pending" && (
             <>
               <Button
                 onClick={() => {
                   handlePrompt(request.id!, true);
                 }}
+                data-testid={`review-remove-detail-${request.id}-accept-button`}
               >
                 Accept
               </Button>
@@ -105,10 +106,11 @@ export function ReviewRemoveRequestDetail({ request, open, close }: Props) {
                   handlePrompt(request.id!, false);
                 }}
                 variant="danger"
+                data-testid={`review-remove-detail-${request.id}-reject-button`}
               >
                 Reject
               </Button>
-              <Button variant="secondary" onClick={close}>
+              <Button variant="secondary" onClick={close} data-testid={`review-remove-detail-${request.id}-cancel-button`}>
                 Cancel
               </Button>
             </>

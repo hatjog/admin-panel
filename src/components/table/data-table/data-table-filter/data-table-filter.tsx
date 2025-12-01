@@ -123,7 +123,7 @@ export const DataTableFilter = ({
         [removeAllFilters, removeFilter]
       )}
     >
-      <div className="max-w-2/3 flex flex-wrap items-center gap-2">
+      <div className="max-w-2/3 flex flex-wrap items-center gap-2" data-testid="data-table-filters">
         {activeFilters.map((filter) => {
           switch (filter.type) {
             case "select":
@@ -174,9 +174,9 @@ export const DataTableFilter = ({
           }
         })}
         {!readonly && availableFilters.length > 0 && (
-          <RadixPopover.Root modal open={open} onOpenChange={setOpen}>
+          <RadixPopover.Root modal open={open} onOpenChange={setOpen} data-testid="data-table-add-filter-popover">
             <RadixPopover.Trigger asChild id="filters_menu_trigger">
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="data-table-add-filter-button">
                 {t("filters.addFilter")}
               </Button>
             </RadixPopover.Trigger>
@@ -186,6 +186,7 @@ export const DataTableFilter = ({
                   "bg-ui-bg-base text-ui-fg-base shadow-elevation-flyout z-[1] h-full max-h-[200px] w-[300px] overflow-auto rounded-lg p-1 outline-none"
                 )}
                 data-name="filters_menu_content"
+                data-testid="data-table-add-filter-menu"
                 align="start"
                 sideOffset={8}
                 collisionPadding={8}
@@ -208,6 +209,7 @@ export const DataTableFilter = ({
                       onClick={() => {
                         addFilter(filter)
                       }}
+                      data-testid={`data-table-filter-option-${filter.key}`}
                     >
                       {filter.label}
                     </div>
@@ -257,6 +259,7 @@ const ClearAllFilters = ({ filters, prefix }: ClearAllFiltersProps) => {
         "hover:text-ui-fg-subtle",
         "focus-visible:shadow-borders-focus"
       )}
+      data-testid="data-table-clear-all-filters-button"
     >
       Clear all
     </button>

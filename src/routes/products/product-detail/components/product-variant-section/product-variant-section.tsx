@@ -92,52 +92,54 @@ export const ProductVariantSection = ({
   }
 
   return (
-    <Container className="divide-y p-0">
-      <DataTable
-        data={variants}
-        columns={columns}
-        filters={filters}
-        rowCount={count}
-        getRowId={(row) => row.id}
-        rowHref={(row) => `/products/${product.id}/variants/${row.id}`}
-        pageSize={PAGE_SIZE}
-        isLoading={isPending}
-        heading={t("products.variants.header")}
-        emptyState={{
-          empty: {
-            heading: t("products.variants.empty.heading"),
-            description: t("products.variants.empty.description"),
-          },
-          filtered: {
-            heading: t("products.variants.filtered.heading"),
-            description: t("products.variants.filtered.description"),
-          },
-        }}
-        action={{
-          label: t("actions.create"),
-          to: `variants/create`,
-        }}
-        actionMenu={{
-          groups: [
-            {
-              actions: [
-                {
-                  label: t("products.editPrices"),
-                  to: `prices`,
-                  icon: <PencilSquare />,
-                },
-                {
-                  label: t("inventory.stock.action"),
-                  to: `stock`,
-                  icon: <Buildings />,
-                },
-              ],
+    <Container className="divide-y p-0" data-testid="product-variant-section">
+      <div data-testid="product-variants-table-container">
+        <DataTable
+          data={variants}
+          columns={columns}
+          filters={filters}
+          rowCount={count}
+          getRowId={(row) => row.id}
+          rowHref={(row) => `/products/${product.id}/variants/${row.id}`}
+          pageSize={PAGE_SIZE}
+          isLoading={isPending}
+          heading={t("products.variants.header")}
+          emptyState={{
+            empty: {
+              heading: t("products.variants.empty.heading"),
+              description: t("products.variants.empty.description"),
             },
-          ],
-        }}
-        commands={commands}
-        prefix={PREFIX}
-      />
+            filtered: {
+              heading: t("products.variants.filtered.heading"),
+              description: t("products.variants.filtered.description"),
+            },
+          }}
+          action={{
+            label: t("actions.create"),
+            to: `variants/create`,
+          }}
+          actionMenu={{
+            groups: [
+              {
+                actions: [
+                  {
+                    label: t("products.editPrices"),
+                    to: `prices`,
+                    icon: <PencilSquare />,
+                  },
+                  {
+                    label: t("inventory.stock.action"),
+                    to: `stock`,
+                    icon: <Buildings />,
+                  },
+                ],
+              },
+            ],
+          }}
+          commands={commands}
+          prefix={PREFIX}
+        />
+      </div>
     </Container>
   )
 }
@@ -203,12 +205,13 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
           }
 
           return (
-            <div className="flex items-center">
+            <div className="flex items-center" data-testid={`product-variant-option-${option.id}-${row.original.id}`}>
               <Tooltip content={variantOpt.value}>
                 <Badge
                   size="2xsmall"
                   title={variantOpt.value}
                   className="inline-flex min-w-[20px] max-w-[140px] items-center justify-center overflow-hidden truncate"
+                  data-testid={`product-variant-option-badge-${option.id}-${row.original.id}-${variantOpt.value}`}
                 >
                   {variantOpt.value}
                 </Badge>
@@ -371,12 +374,13 @@ const useColumns = (product: HttpTypes.AdminProduct) => {
 
           return (
             <Tooltip content={text}>
-              <div className="flex h-full w-full items-center gap-2 overflow-hidden">
-                {hasInventoryKit && <Component />}
+              <div className="flex h-full w-full items-center gap-2 overflow-hidden" data-testid={`product-variant-inventory-${row.original.id}`}>
+                {hasInventoryKit && <Component data-testid={`product-variant-inventory-kit-icon-${row.original.id}`} />}
                 <span
                   className={clx("truncate", {
                     "text-ui-fg-error": !quantity && !notManaged,
                   })}
+                  data-testid={`product-variant-inventory-text-${row.original.id}`}
                 >
                   {text}
                 </span>

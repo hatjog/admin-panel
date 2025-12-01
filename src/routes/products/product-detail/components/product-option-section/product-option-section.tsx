@@ -56,6 +56,7 @@ const OptionActions = ({
           ],
         },
       ]}
+      data-testid={`product-option-actions-${option.id}`}
     />
   )
 }
@@ -70,9 +71,9 @@ export const ProductOptionSection = ({
   const { t } = useTranslation()
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("products.options.header")}</Heading>
+    <Container className="divide-y p-0" data-testid="product-option-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="product-option-header">
+        <Heading level="h2" data-testid="product-option-title">{t("products.options.header")}</Heading>
         <ActionMenu
           groups={[
             {
@@ -85,6 +86,7 @@ export const ProductOptionSection = ({
               ],
             },
           ]}
+          data-testid="product-option-action-menu"
         />
       </div>
 
@@ -99,12 +101,14 @@ export const ProductOptionSection = ({
                   key={val.value}
                   size="2xsmall"
                   className="flex min-w-[20px] items-center justify-center"
+                  data-testid={`product-option-value-badge-${option.id}-${val.value}`}
                 >
                   {val.value}
                 </Badge>
               )
             })}
             actions={<OptionActions product={product} option={option} />}
+            data-testid={`product-option-row-${option.id}`}
           />
         )
       })}

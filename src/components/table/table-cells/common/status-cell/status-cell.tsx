@@ -8,12 +8,17 @@ type StatusCellProps = PropsWithChildren<{
 /**
  * @deprecated Use the new DataTable and DataTableStatusCell instead
  */
-export const StatusCell = ({ color, children }: StatusCellProps) => {
+type StatusCellPropsWithTestId = StatusCellProps & {
+  "data-testid"?: string
+}
+
+export const StatusCell = ({ color, children, "data-testid": dataTestId }: StatusCellPropsWithTestId) => {
   return (
-    <div className="txt-compact-small text-ui-fg-subtle flex h-full w-full items-center gap-x-2 overflow-hidden">
+    <div className="txt-compact-small text-ui-fg-subtle flex h-full w-full items-center gap-x-2 overflow-hidden" data-testid={dataTestId}>
       <div
         role="presentation"
         className="flex h-5 w-2 items-center justify-center"
+        data-testid={dataTestId ? `${dataTestId}-indicator` : undefined}
       >
         <div
           className={clx(
@@ -29,7 +34,7 @@ export const StatusCell = ({ color, children }: StatusCellProps) => {
           )}
         />
       </div>
-      <span className="truncate">{children}</span>
+      <span className="truncate" data-testid={dataTestId ? `${dataTestId}-text` : undefined}>{children}</span>
     </div>
   )
 }

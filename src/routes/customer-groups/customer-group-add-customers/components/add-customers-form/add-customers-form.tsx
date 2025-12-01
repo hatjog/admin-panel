@@ -125,21 +125,22 @@ export const AddCustomersForm = ({
   }
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="add-customers-form">
       <KeyboundForm
         className="flex h-full flex-col overflow-hidden"
         onSubmit={handleSubmit}
+        data-testid="add-customers-form-keybound"
       >
-        <RouteFocusModal.Header>
-          <div className="flex items-center justify-end gap-x-2">
+        <RouteFocusModal.Header data-testid="add-customers-form-header">
+          <div className="flex items-center justify-end gap-x-2" data-testid="add-customers-form-header-errors">
             {form.formState.errors.customer_ids && (
-              <Hint variant="error">
+              <Hint variant="error" data-testid="add-customers-form-error-hint">
                 {form.formState.errors.customer_ids.message}
               </Hint>
             )}
           </div>
         </RouteFocusModal.Header>
-        <RouteFocusModal.Body className="size-full overflow-hidden">
+        <RouteFocusModal.Body className="size-full overflow-hidden" data-testid="add-customers-form-body">
           <_DataTable
             table={table}
             columns={columns}
@@ -163,9 +164,9 @@ export const AddCustomersForm = ({
             }}
           />
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
+        <RouteFocusModal.Footer data-testid="add-customers-form-footer">
           <RouteFocusModal.Close asChild>
-            <Button variant="secondary" size="small">
+            <Button variant="secondary" size="small" data-testid="add-customers-form-cancel-button">
               {t("actions.cancel")}
             </Button>
           </RouteFocusModal.Close>
@@ -174,6 +175,7 @@ export const AddCustomersForm = ({
             variant="primary"
             size="small"
             isLoading={isPending}
+            data-testid="add-customers-form-submit-button"
           >
             {t("actions.save")}
           </Button>

@@ -57,14 +57,16 @@ export const ReservationItemTable = ({
   }
 
   return (
-    <_DataTable
-      table={table}
-      columns={columns}
-      pageSize={PAGE_SIZE}
-      count={count}
-      isLoading={isPending}
-      pagination
-      queryObject={raw}
-    />
+    <div data-testid="inventory-reservations-table">
+      <_DataTable
+        table={table}
+        columns={columns}
+        pageSize={PAGE_SIZE}
+        count={count}
+        isLoading={isPending}
+        pagination
+        queryObject={raw}
+      />
+    </div>
   )
 }

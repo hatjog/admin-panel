@@ -54,12 +54,12 @@ export const MetadataForm = <TRes,>(props: MetadataFormProps<TRes>) => {
   const { isPending, ...innerProps } = props
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <RouteDrawer.Title asChild>
-          <Heading>{t("metadata.edit.header")}</Heading>
+    <RouteDrawer data-testid="metadata-form-drawer">
+      <RouteDrawer.Header data-testid="metadata-form-drawer-header">
+        <RouteDrawer.Title asChild data-testid="metadata-form-drawer-title-wrapper">
+          <Heading data-testid="metadata-form-drawer-title">{t("metadata.edit.header")}</Heading>
         </RouteDrawer.Title>
-        <RouteDrawer.Description className="sr-only">
+        <RouteDrawer.Description className="sr-only" data-testid="metadata-form-drawer-description">
           {t("metadata.edit.description")}
         </RouteDrawer.Description>
       </RouteDrawer.Header>
@@ -134,20 +134,21 @@ const InnerForm = <TRes,>({
   }
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="metadata-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex flex-1 flex-col overflow-hidden"
+        data-testid="metadata-keybound-form"
       >
-        <RouteDrawer.Body className="flex flex-1 flex-col gap-y-8 overflow-y-auto">
-          <div className="bg-ui-bg-base shadow-elevation-card-rest grid grid-cols-1 divide-y rounded-lg">
-            <div className="bg-ui-bg-subtle grid grid-cols-2 divide-x rounded-t-lg">
-              <div className="txt-compact-small-plus text-ui-fg-subtle px-2 py-1.5">
+        <RouteDrawer.Body className="flex flex-1 flex-col gap-y-8 overflow-y-auto" data-testid="metadata-form-body">
+          <div className="bg-ui-bg-base shadow-elevation-card-rest grid grid-cols-1 divide-y rounded-lg" data-testid="metadata-form-table">
+            <div className="bg-ui-bg-subtle grid grid-cols-2 divide-x rounded-t-lg" data-testid="metadata-form-table-header">
+              <div className="txt-compact-small-plus text-ui-fg-subtle px-2 py-1.5" data-testid="metadata-form-table-header-key">
                 <label id={METADATA_KEY_LABEL_ID}>
                   {t("metadata.edit.labels.key")}
                 </label>
               </div>
-              <div className="txt-compact-small-plus text-ui-fg-subtle px-2 py-1.5">
+              <div className="txt-compact-small-plus text-ui-fg-subtle px-2 py-1.5" data-testid="metadata-form-table-header-value">
                 <label id={METADATA_VALUE_LABEL_ID}>
                   {t("metadata.edit.labels.value")}
                 </label>
@@ -171,25 +172,27 @@ const InnerForm = <TRes,>({
                   content={t("metadata.edit.complexRow.tooltip")}
                   key={field.id}
                 >
-                  <div className="group/table relative">
+                  <div className="group/table relative" data-testid={`metadata-form-row-${index}`}>
                     <div
                       className={clx("grid grid-cols-2 divide-x", {
                         "overflow-hidden rounded-b-lg":
                           index === fields.length - 1,
                       })}
+                      data-testid={`metadata-form-row-${index}-content`}
                     >
                       <Form.Field
                         control={form.control}
                         name={`metadata.${index}.key`}
                         render={({ field }) => {
                           return (
-                            <Form.Item>
-                              <Form.Control>
+                            <Form.Item data-testid={`metadata-form-row-${index}-key-item`}>
+                              <Form.Control data-testid={`metadata-form-row-${index}-key-control`}>
                                 <GridInput
                                   aria-labelledby={METADATA_KEY_LABEL_ID}
                                   {...field}
                                   disabled={isDisabled}
                                   placeholder="Key"
+                                  data-testid={`metadata-form-row-${index}-key-input`}
                                 />
                               </Form.Control>
                             </Form.Item>
@@ -201,14 +204,15 @@ const InnerForm = <TRes,>({
                         name={`metadata.${index}.value`}
                         render={({ field: { value, ...field } }) => {
                           return (
-                            <Form.Item>
-                              <Form.Control>
+                            <Form.Item data-testid={`metadata-form-row-${index}-value-item`}>
+                              <Form.Control data-testid={`metadata-form-row-${index}-value-control`}>
                                 <GridInput
                                   aria-labelledby={METADATA_VALUE_LABEL_ID}
                                   {...field}
                                   value={isDisabled ? placeholder : value}
                                   disabled={isDisabled}
                                   placeholder="Value"
+                                  data-testid={`metadata-form-row-${index}-value-input`}
                                 />
                               </Form.Control>
                             </Form.Item>
@@ -218,6 +222,7 @@ const InnerForm = <TRes,>({
                     </div>
                     <DropdownMenu
                       dir={direction}
+                      data-testid={`metadata-form-row-${index}-actions-menu`}
                     >
                       <DropdownMenu.Trigger
                         className={clx(
@@ -228,15 +233,17 @@ const InnerForm = <TRes,>({
                         )}
                         disabled={isDisabled}
                         asChild
+                        data-testid={`metadata-form-row-${index}-actions-menu-trigger`}
                       >
-                        <IconButton size="2xsmall">
+                        <IconButton size="2xsmall" data-testid={`metadata-form-row-${index}-actions-menu-button`}>
                           <EllipsisVertical />
                         </IconButton>
                       </DropdownMenu.Trigger>
-                      <DropdownMenu.Content>
+                      <DropdownMenu.Content data-testid={`metadata-form-row-${index}-actions-menu-content`}>
                         <DropdownMenu.Item
                           className="gap-x-2"
                           onClick={() => insertRow(index, "above")}
+                          data-testid={`metadata-form-row-${index}-action-insert-above`}
                         >
                           <ArrowUpMini className="text-ui-fg-subtle" />
                           {t("metadata.edit.actions.insertRowAbove")}
@@ -244,14 +251,16 @@ const InnerForm = <TRes,>({
                         <DropdownMenu.Item
                           className="gap-x-2"
                           onClick={() => insertRow(index, "below")}
+                          data-testid={`metadata-form-row-${index}-action-insert-below`}
                         >
                           <ArrowDownMini className="text-ui-fg-subtle" />
                           {t("metadata.edit.actions.insertRowBelow")}
                         </DropdownMenu.Item>
-                        <DropdownMenu.Separator />
+                        <DropdownMenu.Separator data-testid={`metadata-form-row-${index}-actions-menu-separator`} />
                         <DropdownMenu.Item
                           className="gap-x-2"
                           onClick={() => deleteRow(index)}
+                          data-testid={`metadata-form-row-${index}-action-delete`}
                         >
                           <Trash className="text-ui-fg-subtle" />
                           {t("metadata.edit.actions.deleteRow")}
@@ -267,24 +276,26 @@ const InnerForm = <TRes,>({
             <InlineTip
               variant="warning"
               label={t("metadata.edit.complexRow.label")}
+              data-testid="metadata-form-warning-tip"
             >
               {t("metadata.edit.complexRow.description")}
             </InlineTip>
           )}
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteDrawer.Close asChild>
+        <RouteDrawer.Footer data-testid="metadata-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="metadata-form-footer-actions">
+            <RouteDrawer.Close asChild data-testid="metadata-form-cancel-button-wrapper">
               <Button
                 size="small"
                 variant="secondary"
                 type="button"
                 disabled={isMutating}
+                data-testid="metadata-form-cancel-button"
               >
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" type="submit" isLoading={isMutating}>
+            <Button size="small" type="submit" isLoading={isMutating} data-testid="metadata-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

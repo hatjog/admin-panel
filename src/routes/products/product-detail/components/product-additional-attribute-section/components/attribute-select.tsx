@@ -3,9 +3,11 @@ import { Select } from "@medusajs/ui";
 export const AttributeSelect = ({
   values,
   field,
+  "data-testid": dataTestId,
 }: {
   values: any[];
   field: any;
+  "data-testid"?: string;
 }) => {
   const handleChange = (value: string) => {
     field.onChange({
@@ -17,20 +19,37 @@ export const AttributeSelect = ({
   };
 
   return (
-    <Select onValueChange={(value) => handleChange(value)} value={field.value}>
-      <Select.Trigger className="bg-ui-bg-base">
-        <Select.Value placeholder="Select value" />
-      </Select.Trigger>
-      <Select.Content>
-        {values?.map(({ id, attribute_id, value }) => (
-          <Select.Item
-            key={`select-option-${attribute_id}-${id}`}
-            value={value}
-          >
-            {value}
-          </Select.Item>
-        ))}
-      </Select.Content>
-    </Select>
+    <div data-testid={dataTestId ? `${dataTestId}-wrapper` : undefined}>
+      <Select
+        onValueChange={(value) => handleChange(value)}
+        value={field.value}
+        data-testid={dataTestId}
+      >
+        <Select.Trigger
+          className="bg-ui-bg-base"
+          data-testid={dataTestId ? `${dataTestId}-trigger` : undefined}
+        >
+          <Select.Value
+            placeholder="Select value"
+            data-testid={dataTestId ? `${dataTestId}-value` : undefined}
+          />
+        </Select.Trigger>
+        <Select.Content
+          data-testid={dataTestId ? `${dataTestId}-content` : undefined}
+        >
+          {values?.map(({ id, attribute_id, value }) => (
+            <Select.Item
+              key={`select-option-${attribute_id}-${id}`}
+              value={value}
+              data-testid={
+                dataTestId ? `${dataTestId}-option-${id}` : undefined
+              }
+            >
+              {value}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select>
+    </div>
   );
 };

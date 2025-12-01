@@ -6,13 +6,15 @@ export const ProductList = () => {
   const { getWidgets } = useExtension()
 
   return (
-    <SingleColumnPage
-      widgets={{
-        after: getWidgets("product.list.after"),
-        before: getWidgets("product.list.before"),
-      }}
-    >
-      <ProductListTable />
-    </SingleColumnPage>
+    <div data-testid="products-page">
+      <SingleColumnPage
+        widgets={{
+          after: getWidgets("product.list.after"),
+          before: getWidgets("product.list.before"),
+        }}
+      >
+        <ProductListTable />
+      </SingleColumnPage>
+    </div>
   )
 }

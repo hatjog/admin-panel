@@ -23,12 +23,15 @@ export const LocationSearchInput = ({
   }, [searchValue, onSearchChange])
 
   return (
-    <Input
-      type="text"
-      placeholder={placeholder || t("general.search")}
-      value={searchValue}
-      onChange={(e) => setSearchValue(e.target.value)}
-      className="w-full"
-    />
+    <div data-testid="inventory-manage-locations-form-search-input-wrapper">
+      <Input
+        type="text"
+        placeholder={placeholder || t("general.search")}
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        className="w-full"
+        data-testid="inventory-manage-locations-form-search-input"
+      />
+    </div>
   )
 }

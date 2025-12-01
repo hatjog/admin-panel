@@ -60,9 +60,9 @@ export const CustomerOrderSection = ({
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("orders.domain")}</Heading>
+    <Container className="divide-y p-0" data-testid="customer-order-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="customer-order-section-header">
+        <Heading level="h2" data-testid="customer-order-section-heading">{t("orders.domain")}</Heading>
         {/*TODO: ENABLE WHEN DRAFT ORDERS ARE DONE*/}
         {/*<div className="flex items-center gap-x-2">*/}
         {/*  <Button size="small" variant="secondary">*/}
@@ -97,6 +97,7 @@ const CustomerOrderActions = ({ order }: { order: HttpTypes.AdminOrder }) => {
 
   return (
     <ActionMenu
+      data-testid={`customer-order-section-row-actions-${order.id}`}
       groups={[
         {
           actions: [

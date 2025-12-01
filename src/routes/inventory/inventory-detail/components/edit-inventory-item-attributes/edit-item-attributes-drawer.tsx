@@ -23,9 +23,9 @@ export const InventoryItemAttributesEdit = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <Heading>{t("products.editAttributes")}</Heading>
+    <RouteDrawer data-testid="inventory-edit-item-attributes-drawer">
+      <RouteDrawer.Header data-testid="inventory-edit-item-attributes-drawer-header">
+        <Heading data-testid="inventory-edit-item-attributes-drawer-title">{t("products.editAttributes")}</Heading>
       </RouteDrawer.Header>
       {ready && <EditInventoryItemAttributesForm item={inventoryItem} />}
     </RouteDrawer>

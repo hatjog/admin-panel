@@ -137,7 +137,7 @@ export const NumberFilter = ({
   const previousDisplayValue = parseDisplayValue(previousValue, t)
 
   return (
-    <RadixPopover.Root modal open={open} onOpenChange={handleOpenChange}>
+    <RadixPopover.Root modal open={open} onOpenChange={handleOpenChange} data-testid={`data-table-number-filter-${key}`}>
       <FilterChip
         hasOperator
         hadPreviousValue={!!previousDisplayValue}
@@ -145,6 +145,7 @@ export const NumberFilter = ({
         value={displayValue}
         onRemove={handleRemove}
         readonly={readonly}
+        data-testid={`data-table-number-filter-chip-${key}`}
       />
       {!readonly && (
         <RadixPopover.Portal>
@@ -156,6 +157,7 @@ export const NumberFilter = ({
             className={clx(
               "bg-ui-bg-base text-ui-fg-base shadow-elevation-flyout max-h-[var(--radix-popper-available-height)] w-[300px] divide-y overflow-y-auto rounded-lg outline-none"
             )}
+            data-testid={`data-table-number-filter-content-${key}`}
             onInteractOutside={(e) => {
               if (e.target instanceof HTMLElement) {
                 if (
@@ -167,19 +169,21 @@ export const NumberFilter = ({
               }
             }}
           >
-            <div className="p-1">
+            <div className="p-1" data-testid={`data-table-number-filter-operator-group-${key}`}>
               <RadixRadioGroup.Root
                 value={operator}
                 onValueChange={(val) => setOperator(val as Comparison)}
                 className="flex flex-col items-start"
                 orientation="vertical"
                 autoFocus
+                data-testid={`data-table-number-filter-operator-radio-${key}`}
               >
                 {operators.map((o) => (
                   <RadixRadioGroup.Item
                     key={o.operator}
                     value={o.operator}
                     className="txt-compact-small hover:bg-ui-bg-base-hover focus-visible:bg-ui-bg-base-hover active:bg-ui-bg-base-pressed transition-fg grid w-full grid-cols-[20px_1fr] gap-2 rounded-[4px] px-2 py-1.5 text-left outline-none"
+                    data-testid={`data-table-number-filter-operator-${key}-${o.operator}`}
                   >
                     <div className="size-5">
                       <RadixRadioGroup.Indicator>
@@ -191,11 +195,11 @@ export const NumberFilter = ({
                 ))}
               </RadixRadioGroup.Root>
             </div>
-            <div>
+            <div data-testid={`data-table-number-filter-inputs-${key}`}>
               {operator === "range" ? (
-                <div className="px-1 pb-3 pt-1" key="range">
+                <div className="px-1 pb-3 pt-1" key="range" data-testid={`data-table-number-filter-range-${key}`}>
                   <div className="px-2 py-1.5">
-                    <Label size="xsmall" weight="plus" htmlFor={GT_KEY}>
+                    <Label size="xsmall" weight="plus" htmlFor={GT_KEY} data-testid={`data-table-number-filter-gt-label-${key}`}>
                       {t("filters.compare.greaterThan")}
                     </Label>
                   </div>
@@ -206,10 +210,11 @@ export const NumberFilter = ({
                       type="number"
                       defaultValue={getValue(currentValue, "gt")}
                       onChange={(e) => debouncedOnChange(e, "gt")}
+                      data-testid={`data-table-number-filter-gt-input-${key}`}
                     />
                   </div>
                   <div className="px-2 py-1.5">
-                    <Label size="xsmall" weight="plus" htmlFor={LT_KEY}>
+                    <Label size="xsmall" weight="plus" htmlFor={LT_KEY} data-testid={`data-table-number-filter-lt-label-${key}`}>
                       {t("filters.compare.lessThan")}
                     </Label>
                   </div>
@@ -220,13 +225,14 @@ export const NumberFilter = ({
                       type="number"
                       defaultValue={getValue(currentValue, "lt")}
                       onChange={(e) => debouncedOnChange(e, "lt")}
+                      data-testid={`data-table-number-filter-lt-input-${key}`}
                     />
                   </div>
                 </div>
               ) : (
-                <div className="px-1 pb-3 pt-1" key="exact">
+                <div className="px-1 pb-3 pt-1" key="exact" data-testid={`data-table-number-filter-exact-${key}`}>
                   <div className="px-2 py-1.5">
-                    <Label size="xsmall" weight="plus" htmlFor={EQ_KEY}>
+                    <Label size="xsmall" weight="plus" htmlFor={EQ_KEY} data-testid={`data-table-number-filter-eq-label-${key}`}>
                       {label}
                     </Label>
                   </div>
@@ -237,6 +243,7 @@ export const NumberFilter = ({
                       type="number"
                       defaultValue={getValue(currentValue, "eq")}
                       onChange={(e) => debouncedOnChange(e, "eq")}
+                      data-testid={`data-table-number-filter-eq-input-${key}`}
                     />
                   </div>
                 </div>

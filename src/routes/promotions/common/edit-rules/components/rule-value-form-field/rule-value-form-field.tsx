@@ -104,6 +104,9 @@ export const RuleValueFormField = ({
     }
   }, [watchOperator])
 
+  const fieldIndex = name.split('.').slice(-2, -1)[0]
+  const testIdBase = `rule-value-form-field-${ruleType}-${fieldIndex}`
+
   return (
     <Form.Field
       key={`${identifier}.${scope}.${name}-${fieldRule.attribute}`}
@@ -111,8 +114,8 @@ export const RuleValueFormField = ({
       render={({ field: { onChange, ref, ...field } }) => {
         if (attribute?.field_type === "number") {
           return (
-            <Form.Item className="basis-1/2">
-              <Form.Control>
+            <Form.Item className="basis-1/2" data-testid={`${testIdBase}-number-item`}>
+              <Form.Control data-testid={`${testIdBase}-number-control`}>
                 <Input
                   {...field}
                   type="number"
@@ -121,30 +124,32 @@ export const RuleValueFormField = ({
                   ref={ref}
                   min={1}
                   disabled={!fieldRule.attribute}
+                  data-testid={`${testIdBase}-number-input`}
                 />
               </Form.Control>
-              <Form.ErrorMessage />
+              <Form.ErrorMessage data-testid={`${testIdBase}-number-error`} />
             </Form.Item>
           )
         } else if (attribute?.field_type === "text") {
           return (
-            <Form.Item className="basis-1/2">
-              <Form.Control>
+            <Form.Item className="basis-1/2" data-testid={`${testIdBase}-text-item`}>
+              <Form.Control data-testid={`${testIdBase}-text-control`}>
                 <Input
                   {...field}
                   ref={ref}
                   onChange={onChange}
                   className="bg-ui-bg-base"
                   disabled={!fieldRule.attribute}
+                  data-testid={`${testIdBase}-text-input`}
                 />
               </Form.Control>
-              <Form.ErrorMessage />
+              <Form.ErrorMessage data-testid={`${testIdBase}-text-error`} />
             </Form.Item>
           )
         } else {
           return (
-            <Form.Item className="basis-1/2">
-              <Form.Control>
+            <Form.Item className="basis-1/2" data-testid={`${testIdBase}-combobox-item`}>
+              <Form.Control data-testid={`${testIdBase}-combobox-control`}>
                 <Combobox
                   {...field}
                   {...comboboxData}
@@ -156,9 +161,10 @@ export const RuleValueFormField = ({
                   }
                   disabled={!watchOperator}
                   onChange={onChange}
+                  data-testid={`${testIdBase}-combobox`}
                 />
               </Form.Control>
-              <Form.ErrorMessage />
+              <Form.ErrorMessage data-testid={`${testIdBase}-combobox-error`} />
             </Form.Item>
           )
         }

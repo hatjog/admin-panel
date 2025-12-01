@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
   const STOREFRONT_URL =
     env.VITE_MEDUSA_STOREFRONT_URL || "http://localhost:8000";
   const B2B_PANEL = env.VITE_MEDUSA_B2B_PANEL || "false";
+  const TALK_JS_APP_ID = env.VITE_TALK_JS_APP_ID || undefined;
 
   /**
    * Add this to your .env file to specify the project to load admin extensions from.
@@ -48,6 +49,7 @@ export default defineConfig(({ mode }) => {
       __BACKEND_URL__: JSON.stringify(BACKEND_URL),
       __STOREFRONT_URL__: JSON.stringify(STOREFRONT_URL),
       __B2B_PANEL__: JSON.stringify(B2B_PANEL),
+      __TALK_JS_APP_ID__: JSON.stringify(TALK_JS_APP_ID),
     },
     server: {
       open: true,

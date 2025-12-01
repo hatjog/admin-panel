@@ -105,10 +105,10 @@ export const EditSalesChannelsForm = ({
   }
 
   return (
-    <RouteFocusModal.Form form={form}>
-      <div className="flex h-full flex-col overflow-hidden">
-        <RouteFocusModal.Header />
-        <RouteFocusModal.Body className="flex-1 overflow-hidden">
+    <RouteFocusModal.Form form={form} data-testid="product-sales-channels-form">
+      <div className="flex h-full flex-col overflow-hidden" data-testid="product-sales-channels-form-container">
+        <RouteFocusModal.Header data-testid="product-sales-channels-form-header" />
+        <RouteFocusModal.Body className="flex-1 overflow-hidden" data-testid="product-sales-channels-form-body">
           <DataTable
             data={sales_channels}
             columns={columns}
@@ -124,16 +124,17 @@ export const EditSalesChannelsForm = ({
             layout="fill"
             emptyState={emptyState}
             prefix={PREFIX}
+            data-testid="product-sales-channels-data-table"
           />
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteFocusModal.Close asChild>
-              <Button size="small" variant="secondary">
+        <RouteFocusModal.Footer data-testid="product-sales-channels-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="product-sales-channels-form-footer-actions">
+            <RouteFocusModal.Close asChild data-testid="product-sales-channels-form-cancel-button-wrapper">
+              <Button size="small" variant="secondary" data-testid="product-sales-channels-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
-            <Button size="small" isLoading={isMutating} onClick={handleSubmit}>
+            <Button size="small" isLoading={isMutating} onClick={handleSubmit} data-testid="product-sales-channels-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

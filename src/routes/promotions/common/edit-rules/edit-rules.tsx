@@ -46,9 +46,9 @@ export const EditRules = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <Heading>{t(`promotions.edit.${ruleType}.title`)}</Heading>
+    <RouteDrawer data-testid={`promotion-edit-rules-${ruleType}`}>
+      <RouteDrawer.Header data-testid={`promotion-edit-rules-header-${ruleType}`}>
+        <Heading data-testid={`promotion-edit-rules-heading-${ruleType}`}>{t(`promotions.edit.${ruleType}.title`)}</Heading>
       </RouteDrawer.Header>
 
       {!isLoading && promotion && (

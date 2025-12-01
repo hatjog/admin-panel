@@ -7,6 +7,7 @@ type MoneyAmountCellProps = {
   amount?: number | null
   align?: "left" | "right"
   className?: string
+  "data-testid"?: string
 }
 
 export const MoneyAmountCell = ({
@@ -14,6 +15,7 @@ export const MoneyAmountCell = ({
   amount,
   align = "left",
   className,
+  "data-testid": dataTestId,
 }: MoneyAmountCellProps) => {
   if (typeof amount === "undefined" || amount === null) {
     return <PlaceholderCell />
@@ -31,8 +33,9 @@ export const MoneyAmountCell = ({
         },
         className
       )}
+      data-testid={dataTestId}
     >
-      <span className="truncate">{formatted}</span>
+      <span className="truncate" data-testid={dataTestId ? `${dataTestId}-text` : undefined}>{formatted}</span>
     </div>
   )
 }

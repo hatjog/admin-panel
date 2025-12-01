@@ -20,10 +20,10 @@ export const ProductAttributes = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <RouteDrawer.Title asChild>
-          <Heading>{t("products.editAttributes")}</Heading>
+    <RouteDrawer data-testid="product-attributes-drawer">
+      <RouteDrawer.Header data-testid="product-attributes-drawer-header">
+        <RouteDrawer.Title asChild data-testid="product-attributes-drawer-title">
+          <Heading data-testid="product-attributes-drawer-title-text">{t("products.editAttributes")}</Heading>
         </RouteDrawer.Title>
       </RouteDrawer.Header>
       {!isLoading && product && <ProductAttributesForm product={product} />}

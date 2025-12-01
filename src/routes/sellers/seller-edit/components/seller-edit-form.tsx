@@ -69,29 +69,31 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
   });
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="seller-edit-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex flex-1 flex-col overflow-hidden"
+        data-testid="seller-edit-form-keybound"
       >
-        <RouteDrawer.Body className="overflow-y-auto">
-          <div className="flex flex-col gap-y-4">
+        <RouteDrawer.Body className="overflow-y-auto" data-testid="seller-edit-form-body">
+          <div className="flex flex-col gap-y-4" data-testid="seller-edit-form-fields">
             <Form.Field
               control={form.control}
               name="name"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("sellers.fields.name")}</Form.Label>
+                  <Form.Item data-testid="seller-edit-form-name-item">
+                    <Form.Label data-testid="seller-edit-form-name-label">{t("sellers.fields.name")}</Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="seller-edit-form-name-control">
                       <Input
                         placeholder={t("sellers.fields.name")}
                         {...field}
+                        data-testid="seller-edit-form-name-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="seller-edit-form-name-error" />
                   </Form.Item>
                 );
               }}
@@ -102,17 +104,18 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
               name="email"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("sellers.fields.email")}</Form.Label>
+                  <Form.Item data-testid="seller-edit-form-email-item">
+                    <Form.Label data-testid="seller-edit-form-email-label">{t("sellers.fields.email")}</Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="seller-edit-form-email-control">
                       <Input
                         placeholder={t("sellers.fields.email")}
                         {...field}
+                        data-testid="seller-edit-form-email-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="seller-edit-form-email-error" />
                   </Form.Item>
                 );
               }}
@@ -123,19 +126,20 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
               name="phone"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="seller-edit-form-phone-item">
+                    <Form.Label optional data-testid="seller-edit-form-phone-label">
                       {t("sellers.fields.phone")}
                     </Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="seller-edit-form-phone-control">
                       <Input
                         placeholder={t("sellers.fields.phone")}
                         {...field}
+                        data-testid="seller-edit-form-phone-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="seller-edit-form-phone-error" />
                   </Form.Item>
                 );
               }}
@@ -146,48 +150,50 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
               name="description"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="seller-edit-form-description-item">
+                    <Form.Label optional data-testid="seller-edit-form-description-label">
                       {t("sellers.fields.description")}
                     </Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="seller-edit-form-description-control">
                       <Textarea
                         placeholder={t("sellers.fields.description")}
                         {...field}
+                        data-testid="seller-edit-form-description-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="seller-edit-form-description-error" />
                   </Form.Item>
                 );
               }}
             />
 
-            <div className="mt-4">
-              <Heading level="h3" className="mb-4">
+            <div className="mt-4" data-testid="seller-edit-form-address-section">
+              <Heading level="h3" className="mb-4" data-testid="seller-edit-form-address-heading">
                 {t("sellers.fields.address")}
               </Heading>
 
-              <div className="flex flex-col gap-y-4">
+              <div className="flex flex-col gap-y-4" data-testid="seller-edit-form-address-fields">
                 <Form.Field
                   control={form.control}
                   name="address_line"
                   render={({ field }) => {
                     return (
-                      <Form.Item>
-                        <Form.Label optional>
+                      <Form.Item data-testid="seller-edit-form-address-line-item">
+                        <Form.Label optional data-testid="seller-edit-form-address-line-label">
                           {t("sellers.fields.address_line")}
                         </Form.Label>
 
-                        <Form.Control>
+                        <Form.Control data-testid="seller-edit-form-address-line-control">
                           <Input
                             placeholder={t("sellers.fields.address_line")}
                             {...field}
+                            data-testid="seller-edit-form-address-line-input"
                           />
                         </Form.Control>
 
-                        <Form.ErrorMessage />
+                        <Form.ErrorMessage data-testid="seller-edit-form-address-line-error" />
                       </Form.Item>
                     );
                   }}
@@ -198,19 +204,20 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
                   name="postal_code"
                   render={({ field }) => {
                     return (
-                      <Form.Item>
-                        <Form.Label optional>
+                      <Form.Item data-testid="seller-edit-form-postal-code-item">
+                        <Form.Label optional data-testid="seller-edit-form-postal-code-label">
                           {t("sellers.fields.postal_code")}
                         </Form.Label>
 
-                        <Form.Control>
+                        <Form.Control data-testid="seller-edit-form-postal-code-control">
                           <Input
                             placeholder={t("sellers.fields.postal_code")}
                             {...field}
+                            data-testid="seller-edit-form-postal-code-input"
                           />
                         </Form.Control>
 
-                        <Form.ErrorMessage />
+                        <Form.ErrorMessage data-testid="seller-edit-form-postal-code-error" />
                       </Form.Item>
                     );
                   }}
@@ -221,19 +228,20 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
                   name="city"
                   render={({ field }) => {
                     return (
-                      <Form.Item>
-                        <Form.Label optional>
+                      <Form.Item data-testid="seller-edit-form-city-item">
+                        <Form.Label optional data-testid="seller-edit-form-city-label">
                           {t("sellers.fields.city")}
                         </Form.Label>
 
-                        <Form.Control>
+                        <Form.Control data-testid="seller-edit-form-city-control">
                           <Input
                             placeholder={t("sellers.fields.city")}
                             {...field}
+                            data-testid="seller-edit-form-city-input"
                           />
                         </Form.Control>
 
-                        <Form.ErrorMessage />
+                        <Form.ErrorMessage data-testid="seller-edit-form-city-error" />
                       </Form.Item>
                     );
                   }}
@@ -244,19 +252,20 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
                   name="country_code"
                   render={({ field }) => {
                     return (
-                      <Form.Item>
-                        <Form.Label optional>
+                      <Form.Item data-testid="seller-edit-form-country-code-item">
+                        <Form.Label optional data-testid="seller-edit-form-country-code-label">
                           {t("sellers.fields.country_code")}
                         </Form.Label>
 
-                        <Form.Control>
+                        <Form.Control data-testid="seller-edit-form-country-code-control">
                           <Input
                             placeholder={t("sellers.fields.country_code")}
                             {...field}
+                            data-testid="seller-edit-form-country-code-input"
                           />
                         </Form.Control>
 
-                        <Form.ErrorMessage />
+                        <Form.ErrorMessage data-testid="seller-edit-form-country-code-error" />
                       </Form.Item>
                     );
                   }}
@@ -267,19 +276,20 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
                   name="tax_id"
                   render={({ field }) => {
                     return (
-                      <Form.Item>
-                        <Form.Label optional>
+                      <Form.Item data-testid="seller-edit-form-tax-id-item">
+                        <Form.Label optional data-testid="seller-edit-form-tax-id-label">
                           {t("sellers.fields.tax_id")}
                         </Form.Label>
 
-                        <Form.Control>
+                        <Form.Control data-testid="seller-edit-form-tax-id-control">
                           <Input
                             placeholder={t("sellers.fields.tax_id")}
                             {...field}
+                            data-testid="seller-edit-form-tax-id-input"
                           />
                         </Form.Control>
 
-                        <Form.ErrorMessage />
+                        <Form.ErrorMessage data-testid="seller-edit-form-tax-id-error" />
                       </Form.Item>
                     );
                   }}
@@ -289,10 +299,10 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
           </div>
         </RouteDrawer.Body>
 
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
+        <RouteDrawer.Footer data-testid="seller-edit-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="seller-edit-form-footer-actions">
             <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="secondary" size="small" data-testid="seller-edit-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
@@ -302,6 +312,7 @@ export const SellerEditForm = ({ seller }: SellerEditFormProps) => {
               type="submit"
               variant="primary"
               size="small"
+              data-testid="seller-edit-form-submit-button"
             >
               {t("actions.save")}
             </Button>

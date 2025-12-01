@@ -31,27 +31,48 @@ export const useProductTableColumns = () => {
       columnHelper.display({
         id: "product",
         header: () => <ProductHeader />,
-        cell: ({ row }) => <ProductCell product={row.original} />,
+        cell: ({ row }) => (
+          <ProductCell
+            product={row.original}
+            data-testid={`products-table-cell-${row.id}-product-value`}
+          />
+        ),
       }),
       columnHelper.accessor("collection", {
         header: () => <CollectionHeader />,
         cell: ({ row }) => (
-          <CollectionCell collection={row.original.collection} />
+          <CollectionCell
+            collection={row.original.collection}
+            data-testid={`products-table-cell-${row.id}-collection-value`}
+          />
         ),
       }),
       columnHelper.accessor("sales_channels", {
         header: () => <SalesChannelHeader />,
         cell: ({ row }) => (
-          <SalesChannelsCell salesChannels={row.original.sales_channels} />
+          <SalesChannelsCell
+            salesChannels={row.original.sales_channels}
+            data-testid={`products-table-cell-${row.id}-sales_channels-value`}
+          />
         ),
       }),
       columnHelper.accessor("variants", {
         header: () => <VariantHeader />,
-        cell: ({ row }) => <VariantCell variants={row.original.variants} />,
+        cell: ({ row }) => (
+          <VariantCell
+            variants={row.original.variants}
+            data-testid={`products-table-cell-${row.id}-variants-value`}
+          />
+        ),
       }),
       columnHelper.accessor("status", {
         header: () => <ProductStatusHeader />,
-        cell: ({ row }) => <ProductStatusCell status={row.original.status} />,
+        cell: ({ row }) => (
+          <ProductStatusCell
+            status={row.original.status}
+            data-testid={`products-table-cell-${row.id}-status-value`}
+          />
+        ),
       }),
     ],
     []

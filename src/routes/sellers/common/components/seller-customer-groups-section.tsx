@@ -54,9 +54,9 @@ export const SellerCustomerGroupsSection = ({
   });
 
   return (
-    <Container className="mt-2 px-0">
-      <div className="px-8 pb-4">
-        <Heading>Customer Groups</Heading>
+    <Container className="mt-2 px-0" data-testid="seller-customer-groups-section">
+      <div className="px-8 pb-4" data-testid="seller-customer-groups-section-header">
+        <Heading data-testid="seller-customer-groups-section-heading">Customer Groups</Heading>
       </div>
       <Divider />
       <_DataTable
@@ -154,6 +154,7 @@ const useColumns = (refetch: () => void) => {
         header: "",
         cell: ({ row }) => (
           <ActionsButton
+            data-testid={`seller-customer-groups-section-row-actions-${row.original.id}`}
             actions={[
               {
                 label: "Edit",

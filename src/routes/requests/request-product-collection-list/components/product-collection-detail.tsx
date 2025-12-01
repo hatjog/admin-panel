@@ -35,7 +35,7 @@ export function ProductCollectionRequestDetail({
   };
 
   return (
-    <Drawer open={open} onOpenChange={close}>
+    <Drawer open={open} onOpenChange={close} data-testid={`product-collection-detail-${request.id}`}>
       <ResolveRequestPrompt
         close={() => {
           setPromptOpen(false);
@@ -47,50 +47,51 @@ export function ProductCollectionRequestDetail({
           close();
         }}
       />
-      <Drawer.Content>
-        <Drawer.Header>
-          <Drawer.Title>Product category request</Drawer.Title>
+      <Drawer.Content data-testid={`product-collection-detail-${request.id}-content`}>
+        <Drawer.Header data-testid={`product-collection-detail-${request.id}-header`}>
+          <Drawer.Title data-testid={`product-collection-detail-${request.id}-title`}>Product category request</Drawer.Title>
         </Drawer.Header>
-        <Drawer.Body className="p-4">
-          <fieldset>
-            <legend className="mb-2">Collection title</legend>
-            <Container>
-              <Text>{requestData.title}</Text>
+        <Drawer.Body className="p-4" data-testid={`product-collection-detail-${request.id}-body`}>
+          <fieldset data-testid={`product-collection-detail-${request.id}-title-fieldset`}>
+            <legend className="mb-2" data-testid={`product-collection-detail-${request.id}-title-legend`}>Collection title</legend>
+            <Container data-testid={`product-collection-detail-${request.id}-title-container`}>
+              <Text data-testid={`product-collection-detail-${request.id}-title-value`}>{requestData.title}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Handle</legend>
-            <Container>
-              <Text>{`/${requestData.handle}`}</Text>
+          <fieldset className="mt-2" data-testid={`product-collection-detail-${request.id}-handle-fieldset`}>
+            <legend className="mb-2" data-testid={`product-collection-detail-${request.id}-handle-legend`}>Handle</legend>
+            <Container data-testid={`product-collection-detail-${request.id}-handle-container`}>
+              <Text data-testid={`product-collection-detail-${request.id}-handle-value`}>{`/${requestData.handle}`}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Submitted by</legend>
-            <Container>
-              <Text>{request.seller?.name}</Text>
+          <fieldset className="mt-2" data-testid={`product-collection-detail-${request.id}-submitted-by-fieldset`}>
+            <legend className="mb-2" data-testid={`product-collection-detail-${request.id}-submitted-by-legend`}>Submitted by</legend>
+            <Container data-testid={`product-collection-detail-${request.id}-submitted-by-container`}>
+              <Text data-testid={`product-collection-detail-${request.id}-submitted-by-value`}>{request.seller?.name}</Text>
             </Container>
           </fieldset>
-          <Container className="mt-4">
-            <div className="flex items-center gap-2">
+          <Container className="mt-4" data-testid={`product-collection-detail-${request.id}-request-information`}>
+            <div className="flex items-center gap-2" data-testid={`product-collection-detail-${request.id}-request-information-header`}>
               <InformationCircle />
-              <Text className="font-semibold">Request information</Text>
+              <Text className="font-semibold" data-testid={`product-collection-detail-${request.id}-request-information-title`}>Request information</Text>
             </div>
-            <Text>{`Submitted on ${formatDate(request.created_at)}`}</Text>
+            <Text data-testid={`product-collection-detail-${request.id}-submitted-on`}>{`Submitted on ${formatDate(request.created_at)}`}</Text>
             {request.reviewer_id && (
-              <Text>{`Reviewed on ${formatDate(request.updated_at)}`}</Text>
+              <Text data-testid={`product-collection-detail-${request.id}-reviewed-on`}>{`Reviewed on ${formatDate(request.updated_at)}`}</Text>
             )}
             {request.reviewer_note && (
-              <Text>{`Reviewer note: ${request.reviewer_note}`}</Text>
+              <Text data-testid={`product-collection-detail-${request.id}-reviewer-note`}>{`Reviewer note: ${request.reviewer_note}`}</Text>
             )}
           </Container>
         </Drawer.Body>
-        <Drawer.Footer>
+        <Drawer.Footer data-testid={`product-collection-detail-${request.id}-footer`}>
           {request.status === "pending" && (
             <>
               <Button
                 onClick={() => {
                   handlePrompt(request.id!, true);
                 }}
+                data-testid={`product-collection-detail-${request.id}-accept-button`}
               >
                 Accept
               </Button>
@@ -99,10 +100,11 @@ export function ProductCollectionRequestDetail({
                   handlePrompt(request.id!, false);
                 }}
                 variant="danger"
+                data-testid={`product-collection-detail-${request.id}-reject-button`}
               >
                 Reject
               </Button>
-              <Button variant="secondary" onClick={close}>
+              <Button variant="secondary" onClick={close} data-testid={`product-collection-detail-${request.id}-cancel-button`}>
                 Cancel
               </Button>
             </>

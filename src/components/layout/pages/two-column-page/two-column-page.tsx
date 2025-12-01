@@ -81,7 +81,7 @@ const Root = <TData,>({
             return <Component {...widgetProps} key={i} />
           })}
           {showExtraData && (
-            <div className="hidden flex-col gap-y-3 xl:flex">
+            <div className="hidden flex-col gap-y-3 xl:flex" data-testid="product-extra-data-desktop">
               {showMetadata && <MetadataSection data={data!} />}
               {showJSON && <JsonViewSection data={data!} />}
             </div>
@@ -96,7 +96,7 @@ const Root = <TData,>({
             return <Component {...widgetProps} key={i} />
           })}
           {showExtraData && (
-            <div className="flex flex-col gap-y-3 xl:hidden">
+            <div className="flex flex-col gap-y-3 xl:hidden" data-testid="product-extra-data-mobile">
               {showMetadata && <MetadataSection data={data!} />}
               {showJSON && <JsonViewSection data={data!} />}
             </div>

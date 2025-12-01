@@ -69,26 +69,26 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
   })
 
   return (
-    <RouteDrawer.Form form={form}>
-      <KeyboundForm onSubmit={handleSubmit} className="flex flex-1 flex-col">
-        <RouteDrawer.Body>
-          <div className="flex flex-col gap-y-4">
+    <RouteDrawer.Form form={form} data-testid="edit-customer-form">
+      <KeyboundForm onSubmit={handleSubmit} className="flex flex-1 flex-col" data-testid="edit-customer-form-keybound">
+        <RouteDrawer.Body data-testid="edit-customer-form-body">
+          <div className="flex flex-col gap-y-4" data-testid="edit-customer-form-fields">
             <Form.Field
               control={form.control}
               name="email"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("fields.email")}</Form.Label>
-                    <Form.Control>
+                  <Form.Item data-testid="edit-customer-form-email-item">
+                    <Form.Label data-testid="edit-customer-form-email-label">{t("fields.email")}</Form.Label>
+                    <Form.Control data-testid="edit-customer-form-email-control">
                       <ConditionalTooltip
                         showTooltip={customer.has_account}
                         content={t("customers.edit.emailDisabledTooltip")}
                       >
-                        <Input {...field} disabled={customer.has_account} />
+                        <Input {...field} disabled={customer.has_account} data-testid="edit-customer-form-email-input" />
                       </ConditionalTooltip>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="edit-customer-form-email-error" />
                   </Form.Item>
                 )
               }}
@@ -98,12 +98,12 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
               name="first_name"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("fields.firstName")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="edit-customer-form-first-name-item">
+                    <Form.Label data-testid="edit-customer-form-first-name-label">{t("fields.firstName")}</Form.Label>
+                    <Form.Control data-testid="edit-customer-form-first-name-control">
+                      <Input {...field} data-testid="edit-customer-form-first-name-input" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="edit-customer-form-first-name-error" />
                   </Form.Item>
                 )
               }}
@@ -113,12 +113,12 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
               name="last_name"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("fields.lastName")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="edit-customer-form-last-name-item">
+                    <Form.Label data-testid="edit-customer-form-last-name-label">{t("fields.lastName")}</Form.Label>
+                    <Form.Control data-testid="edit-customer-form-last-name-control">
+                      <Input {...field} data-testid="edit-customer-form-last-name-input" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="edit-customer-form-last-name-error" />
                   </Form.Item>
                 )
               }}
@@ -128,12 +128,12 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
               name="company_name"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("fields.company")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="edit-customer-form-company-name-item">
+                    <Form.Label data-testid="edit-customer-form-company-name-label">{t("fields.company")}</Form.Label>
+                    <Form.Control data-testid="edit-customer-form-company-name-control">
+                      <Input {...field} data-testid="edit-customer-form-company-name-input" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="edit-customer-form-company-name-error" />
                   </Form.Item>
                 )
               }}
@@ -143,22 +143,22 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
               name="phone"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("fields.phone")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="edit-customer-form-phone-item">
+                    <Form.Label data-testid="edit-customer-form-phone-label">{t("fields.phone")}</Form.Label>
+                    <Form.Control data-testid="edit-customer-form-phone-control">
+                      <Input {...field} data-testid="edit-customer-form-phone-input" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="edit-customer-form-phone-error" />
                   </Form.Item>
                 )
               }}
             />
           </div>
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
+        <RouteDrawer.Footer data-testid="edit-customer-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="edit-customer-form-footer-actions">
             <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="secondary" size="small" data-testid="edit-customer-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
@@ -167,6 +167,7 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
               type="submit"
               variant="primary"
               size="small"
+              data-testid="edit-customer-form-submit-button"
             >
               {t("actions.save")}
             </Button>

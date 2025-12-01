@@ -13,11 +13,11 @@ export const InventoryItemReservationsSection = ({
   const { t } = useTranslation()
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading>{t("reservations.domain")}</Heading>
-        <Button size="small" variant="secondary" asChild>
-          <Link to={`/reservations/create?item_id=${inventoryItem.id}`}>
+    <Container className="divide-y p-0" data-testid="inventory-item-reservations-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="inventory-item-reservations-header">
+        <Heading data-testid="inventory-item-reservations-title">{t("reservations.domain")}</Heading>
+        <Button size="small" variant="secondary" asChild data-testid="inventory-create-reservation-button">
+          <Link to={`/reservations/create?item_id=${inventoryItem.id}`} data-testid="inventory-create-reservation-link">
             {t("actions.create")}
           </Link>
         </Button>

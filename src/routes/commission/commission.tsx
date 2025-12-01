@@ -116,14 +116,12 @@ export const Commission = () => {
               <Drawer.Header>
                 <Drawer.Title>Create Rule</Drawer.Title>
               </Drawer.Header>
-              <Drawer.Body>
                 <CreateCommissionRuleForm
                   onSuccess={() => {
                     setCreateRuleOpen(false);
                     refetch();
                   }}
                 />
-              </Drawer.Body>
             </Drawer.Content>
           </Drawer>
         </div>

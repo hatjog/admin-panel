@@ -52,9 +52,9 @@ export const SellerProductsSection = ({
   });
 
   return (
-    <Container className="mt-2 px-0">
-      <div className="px-8 pb-4">
-        <Heading>Products</Heading>
+    <Container className="mt-2 px-0" data-testid="seller-products-section">
+      <div className="px-8 pb-4" data-testid="seller-products-section-header">
+        <Heading data-testid="seller-products-section-heading">Products</Heading>
       </div>
       <Divider />
       <_DataTable
@@ -162,6 +162,7 @@ const useColumns = (refetch: () => void) => {
         header: "",
         cell: ({ row }) => (
           <ActionsButton
+            data-testid={`seller-products-section-row-actions-${row.original.id}`}
             actions={[
               {
                 label: "Edit",

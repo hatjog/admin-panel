@@ -89,10 +89,10 @@ export const PriceListPricesEditForm = ({
   })
 
   return (
-    <RouteFocusModal.Form form={form}>
+    <RouteFocusModal.Form form={form} data-testid="price-list-prices-edit-form">
       <KeyboundForm onSubmit={handleSubmit} className="flex size-full flex-col">
-        <RouteFocusModal.Header />
-        <RouteFocusModal.Body className="flex flex-col overflow-hidden">
+        <RouteFocusModal.Header data-testid="price-list-prices-edit-form-header" />
+        <RouteFocusModal.Body className="flex flex-col overflow-hidden" data-testid="price-list-prices-edit-form-body">
           <DataGrid
             columns={columns}
             data={products}
@@ -103,16 +103,17 @@ export const PriceListPricesEditForm = ({
             }}
             state={form}
             onEditingChange={(editing) => setCloseOnEscape(!editing)}
+            data-testid="price-list-prices-edit-form-data-grid"
           />
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer>
+        <RouteFocusModal.Footer data-testid="price-list-prices-edit-form-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="price-list-prices-edit-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
-            <Button size="small" type="submit" isLoading={isPending}>
+            <Button size="small" type="submit" isLoading={isPending} data-testid="price-list-prices-edit-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

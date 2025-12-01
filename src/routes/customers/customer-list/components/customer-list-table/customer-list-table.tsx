@@ -47,11 +47,11 @@ export const CustomerListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading>{t("customers.domain")}</Heading>
-        <Link to="/customers/create">
-          <Button size="small" variant="secondary">
+    <Container className="divide-y p-0" data-testid="customer-list-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="customer-list-header">
+        <Heading data-testid="customer-list-heading">{t("customers.domain")}</Heading>
+        <Link to="/customers/create" data-testid="customer-list-create-link">
+          <Button size="small" variant="secondary" data-testid="customer-list-create-button">
             {t("actions.create")}
           </Button>
         </Link>
@@ -91,6 +91,7 @@ const CustomerActions = ({
 
   return (
     <ActionMenu
+      data-testid={`customer-list-row-actions-${customer.id}`}
       groups={[
         {
           actions: [

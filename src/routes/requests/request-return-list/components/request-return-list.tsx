@@ -34,7 +34,7 @@ export function ReturnRequestDetail({ request, open, close }: Props) {
   };
 
   return (
-    <Drawer open={open} onOpenChange={close}>
+    <Drawer open={open} onOpenChange={close} data-testid={`return-request-detail-${request.id}`}>
       <ResolveReturnRequestPrompt
         close={() => {
           setPromptOpen(false);
@@ -46,44 +46,44 @@ export function ReturnRequestDetail({ request, open, close }: Props) {
           close();
         }}
       />
-      <Drawer.Content>
-        <Drawer.Header>
-          <Drawer.Title>Order return request</Drawer.Title>
+      <Drawer.Content data-testid={`return-request-detail-${request.id}-content`}>
+        <Drawer.Header data-testid={`return-request-detail-${request.id}-header`}>
+          <Drawer.Title data-testid={`return-request-detail-${request.id}-title`}>Order return request</Drawer.Title>
         </Drawer.Header>
-        <Drawer.Body className="flex max-w-full flex-1 flex-col overflow-y-auto">
-          <fieldset>
-            <legend className="mb-2">Order ID</legend>
-            <Container>
-              <Text>{request.order?.id}</Text>
+        <Drawer.Body className="flex max-w-full flex-1 flex-col overflow-y-auto" data-testid={`return-request-detail-${request.id}-body`}>
+          <fieldset data-testid={`return-request-detail-${request.id}-order-id-fieldset`}>
+            <legend className="mb-2" data-testid={`return-request-detail-${request.id}-order-id-legend`}>Order ID</legend>
+            <Container data-testid={`return-request-detail-${request.id}-order-id-container`}>
+              <Text data-testid={`return-request-detail-${request.id}-order-id-value`}>{request.order?.id}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Customer</legend>
-            <Container>
-              <Text>{`${request.order?.customer?.first_name} ${request.order?.customer?.last_name}`}</Text>
+          <fieldset className="mt-2" data-testid={`return-request-detail-${request.id}-customer-fieldset`}>
+            <legend className="mb-2" data-testid={`return-request-detail-${request.id}-customer-legend`}>Customer</legend>
+            <Container data-testid={`return-request-detail-${request.id}-customer-container`}>
+              <Text data-testid={`return-request-detail-${request.id}-customer-value`}>{`${request.order?.customer?.first_name} ${request.order?.customer?.last_name}`}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Seller</legend>
-            <Container>
-              <Text>{request.seller?.name}</Text>
+          <fieldset className="mt-2" data-testid={`return-request-detail-${request.id}-seller-fieldset`}>
+            <legend className="mb-2" data-testid={`return-request-detail-${request.id}-seller-legend`}>Seller</legend>
+            <Container data-testid={`return-request-detail-${request.id}-seller-container`}>
+              <Text data-testid={`return-request-detail-${request.id}-seller-value`}>{request.seller?.name}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Return request reason</legend>
-            <Container>
-              <Text>{request.customer_note}</Text>
+          <fieldset className="mt-2" data-testid={`return-request-detail-${request.id}-reason-fieldset`}>
+            <legend className="mb-2" data-testid={`return-request-detail-${request.id}-reason-legend`}>Return request reason</legend>
+            <Container data-testid={`return-request-detail-${request.id}-reason-container`}>
+              <Text data-testid={`return-request-detail-${request.id}-reason-value`}>{request.customer_note}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Vendor response</legend>
-            <Container>
-              <Text>{request.vendor_reviewer_note || "-"}</Text>
+          <fieldset className="mt-2" data-testid={`return-request-detail-${request.id}-vendor-response-fieldset`}>
+            <legend className="mb-2" data-testid={`return-request-detail-${request.id}-vendor-response-legend`}>Vendor response</legend>
+            <Container data-testid={`return-request-detail-${request.id}-vendor-response-container`}>
+              <Text data-testid={`return-request-detail-${request.id}-vendor-response-value`}>{request.vendor_reviewer_note || "-"}</Text>
             </Container>
           </fieldset>
-          <fieldset className="mt-2">
-            <legend className="mb-2">Items</legend>
-            <Container>
+          <fieldset className="mt-2" data-testid={`return-request-detail-${request.id}-items-fieldset`}>
+            <legend className="mb-2" data-testid={`return-request-detail-${request.id}-items-legend`}>Items</legend>
+            <Container data-testid={`return-request-detail-${request.id}-items-container`}>
               {request.line_items?.map((item) => {
                 return (
                   <ItemRow
@@ -96,22 +96,22 @@ export function ReturnRequestDetail({ request, open, close }: Props) {
               })}
             </Container>
           </fieldset>
-          <Container className="mt-4">
-            <div className="flex items-center gap-2">
+          <Container className="mt-4" data-testid={`return-request-detail-${request.id}-request-information`}>
+            <div className="flex items-center gap-2" data-testid={`return-request-detail-${request.id}-request-information-header`}>
               <InformationCircle />
-              <Text className="font-semibold">Request information</Text>
+              <Text className="font-semibold" data-testid={`return-request-detail-${request.id}-request-information-title`}>Request information</Text>
             </div>
-            <Text>{`Submitted on ${formatDate(request.created_at)}`}</Text>
-            <Text>{`Escalated on ${formatDate(request.vendor_reviewer_date)}`}</Text>
+            <Text data-testid={`return-request-detail-${request.id}-submitted-on`}>{`Submitted on ${formatDate(request.created_at)}`}</Text>
+            <Text data-testid={`return-request-detail-${request.id}-escalated-on`}>{`Escalated on ${formatDate(request.vendor_reviewer_date)}`}</Text>
             {request.admin_reviewer_id && (
-              <Text>{`Reviewed on ${formatDate(request.admin_reviewer_date)}`}</Text>
+              <Text data-testid={`return-request-detail-${request.id}-reviewed-on`}>{`Reviewed on ${formatDate(request.admin_reviewer_date)}`}</Text>
             )}
             {request.admin_reviewer_note && (
-              <Text>{`Reviewer note: ${request.admin_reviewer_note}`}</Text>
+              <Text data-testid={`return-request-detail-${request.id}-reviewer-note`}>{`Reviewer note: ${request.admin_reviewer_note}`}</Text>
             )}
           </Container>
         </Drawer.Body>
-        <Drawer.Footer>
+        <Drawer.Footer data-testid={`return-request-detail-${request.id}-footer`}>
           {request.status === "pending" ||
             (request.status === "escalated" && (
               <>
@@ -119,6 +119,7 @@ export function ReturnRequestDetail({ request, open, close }: Props) {
                   onClick={() => {
                     handlePrompt(request.id!, true);
                   }}
+                  data-testid={`return-request-detail-${request.id}-accept-button`}
                 >
                   Accept
                 </Button>
@@ -127,10 +128,11 @@ export function ReturnRequestDetail({ request, open, close }: Props) {
                     handlePrompt(request.id!, false);
                   }}
                   variant="danger"
+                  data-testid={`return-request-detail-${request.id}-reject-button`}
                 >
                   Reject
                 </Button>
-                <Button variant="secondary" onClick={close}>
+                <Button variant="secondary" onClick={close} data-testid={`return-request-detail-${request.id}-cancel-button`}>
                   Cancel
                 </Button>
               </>

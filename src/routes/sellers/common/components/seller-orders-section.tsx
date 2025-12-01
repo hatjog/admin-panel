@@ -48,9 +48,9 @@ export const SellerOrdersSection = ({
   });
 
   return (
-    <Container className="mt-2 px-0">
-      <div className="px-8 pb-4">
-        <Heading>Orders</Heading>
+    <Container className="mt-2 px-0" data-testid="seller-orders-section">
+      <div className="px-8 pb-4" data-testid="seller-orders-section-header">
+        <Heading data-testid="seller-orders-section-heading">Orders</Heading>
       </div>
       <Divider />
       <_DataTable

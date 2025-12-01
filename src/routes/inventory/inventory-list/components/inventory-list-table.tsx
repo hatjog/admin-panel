@@ -57,49 +57,51 @@ export const InventoryListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container className="divide-y p-0" data-testid="inventory-list-table">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="inventory-list-header">
         <div>
-          <Heading>{t("inventory.domain")}</Heading>
-          <Text className="text-ui-fg-subtle" size="small">
+          <Heading data-testid="inventory-list-title">{t("inventory.domain")}</Heading>
+          <Text className="text-ui-fg-subtle" size="small" data-testid="inventory-list-subtitle">
             {t("inventory.subtitle")}
           </Text>
         </div>
-        <Button size="small" variant="secondary" asChild>
-          <Link to="create">{t("actions.create")}</Link>
+        <Button size="small" variant="secondary" asChild data-testid="inventory-create-button">
+          <Link to="create" data-testid="inventory-create-link">{t("actions.create")}</Link>
         </Button>
       </div>
-      <_DataTable
-        table={table}
-        columns={columns}
-        pageSize={PAGE_SIZE}
-        count={count}
-        isLoading={isLoading}
-        pagination
-        search
-        filters={filters}
-        queryObject={raw}
-        orderBy={[
-          { key: "title", label: t("fields.title") },
-          { key: "sku", label: t("fields.sku") },
-          { key: "stocked_quantity", label: t("fields.inStock") },
-          { key: "reserved_quantity", label: t("inventory.reserved") },
-        ]}
-        navigateTo={(row) => `${row.id}`}
-        commands={[
-          {
-            action: async (selection) => {
-              navigate(
-                `stock?${INVENTORY_ITEM_IDS_KEY}=${Object.keys(selection).join(
-                  ","
-                )}`
-              )
+      <div data-testid="inventory-data-table">
+        <_DataTable
+          table={table}
+          columns={columns}
+          pageSize={PAGE_SIZE}
+          count={count}
+          isLoading={isLoading}
+          pagination
+          search
+          filters={filters}
+          queryObject={raw}
+          orderBy={[
+            { key: "title", label: t("fields.title") },
+            { key: "sku", label: t("fields.sku") },
+            { key: "stocked_quantity", label: t("fields.inStock") },
+            { key: "reserved_quantity", label: t("inventory.reserved") },
+          ]}
+          navigateTo={(row) => `${row.id}`}
+          commands={[
+            {
+              action: async (selection) => {
+                navigate(
+                  `stock?${INVENTORY_ITEM_IDS_KEY}=${Object.keys(selection).join(
+                    ","
+                  )}`
+                )
+              },
+              label: t("inventory.stock.action"),
+              shortcut: "i",
             },
-            label: t("inventory.stock.action"),
-            shortcut: "i",
-          },
-        ]}
-      />
+          ]}
+        />
+      </div>
     </Container>
   )
 }

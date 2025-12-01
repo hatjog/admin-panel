@@ -12,10 +12,10 @@ export const CampaignBudget = ({ campaign }: CampaignBudgetProps) => {
   const { t } = useTranslation()
 
   return (
-    <Container className="flex flex-col gap-y-4 px-6 py-4">
-      <div className="flex justify-between">
+    <Container className="flex flex-col gap-y-4 px-6 py-4" data-testid="campaign-budget-container">
+      <div className="flex justify-between" data-testid="campaign-budget-header">
         <div className="flex-grow">
-          <div className="bg-ui-bg-base shadow-borders-base float-start flex size-7 items-center justify-center rounded-md">
+          <div className="bg-ui-bg-base shadow-borders-base float-start flex size-7 items-center justify-center rounded-md" data-testid="campaign-budget-icon-container">
             <div className="bg-ui-bg-component flex size-6 items-center justify-center rounded-[4px]">
               <ChartPie className="text-ui-fg-subtle" />
             </div>
@@ -24,6 +24,7 @@ export const CampaignBudget = ({ campaign }: CampaignBudgetProps) => {
           <Heading
             className="text-ui-fg-subtle ms-10 mt-[1.5px] font-normal"
             level="h3"
+            data-testid="campaign-budget-heading"
           >
             {campaign.budget?.type === "use_by_attribute"
               ? t("campaigns.budget.fields.totalUsedByAttribute", {
@@ -45,14 +46,16 @@ export const CampaignBudget = ({ campaign }: CampaignBudgetProps) => {
               ],
             },
           ]}
+          data-testid="campaign-budget-action-menu"
         />
       </div>
 
-      <div>
+      <div data-testid="campaign-budget-limit">
         <Text
           className="text-ui-fg-subtle border-ui-border-strong border-l-4 ps-3"
           size="small"
           leading="compact"
+          data-testid="campaign-budget-limit-text"
         >
           <Trans
             i18nKey="campaigns.totalSpend"
@@ -67,10 +70,12 @@ export const CampaignBudget = ({ campaign }: CampaignBudgetProps) => {
               <span
                 key="amount"
                 className="text-ui-fg-base txt-compact-medium-plus text-lg"
+                data-testid="campaign-budget-limit-amount"
               />,
               <span
                 key="currency"
                 className="text-ui-fg-base txt-compact-medium-plus text-lg"
+                data-testid="campaign-budget-limit-currency"
               />,
             ]}
           />

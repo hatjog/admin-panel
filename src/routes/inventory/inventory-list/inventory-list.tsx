@@ -6,13 +6,15 @@ export const InventoryItemListTable = () => {
   const { getWidgets } = useExtension()
 
   return (
-    <SingleColumnPage
-      widgets={{
-        after: getWidgets("inventory_item.list.after"),
-        before: getWidgets("inventory_item.list.before"),
-      }}
-    >
-      <InventoryListTable />
-    </SingleColumnPage>
+    <div data-testid="inventory-page">
+      <SingleColumnPage
+        widgets={{
+          after: getWidgets("inventory_item.list.after"),
+          before: getWidgets("inventory_item.list.before"),
+        }}
+      >
+        <InventoryListTable />
+      </SingleColumnPage>
+    </div>
   )
 }

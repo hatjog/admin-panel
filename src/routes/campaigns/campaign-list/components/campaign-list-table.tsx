@@ -48,11 +48,11 @@ export const CampaignListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("campaigns.domain")}</Heading>
+    <Container className="divide-y p-0" data-testid="campaign-list-table-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="campaign-list-table-header">
+        <Heading level="h2" data-testid="campaign-list-table-heading">{t("campaigns.domain")}</Heading>
         <Link to="/campaigns/create">
-          <Button size="small" variant="secondary">
+          <Button size="small" variant="secondary" data-testid="campaign-list-table-create-button">
             {t("actions.create")}
           </Button>
         </Link>
@@ -73,6 +73,7 @@ export const CampaignListTable = () => {
           { key: "created_at", label: t("fields.createdAt") },
           { key: "updated_at", label: t("fields.updatedAt") },
         ]}
+        data-testid="campaign-list-table"
       />
     </Container>
   )
@@ -133,6 +134,7 @@ const CampaignActions = ({ campaign }: { campaign: AdminCampaign }) => {
           ],
         },
       ]}
+      data-testid={`campaign-list-table-action-menu-${campaign.id}`}
     />
   )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { History } from "@medusajs/icons";
 import { Container, Heading, Table, Text } from "@medusajs/ui";
@@ -32,10 +32,6 @@ export const CommissionLines = () => {
     limit: PAGE_SIZE,
   });
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <Container>
       <div className="flex items-center justify-between px-6 py-4">
@@ -67,8 +63,8 @@ export const CommissionLines = () => {
             {data?.commission_lines?.map((line: CommissionLine) => {
               return (
                 <Table.Row key={line.id}>
-                  <Table.Cell>{line.order.seller.name || ""}</Table.Cell>
-                  <Table.Cell>{`#${line.order.display_id || ""}`}</Table.Cell>
+                  <Table.Cell>{line.order?.seller?.name || "-"}</Table.Cell>
+                  <Table.Cell>{line.order?.display_id ? `#${line.order?.display_id}` : "-"}</Table.Cell>
                   <Table.Cell>{`${line.value} ${line.currency_code.toUpperCase()}`}</Table.Cell>
                   <Table.Cell>
                     <div className="flex items-center gap-2">

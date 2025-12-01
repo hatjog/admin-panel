@@ -1,20 +1,22 @@
-import { CheckMini, EllipseMiniSolid, XMarkMini } from "@medusajs/icons"
-import { clx } from "@medusajs/ui"
-import { Command } from "cmdk"
-import { Popover as RadixPopover } from "radix-ui"
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
+import { useState } from "react";
 
-import { useSelectedParams } from "../hooks"
-import { useDataTableFilterContext } from "./context"
-import FilterChip from "./filter-chip"
-import { IFilter } from "./types"
+import { CheckMini, EllipseMiniSolid, XMarkMini } from "@medusajs/icons";
+import { clx } from "@medusajs/ui";
+
+import { Command } from "cmdk";
+import { Popover as RadixPopover } from "radix-ui";
+import { useTranslation } from "react-i18next";
+
+import { useSelectedParams } from "../hooks";
+import { useDataTableFilterContext } from "./context";
+import FilterChip from "./filter-chip";
+import { IFilter } from "./types";
 
 interface SelectFilterProps extends IFilter {
-  options: { label: string; value: unknown }[]
-  readonly?: boolean
-  multiple?: boolean
-  searchable?: boolean
+  options: { label: string; value: unknown }[];
+  readonly?: boolean;
+  multiple?: boolean;
+  searchable?: boolean;
 }
 
 export const SelectFilter = ({
@@ -26,79 +28,84 @@ export const SelectFilter = ({
   options,
   openOnMount,
 }: SelectFilterProps) => {
-  const [open, setOpen] = useState(openOnMount)
-  const [search, setSearch] = useState("")
-  const [searchRef, setSearchRef] = useState<HTMLInputElement | null>(null)
+  const [open, setOpen] = useState(openOnMount);
+  const [search, setSearch] = useState("");
+  const [searchRef, setSearchRef] = useState<HTMLInputElement | null>(null);
 
-  const { t } = useTranslation()
-  const { removeFilter } = useDataTableFilterContext()
+  const { t } = useTranslation();
+  const { removeFilter } = useDataTableFilterContext();
 
-  const { key, label } = filter
-  const selectedParams = useSelectedParams({ param: key, prefix, multiple })
-  const currentValue = selectedParams.get()
+  const { key, label } = filter;
+  const selectedParams = useSelectedParams({ param: key, prefix, multiple });
+  const currentValue = selectedParams.get();
 
   const labelValues = currentValue
     .map((v) => options.find((o) => o.value === v)?.label)
-    .filter(Boolean) as string[]
+    .filter(Boolean) as string[];
 
   const [previousValue, setPreviousValue] = useState<
     string | string[] | undefined
-  >(labelValues)
+  >(labelValues);
 
   const handleRemove = () => {
-    selectedParams.delete()
-    removeFilter(key)
-  }
+    selectedParams.delete();
+    removeFilter(key);
+  };
 
-  let timeoutId: ReturnType<typeof setTimeout> | null = null
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const handleOpenChange = (open: boolean) => {
-    setOpen(open)
+    setOpen(open);
 
-    setPreviousValue(labelValues)
+    setPreviousValue(labelValues);
 
     if (timeoutId) {
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
     }
 
     if (!open && !currentValue.length) {
       timeoutId = setTimeout(() => {
-        removeFilter(key)
-      }, 200)
+        removeFilter(key);
+      }, 200);
     }
-  }
+  };
 
   const handleClearSearch = () => {
-    setSearch("")
+    setSearch("");
 
     if (searchRef) {
-      searchRef.focus()
+      searchRef.focus();
     }
-  }
+  };
 
   const handleSelect = (value: unknown) => {
-    const isSelected = selectedParams.get().includes(String(value))
+    const isSelected = selectedParams.get().includes(String(value));
 
     if (isSelected) {
-      selectedParams.delete(String(value))
+      selectedParams.delete(String(value));
     } else {
-      selectedParams.add(String(value))
+      selectedParams.add(String(value));
     }
-  }
+  };
 
   const normalizedValues = labelValues
     ? Array.isArray(labelValues)
       ? labelValues
       : [labelValues]
-    : null
+    : null;
   const normalizedPrev = previousValue
     ? Array.isArray(previousValue)
       ? previousValue
       : [previousValue]
-    : null
+    : null;
 
   return (
-    <RadixPopover.Root modal open={open} onOpenChange={handleOpenChange}>
+    <RadixPopover.Root
+      modal
+      open={open}
+      onOpenChange={handleOpenChange}
+      data-testid={`data-table-select-filter-${key}`}
+    >
       <FilterChip
         hasOperator
         hadPreviousValue={!!normalizedPrev?.length}
@@ -106,6 +113,7 @@ export const SelectFilter = ({
         label={label}
         value={normalizedValues?.join(", ")}
         onRemove={handleRemove}
+        data-testid={`data-table-select-filter-chip-${key}`}
       />
       {!readonly && (
         <RadixPopover.Portal>
@@ -115,41 +123,50 @@ export const SelectFilter = ({
             sideOffset={8}
             collisionPadding={8}
             className={clx(
-              "bg-ui-bg-base text-ui-fg-base shadow-elevation-flyout z-[1] h-full max-h-[200px] w-[300px] overflow-hidden rounded-lg outline-none"
+              "z-[1] h-full max-h-[200px] w-[300px] overflow-hidden rounded-lg bg-ui-bg-base text-ui-fg-base shadow-elevation-flyout outline-none",
             )}
+            data-testid={`data-table-select-filter-content-${key}`}
             onInteractOutside={(e) => {
               if (e.target instanceof HTMLElement) {
                 if (
                   e.target.attributes.getNamedItem("data-name")?.value ===
                   "filters_menu_content"
                 ) {
-                  e.preventDefault()
-                  e.stopPropagation()
+                  e.preventDefault();
+                  e.stopPropagation();
                 }
               }
             }}
           >
-            <Command className="h-full">
+            <Command
+              className="h-full"
+              data-testid={`data-table-select-filter-command-${key}`}
+            >
               {searchable && (
-                <div className="border-b p-1">
+                <div
+                  className="border-b p-1"
+                  data-testid={`data-table-select-filter-search-${key}`}
+                >
                   <div className="grid grid-cols-[1fr_20px] gap-x-2 rounded-md px-2 py-1">
                     <Command.Input
                       ref={setSearchRef}
                       value={search}
                       onValueChange={setSearch}
-                      className="txt-compact-small placeholder:text-ui-fg-muted bg-transparent outline-none"
+                      className="txt-compact-small bg-transparent outline-none placeholder:text-ui-fg-muted"
                       placeholder="Search"
+                      data-testid={`data-table-select-filter-search-input-${key}`}
                     />
                     <div className="flex h-5 w-5 items-center justify-center">
                       <button
                         disabled={!search}
                         onClick={handleClearSearch}
                         className={clx(
-                          "transition-fg text-ui-fg-muted focus-visible:bg-ui-bg-base-pressed rounded-md outline-none",
+                          "rounded-md text-ui-fg-muted outline-none transition-fg focus-visible:bg-ui-bg-base-pressed",
                           {
                             invisible: !search,
-                          }
+                          },
                         )}
+                        data-testid={`data-table-select-filter-clear-search-${key}`}
                       >
                         <XMarkMini />
                       </button>
@@ -157,39 +174,47 @@ export const SelectFilter = ({
                   </div>
                 </div>
               )}
-              <Command.Empty className="txt-compact-small flex items-center justify-center p-1">
+              <Command.Empty
+                className="txt-compact-small flex items-center justify-center p-1"
+                data-testid={`data-table-select-filter-empty-${key}`}
+              >
                 <span className="w-full px-2 py-1 text-center">
                   {t("general.noResultsTitle")}
                 </span>
               </Command.Empty>
-              <Command.List className="h-full max-h-[163px] min-h-[0] overflow-auto p-1 outline-none">
+              <Command.List
+                className="h-full max-h-[163px] min-h-[0] overflow-auto p-1 outline-none"
+                data-testid={`data-table-select-filter-list-${key}`}
+              >
                 {options.map((option) => {
                   const isSelected = selectedParams
                     .get()
-                    .includes(String(option.value))
+                    .includes(String(option.value));
 
                   return (
                     <Command.Item
                       key={String(option.value)}
-                      className="bg-ui-bg-base hover:bg-ui-bg-base-hover aria-selected:bg-ui-bg-base-pressed focus-visible:bg-ui-bg-base-pressed text-ui-fg-base data-[disabled]:text-ui-fg-disabled txt-compact-small relative flex cursor-pointer select-none items-center gap-x-2 rounded-md px-2 py-1.5 outline-none transition-colors data-[disabled]:pointer-events-none"
+                      className="txt-compact-small relative flex cursor-pointer select-none items-center gap-x-2 rounded-md bg-ui-bg-base px-2 py-1.5 text-ui-fg-base outline-none transition-colors hover:bg-ui-bg-base-hover focus-visible:bg-ui-bg-base-pressed aria-selected:bg-ui-bg-base-pressed data-[disabled]:pointer-events-none data-[disabled]:text-ui-fg-disabled"
                       value={option.label}
                       onSelect={() => {
-                        handleSelect(option.value)
+                        handleSelect(option.value);
                       }}
+                      data-testid={`data-table-select-filter-option-${key}-${String(option.value)}`}
                     >
                       <div
                         className={clx(
-                          "transition-fg flex h-5 w-5 items-center justify-center",
+                          "flex h-5 w-5 items-center justify-center transition-fg",
                           {
                             "[&_svg]:invisible": !isSelected,
-                          }
+                          },
                         )}
+                        data-testid={`data-table-select-filter-option-checkbox-${key}-${String(option.value)}`}
                       >
                         {multiple ? <CheckMini /> : <EllipseMiniSolid />}
                       </div>
                       {option.label}
                     </Command.Item>
-                  )
+                  );
                 })}
               </Command.List>
             </Command>
@@ -197,5 +222,5 @@ export const SelectFilter = ({
         </RadixPopover.Portal>
       )}
     </RadixPopover.Root>
-  )
-}
+  );
+};

@@ -6,10 +6,12 @@ import { PlaceholderCell } from "../../common/placeholder-cell"
 
 type SalesChannelsCellProps = {
   salesChannels?: SalesChannelDTO[] | null
+  "data-testid"?: string
 }
 
 export const SalesChannelsCell = ({
   salesChannels,
+  "data-testid": dataTestId,
 }: SalesChannelsCellProps) => {
   const { t } = useTranslation()
 
@@ -20,7 +22,7 @@ export const SalesChannelsCell = ({
   if (salesChannels.length > 2) {
     return (
       <div className="flex h-full w-full items-center gap-x-1 overflow-hidden">
-        <span className="truncate">
+        <span className="truncate" data-testid={dataTestId}>
           {salesChannels
             .slice(0, 2)
             .map((sc) => sc.name)
@@ -49,7 +51,7 @@ export const SalesChannelsCell = ({
 
   return (
     <div className="flex h-full w-full items-center overflow-hidden max-w-[250px]">
-      <span title={channels} className="truncate">
+      <span title={channels} className="truncate" data-testid={dataTestId}>
         {channels}
       </span>
     </div>
@@ -60,8 +62,8 @@ export const SalesChannelHeader = () => {
   const { t } = useTranslation()
 
   return (
-    <div className="flex h-full w-full items-center">
-      <span>{t("fields.salesChannels")}</span>
+    <div className="flex h-full w-full items-center" data-testid="products-table-header-sales-channels">
+      <span data-testid="products-table-header-sales-channels-text">{t("fields.salesChannels")}</span>
     </div>
   )
 }

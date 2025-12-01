@@ -122,24 +122,27 @@ export const ProductEditVariantForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="product-variant-edit-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex size-full flex-col overflow-hidden"
+        data-testid="product-variant-edit-keybound-form"
       >
-        <RouteDrawer.Body className="flex size-full flex-col gap-y-8 overflow-auto">
-          <div className="flex flex-col gap-y-4">
+        <RouteDrawer.Body className="flex size-full flex-col gap-y-8 overflow-auto" data-testid="product-variant-edit-form-body">
+          <div className="flex flex-col gap-y-4" data-testid="product-variant-edit-form-main-fields">
             <Form.Field
               control={form.control}
               name="title"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("fields.title")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-title-item">
+                    <Form.Label data-testid="product-variant-edit-form-title-label">{t("fields.title")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-title-control">
+                      <div data-testid="product-variant-edit-form-title-input-wrapper">
+                        <Input {...field} data-testid="product-variant-edit-form-title-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-title-error" />
                   </Form.Item>
                 )
               }}
@@ -149,17 +152,20 @@ export const ProductEditVariantForm = ({
               name="material"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.material")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-material-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-material-label">{t("fields.material")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-material-control">
+                      <div data-testid="product-variant-edit-form-material-input-wrapper">
+                        <Input {...field} data-testid="product-variant-edit-form-material-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-material-error" />
                   </Form.Item>
                 )
               }}
             />
             {product.options?.map((option: any) => {
+              const optionKey = option.title.toLowerCase().replace(/\s+/g, "-")
               return (
                 <Form.Field
                   key={option.id}
@@ -167,21 +173,25 @@ export const ProductEditVariantForm = ({
                   name={`options.${option.title}`}
                   render={({ field: { value, onChange, ...field } }) => {
                     return (
-                      <Form.Item>
-                        <Form.Label>{option.title}</Form.Label>
-                        <Form.Control>
-                          <Combobox
-                            value={value}
-                            onChange={(v) => {
-                              onChange(v)
-                            }}
-                            {...field}
-                            options={option.values.map((v: any) => ({
-                              label: v.value,
-                              value: v.value,
-                            }))}
-                          />
+                      <Form.Item data-testid={`product-variant-edit-form-option-${optionKey}-item`}>
+                        <Form.Label data-testid={`product-variant-edit-form-option-${optionKey}-label`}>{option.title}</Form.Label>
+                        <Form.Control data-testid={`product-variant-edit-form-option-${optionKey}-control`}>
+                          <div data-testid={`product-variant-edit-form-option-${optionKey}-combobox-wrapper`}>
+                            <Combobox
+                              value={value}
+                              onChange={(v) => {
+                                onChange(v)
+                              }}
+                              {...field}
+                              options={option.values.map((v: any) => ({
+                                label: v.value,
+                                value: v.value,
+                              }))}
+                              data-testid={`product-variant-edit-form-option-${optionKey}-combobox`}
+                            />
+                          </div>
                         </Form.Control>
+                        <Form.ErrorMessage data-testid={`product-variant-edit-form-option-${optionKey}-error`} />
                       </Form.Item>
                     )
                   }}
@@ -189,10 +199,10 @@ export const ProductEditVariantForm = ({
               )
             })}
           </div>
-          <Divider />
-          <div className="flex flex-col gap-y-8">
-            <div className="flex flex-col gap-y-4">
-              <Heading level="h2">
+          <Divider data-testid="product-variant-edit-form-divider-1" />
+          <div className="flex flex-col gap-y-8" data-testid="product-variant-edit-form-inventory-section">
+            <div className="flex flex-col gap-y-4" data-testid="product-variant-edit-form-inventory-fields">
+              <Heading level="h2" data-testid="product-variant-edit-form-inventory-header">
                 {t("products.variant.inventory.header")}
               </Heading>
               <Form.Field
@@ -200,12 +210,14 @@ export const ProductEditVariantForm = ({
                 name="sku"
                 render={({ field }) => {
                   return (
-                    <Form.Item>
-                      <Form.Label optional>{t("fields.sku")}</Form.Label>
-                      <Form.Control>
-                        <Input {...field} />
+                    <Form.Item data-testid="product-variant-edit-form-sku-item">
+                      <Form.Label optional data-testid="product-variant-edit-form-sku-label">{t("fields.sku")}</Form.Label>
+                      <Form.Control data-testid="product-variant-edit-form-sku-control">
+                        <div data-testid="product-variant-edit-form-sku-input-wrapper">
+                          <Input {...field} data-testid="product-variant-edit-form-sku-input" />
+                        </div>
                       </Form.Control>
-                      <Form.ErrorMessage />
+                      <Form.ErrorMessage data-testid="product-variant-edit-form-sku-error" />
                     </Form.Item>
                   )
                 }}
@@ -215,12 +227,14 @@ export const ProductEditVariantForm = ({
                 name="ean"
                 render={({ field }) => {
                   return (
-                    <Form.Item>
-                      <Form.Label optional>{t("fields.ean")}</Form.Label>
-                      <Form.Control>
-                        <Input {...field} />
+                    <Form.Item data-testid="product-variant-edit-form-ean-item">
+                      <Form.Label optional data-testid="product-variant-edit-form-ean-label">{t("fields.ean")}</Form.Label>
+                      <Form.Control data-testid="product-variant-edit-form-ean-control">
+                        <div data-testid="product-variant-edit-form-ean-input-wrapper">
+                          <Input {...field} data-testid="product-variant-edit-form-ean-input" />
+                        </div>
                       </Form.Control>
-                      <Form.ErrorMessage />
+                      <Form.ErrorMessage data-testid="product-variant-edit-form-ean-error" />
                     </Form.Item>
                   )
                 }}
@@ -230,12 +244,14 @@ export const ProductEditVariantForm = ({
                 name="upc"
                 render={({ field }) => {
                   return (
-                    <Form.Item>
-                      <Form.Label optional>{t("fields.upc")}</Form.Label>
-                      <Form.Control>
-                        <Input {...field} />
+                    <Form.Item data-testid="product-variant-edit-form-upc-item">
+                      <Form.Label optional data-testid="product-variant-edit-form-upc-label">{t("fields.upc")}</Form.Label>
+                      <Form.Control data-testid="product-variant-edit-form-upc-control">
+                        <div data-testid="product-variant-edit-form-upc-input-wrapper">
+                          <Input {...field} data-testid="product-variant-edit-form-upc-input" />
+                        </div>
                       </Form.Control>
-                      <Form.ErrorMessage />
+                      <Form.ErrorMessage data-testid="product-variant-edit-form-upc-error" />
                     </Form.Item>
                   )
                 }}
@@ -245,12 +261,14 @@ export const ProductEditVariantForm = ({
                 name="barcode"
                 render={({ field }) => {
                   return (
-                    <Form.Item>
-                      <Form.Label optional>{t("fields.barcode")}</Form.Label>
-                      <Form.Control>
-                        <Input {...field} />
+                    <Form.Item data-testid="product-variant-edit-form-barcode-item">
+                      <Form.Label optional data-testid="product-variant-edit-form-barcode-label">{t("fields.barcode")}</Form.Label>
+                      <Form.Control data-testid="product-variant-edit-form-barcode-control">
+                        <div data-testid="product-variant-edit-form-barcode-input-wrapper">
+                          <Input {...field} data-testid="product-variant-edit-form-barcode-input" />
+                        </div>
                       </Form.Control>
-                      <Form.ErrorMessage />
+                      <Form.ErrorMessage data-testid="product-variant-edit-form-barcode-error" />
                     </Form.Item>
                   )
                 }}
@@ -261,27 +279,30 @@ export const ProductEditVariantForm = ({
               name="manage_inventory"
               render={({ field: { value, onChange, ...field } }) => {
                 return (
-                  <Form.Item>
-                    <div className="flex flex-col gap-y-1">
-                      <div className="flex items-center justify-between">
-                        <Form.Label>
+                  <Form.Item data-testid="product-variant-edit-form-manage-inventory-item">
+                    <div className="flex flex-col gap-y-1" data-testid="product-variant-edit-form-manage-inventory-container">
+                      <div className="flex items-center justify-between" data-testid="product-variant-edit-form-manage-inventory-control-row">
+                        <Form.Label data-testid="product-variant-edit-form-manage-inventory-label">
                           {t("products.variant.inventory.manageInventoryLabel")}
                         </Form.Label>
-                        <Form.Control>
-                          <Switch
-                            dir="ltr"
-                            checked={value}
-                            className="rtl:rotate-180"
-                            onCheckedChange={(checked) => onChange(!!checked)}
-                            {...field}
-                          />
+                        <Form.Control data-testid="product-variant-edit-form-manage-inventory-control">
+                          <div data-testid="product-variant-edit-form-manage-inventory-switch-wrapper">
+                            <Switch
+                              dir="ltr"
+                              checked={value}
+                              className="rtl:rotate-180"
+                              onCheckedChange={(checked) => onChange(!!checked)}
+                              {...field}
+                              data-testid="product-variant-edit-form-manage-inventory-switch"
+                            />
+                          </div>
                         </Form.Control>
                       </div>
-                      <Form.Hint>
+                      <Form.Hint data-testid="product-variant-edit-form-manage-inventory-hint">
                         {t("products.variant.inventory.manageInventoryHint")}
                       </Form.Hint>
                     </div>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-manage-inventory-error" />
                   </Form.Item>
                 )
               }}
@@ -291,46 +312,51 @@ export const ProductEditVariantForm = ({
               name="allow_backorder"
               render={({ field: { value, onChange, ...field } }) => {
                 return (
-                  <Form.Item>
-                    <div className="flex flex-col gap-y-1">
-                      <div className="flex items-center justify-between">
-                        <Form.Label>
+                  <Form.Item data-testid="product-variant-edit-form-allow-backorder-item">
+                    <div className="flex flex-col gap-y-1" data-testid="product-variant-edit-form-allow-backorder-container">
+                      <div className="flex items-center justify-between" data-testid="product-variant-edit-form-allow-backorder-control-row">
+                        <Form.Label data-testid="product-variant-edit-form-allow-backorder-label">
                           {t("products.variant.inventory.allowBackordersLabel")}
                         </Form.Label>
-                        <Form.Control>
-                          <Switch
-                            dir="ltr"
-                            className="rtl:rotate-180"
-                            checked={value}
-                            onCheckedChange={(checked) => onChange(!!checked)}
-                            {...field}
-                          />
+                        <Form.Control data-testid="product-variant-edit-form-allow-backorder-control">
+                          <div data-testid="product-variant-edit-form-allow-backorder-switch-wrapper">
+                            <Switch
+                              dir="ltr"
+                              className="rtl:rotate-180"
+                              checked={value}
+                              onCheckedChange={(checked) => onChange(!!checked)}
+                              {...field}
+                              data-testid="product-variant-edit-form-allow-backorder-switch"
+                            />
+                          </div>
                         </Form.Control>
                       </div>
-                      <Form.Hint>
+                      <Form.Hint data-testid="product-variant-edit-form-allow-backorder-hint">
                         {t("products.variant.inventory.allowBackordersHint")}
                       </Form.Hint>
                     </div>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-allow-backorder-error" />
                   </Form.Item>
                 )
               }}
             />
           </div>
-          <Divider />
-          <div className="flex flex-col gap-y-4">
-            <Heading level="h2">{t("products.attributes")}</Heading>
+          <Divider data-testid="product-variant-edit-form-divider-2" />
+          <div className="flex flex-col gap-y-4" data-testid="product-variant-edit-form-attributes-section">
+            <Heading level="h2" data-testid="product-variant-edit-form-attributes-header">{t("products.attributes")}</Heading>
             <Form.Field
               control={form.control}
               name="weight"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.weight")}</Form.Label>
-                    <Form.Control>
-                      <Input type="number" {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-weight-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-weight-label">{t("fields.weight")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-weight-control">
+                      <div data-testid="product-variant-edit-form-weight-input-wrapper">
+                        <Input type="number" {...field} data-testid="product-variant-edit-form-weight-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-weight-error" />
                   </Form.Item>
                 )
               }}
@@ -340,12 +366,14 @@ export const ProductEditVariantForm = ({
               name="width"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.width")}</Form.Label>
-                    <Form.Control>
-                      <Input type="number" {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-width-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-width-label">{t("fields.width")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-width-control">
+                      <div data-testid="product-variant-edit-form-width-input-wrapper">
+                        <Input type="number" {...field} data-testid="product-variant-edit-form-width-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-width-error" />
                   </Form.Item>
                 )
               }}
@@ -355,12 +383,14 @@ export const ProductEditVariantForm = ({
               name="length"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.length")}</Form.Label>
-                    <Form.Control>
-                      <Input type="number" {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-length-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-length-label">{t("fields.length")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-length-control">
+                      <div data-testid="product-variant-edit-form-length-input-wrapper">
+                        <Input type="number" {...field} data-testid="product-variant-edit-form-length-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-length-error" />
                   </Form.Item>
                 )
               }}
@@ -370,12 +400,14 @@ export const ProductEditVariantForm = ({
               name="height"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.height")}</Form.Label>
-                    <Form.Control>
-                      <Input type="number" {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-height-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-height-label">{t("fields.height")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-height-control">
+                      <div data-testid="product-variant-edit-form-height-input-wrapper">
+                        <Input type="number" {...field} data-testid="product-variant-edit-form-height-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-height-error" />
                   </Form.Item>
                 )
               }}
@@ -385,12 +417,14 @@ export const ProductEditVariantForm = ({
               name="mid_code"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.midCode")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-mid-code-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-mid-code-label">{t("fields.midCode")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-mid-code-control">
+                      <div data-testid="product-variant-edit-form-mid-code-input-wrapper">
+                        <Input {...field} data-testid="product-variant-edit-form-mid-code-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-mid-code-error" />
                   </Form.Item>
                 )
               }}
@@ -400,12 +434,14 @@ export const ProductEditVariantForm = ({
               name="hs_code"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>{t("fields.hsCode")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="product-variant-edit-form-hs-code-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-hs-code-label">{t("fields.hsCode")}</Form.Label>
+                    <Form.Control data-testid="product-variant-edit-form-hs-code-control">
+                      <div data-testid="product-variant-edit-form-hs-code-input-wrapper">
+                        <Input {...field} data-testid="product-variant-edit-form-hs-code-input" />
+                      </div>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-hs-code-error" />
                   </Form.Item>
                 )
               }}
@@ -415,28 +451,28 @@ export const ProductEditVariantForm = ({
               name="origin_country"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label optional>
+                  <Form.Item data-testid="product-variant-edit-form-origin-country-item">
+                    <Form.Label optional data-testid="product-variant-edit-form-origin-country-label">
                       {t("fields.countryOfOrigin")}
                     </Form.Label>
-                    <Form.Control>
-                      <CountrySelect {...field} />
+                    <Form.Control data-testid="product-variant-edit-form-origin-country-control">
+                      <CountrySelect {...field} data-testid="product-variant-edit-form-origin-country-select" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="product-variant-edit-form-origin-country-error" />
                   </Form.Item>
                 )
               }}
             />
           </div>
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small">
+        <RouteDrawer.Footer data-testid="product-variant-edit-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="product-variant-edit-form-footer-actions">
+            <RouteDrawer.Close asChild data-testid="product-variant-edit-form-cancel-button-wrapper">
+              <Button variant="secondary" size="small" data-testid="product-variant-edit-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button type="submit" size="small" isLoading={isPending}>
+            <Button type="submit" size="small" isLoading={isPending} data-testid="product-variant-edit-form-save-button">
               {t("actions.save")}
             </Button>
           </div>

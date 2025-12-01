@@ -59,28 +59,29 @@ export const CampaignConfigurationForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="campaign-configuration-form">
       <KeyboundForm onSubmit={handleSubmit} className="flex flex-1 flex-col">
-        <RouteDrawer.Body>
+        <RouteDrawer.Body data-testid="campaign-configuration-form-body">
           <div className="flex flex-col gap-y-4">
             <Form.Field
               control={form.control}
               name="starts_at"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("campaigns.fields.start_date")}</Form.Label>
+                  <Form.Item data-testid="campaign-configuration-form-starts-at-item">
+                    <Form.Label data-testid="campaign-configuration-form-starts-at-label">{t("campaigns.fields.start_date")}</Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="campaign-configuration-form-starts-at-control">
                       <DatePicker
                         granularity="minute"
                         hourCycle={12}
                         shouldCloseOnSelect={false}
                         {...field}
+                        data-testid="campaign-configuration-form-starts-at-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="campaign-configuration-form-starts-at-error" />
                   </Form.Item>
                 )
               }}
@@ -91,18 +92,19 @@ export const CampaignConfigurationForm = ({
               name="ends_at"
               render={({ field }) => {
                 return (
-                  <Form.Item>
-                    <Form.Label>{t("campaigns.fields.end_date")}</Form.Label>
+                  <Form.Item data-testid="campaign-configuration-form-ends-at-item">
+                    <Form.Label data-testid="campaign-configuration-form-ends-at-label">{t("campaigns.fields.end_date")}</Form.Label>
 
-                    <Form.Control>
+                    <Form.Control data-testid="campaign-configuration-form-ends-at-control">
                       <DatePicker
                         granularity="minute"
                         shouldCloseOnSelect={false}
                         {...field}
+                        data-testid="campaign-configuration-form-ends-at-input"
                       />
                     </Form.Control>
 
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="campaign-configuration-form-ends-at-error" />
                   </Form.Item>
                 )
               }}
@@ -110,10 +112,10 @@ export const CampaignConfigurationForm = ({
           </div>
         </RouteDrawer.Body>
 
-        <RouteDrawer.Footer>
+        <RouteDrawer.Footer data-testid="campaign-configuration-form-footer">
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="secondary" size="small" data-testid="campaign-configuration-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
@@ -123,6 +125,7 @@ export const CampaignConfigurationForm = ({
               type="submit"
               variant="primary"
               size="small"
+              data-testid="campaign-configuration-form-save-button"
             >
               {t("actions.save")}
             </Button>

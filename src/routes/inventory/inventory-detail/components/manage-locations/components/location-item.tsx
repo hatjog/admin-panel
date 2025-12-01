@@ -22,21 +22,23 @@ export const LocationItem = ({
         }
       )}
       onClick={() => onSelect(!selected)}
+      data-testid={`inventory-manage-locations-form-location-item-${location.id}`}
     >
-      <div className="h-5 w-5">
+      <div className="h-5 w-5" data-testid={`inventory-manage-locations-form-location-item-${location.id}-checkbox-container`}>
         <Checkbox
           onClick={(e) => {
             e.stopPropagation()
             onSelect(!selected)
           }}
           checked={selected}
+          data-testid={`inventory-manage-locations-form-location-item-${location.id}-checkbox`}
         />
       </div>
-      <div className="flex w-full flex-col">
-        <Text size="small" leading="compact" weight="plus">
+      <div className="flex w-full flex-col" data-testid={`inventory-manage-locations-form-location-item-${location.id}-details`}>
+        <Text size="small" leading="compact" weight="plus" data-testid={`inventory-manage-locations-form-location-item-${location.id}-name`}>
           {location.name}
         </Text>
-        <Text size="small" leading="compact" className="text-ui-fg-subtle">
+        <Text size="small" leading="compact" className="text-ui-fg-subtle" data-testid={`inventory-manage-locations-form-location-item-${location.id}-address`}>
           {[
             location.address?.address_1,
             location.address?.city,

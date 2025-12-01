@@ -53,30 +53,32 @@ export const ProductDetail = () => {
   }
 
   return (
-    <TwoColumnPage
-      widgets={{
-        after,
-        before,
-        sideAfter,
-        sideBefore,
-      }}
-      showJSON
-      showMetadata
-      data={product}
-    >
-      <TwoColumnPage.Main>
-        <ProductGeneralSection product={product} />
-        <ProductMediaSection product={product} />
-        <ProductOptionSection product={product} />
-        <ProductVariantSection product={product} />
-      </TwoColumnPage.Main>
-      <TwoColumnPage.Sidebar>
-        <ProductSalesChannelSection product={product} />
-        <ProductShippingProfileSection product={product} />
-        <ProductOrganizationSection product={product} />
-        <ProductAttributeSection product={product} />
-        <ProductAdditionalAttributeSection />
-      </TwoColumnPage.Sidebar>
-    </TwoColumnPage>
+    <div data-testid="product-detail-page">
+      <TwoColumnPage
+        widgets={{
+          after,
+          before,
+          sideAfter,
+          sideBefore,
+        }}
+        showJSON
+        showMetadata
+        data={product}
+      >
+        <TwoColumnPage.Main data-testid="product-detail-main">
+          <ProductGeneralSection product={product} />
+          <ProductMediaSection product={product} />
+          <ProductOptionSection product={product} />
+          <ProductVariantSection product={product} />
+        </TwoColumnPage.Main>
+        <TwoColumnPage.Sidebar data-testid="product-detail-sidebar">
+          <ProductSalesChannelSection product={product} />
+          <ProductShippingProfileSection product={product} />
+          <ProductOrganizationSection product={product} />
+          <ProductAttributeSection product={product} />
+          <ProductAdditionalAttributeSection />
+        </TwoColumnPage.Sidebar>
+      </TwoColumnPage>
+    </div>
   );
 };

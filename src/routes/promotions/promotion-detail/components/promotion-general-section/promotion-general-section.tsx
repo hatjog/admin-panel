@@ -79,14 +79,14 @@ export const PromotionGeneralSection = ({
   const displayValue = getDisplayValue(promotion)
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container className="divide-y p-0" data-testid="promotion-general-section-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="promotion-general-section-header">
         <div className="flex flex-col">
-          <Heading>{promotion.code}</Heading>
+          <Heading data-testid="promotion-general-section-code">{promotion.code}</Heading>
         </div>
 
         <div className="flex items-center gap-x-2">
-          <StatusBadge color={color}>{text}</StatusBadge>
+          <StatusBadge color={color} data-testid="promotion-general-section-status">{text}</StatusBadge>
           <ActionMenu
             groups={[
               {
@@ -108,24 +108,25 @@ export const PromotionGeneralSection = ({
                 ],
               },
             ]}
+            data-testid="promotion-general-section-action-menu"
           />
         </div>
       </div>
 
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4">
-        <Text size="small" weight="plus" leading="compact">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4" data-testid="promotion-general-section-method">
+        <Text size="small" weight="plus" leading="compact" data-testid="promotion-general-section-method-label">
           {t("promotions.fields.method")}
         </Text>
 
-        <Text size="small" leading="compact" className="text-pretty">
+        <Text size="small" leading="compact" className="text-pretty" data-testid="promotion-general-section-method-value">
           {promotion.is_automatic
             ? t("promotions.form.method.automatic.title")
             : t("promotions.form.method.code.title")}
         </Text>
       </div>
 
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4">
-        <Text size="small" weight="plus" leading="compact">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-center px-6 py-4" data-testid="promotion-general-section-code-field">
+        <Text size="small" weight="plus" leading="compact" data-testid="promotion-general-section-code-label">
           {t("fields.code")}
         </Text>
 
@@ -133,61 +134,63 @@ export const PromotionGeneralSection = ({
           content={promotion.code!}
           className="text-ui-tag-neutral-text"
           asChild
+          data-testid="promotion-general-section-code-copy"
         >
           <Badge
             size="2xsmall"
             rounded="full"
             className="cursor-pointer text-pretty"
+            data-testid="promotion-general-section-code-badge"
           >
             {promotion.code}
           </Badge>
         </Copy>
       </div>
 
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4">
-        <Text size="small" weight="plus" leading="compact">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4" data-testid="promotion-general-section-type">
+        <Text size="small" weight="plus" leading="compact" data-testid="promotion-general-section-type-label">
           {t("promotions.fields.type")}
         </Text>
 
-        <Text size="small" leading="compact" className="text-pretty capitalize">
+        <Text size="small" leading="compact" className="text-pretty capitalize" data-testid="promotion-general-section-type-value">
           {promotion.type}
         </Text>
       </div>
 
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4">
-        <Text size="small" weight="plus" leading="compact">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4" data-testid="promotion-general-section-value">
+        <Text size="small" weight="plus" leading="compact" data-testid="promotion-general-section-value-label">
           {t("promotions.fields.value")}
         </Text>
 
-        <div className="flex items-center gap-x-2">
-          <Text className="inline" size="small" leading="compact">
+        <div className="flex items-center gap-x-2" data-testid="promotion-general-section-value-content">
+          <Text className="inline" size="small" leading="compact" data-testid="promotion-general-section-value-text">
             {displayValue || "-"}
           </Text>
           {promotion?.application_method?.type === "fixed" && (
-            <Badge size="2xsmall" rounded="full">
+            <Badge size="2xsmall" rounded="full" data-testid="promotion-general-section-value-currency">
               {promotion?.application_method?.currency_code?.toUpperCase()}
             </Badge>
           )}
         </div>
       </div>
 
-      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4">
-        <Text size="small" weight="plus" leading="compact">
+      <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4" data-testid="promotion-general-section-allocation">
+        <Text size="small" weight="plus" leading="compact" data-testid="promotion-general-section-allocation-label">
           {t("promotions.fields.allocation")}
         </Text>
 
-        <Text size="small" leading="compact" className="text-pretty capitalize">
+        <Text size="small" leading="compact" className="text-pretty capitalize" data-testid="promotion-general-section-allocation-value">
           {promotion.application_method?.allocation!}
         </Text>
       </div>
 
       {promotion.application_method?.type === "fixed" && (
-        <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4">
-          <Text size="small" weight="plus" leading="compact">
+        <div className="text-ui-fg-subtle grid grid-cols-2 items-start px-6 py-4" data-testid="promotion-general-section-tax-inclusive">
+          <Text size="small" weight="plus" leading="compact" data-testid="promotion-general-section-tax-inclusive-label">
             {t("promotions.fields.taxInclusive")}
           </Text>
 
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-2" data-testid="promotion-general-section-tax-inclusive-value">
             <Text className="inline" size="small" leading="compact">
               {promotion.is_tax_inclusive
                 ? t("fields.true")

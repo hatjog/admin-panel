@@ -34,7 +34,7 @@ export const RequestProductCategoryList = () => {
 
   const [currentFilter, setCurrentFilter] = useState<FilterState>("");
 
-  const { requests, isLoading, refetch, count } = useVendorRequests({
+  const { requests, isLoading, refetch, count = 0 } = useVendorRequests({
     offset: currentPage * PAGE_SIZE,
     limit: PAGE_SIZE,
     type: "product_category",
@@ -42,10 +42,10 @@ export const RequestProductCategoryList = () => {
   });
 
   return (
-    <Container>
-      <div className="flex items-center justify-between px-6 py-4">
+    <Container data-testid="request-product-category-list-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="request-product-category-list-header">
         <div>
-          <Heading>Product category requests</Heading>
+          <Heading data-testid="request-product-category-list-heading">Product category requests</Heading>
           <ProductCategoryRequestDetail
             request={detailRequest}
             open={detailOpen}
@@ -61,38 +61,38 @@ export const RequestProductCategoryList = () => {
           />
         </div>
       </div>
-      <div className="flex size-full flex-col overflow-hidden">
-        {isLoading && <Text>Loading...</Text>}
-        <Table>
-          <Table.Header>
+      <div className="flex size-full flex-col overflow-hidden" data-testid="request-product-category-list-content">
+        {isLoading && <Text data-testid="request-product-category-list-loading">Loading...</Text>}
+        <Table data-testid="request-product-category-list-table">
+          <Table.Header data-testid="request-product-category-list-table-header">
             <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Handle</Table.HeaderCell>
-              <Table.HeaderCell>Submitted By</Table.HeaderCell>
-              <Table.HeaderCell>Date</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Actions</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-product-category-list-table-header-name">Name</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-product-category-list-table-header-handle">Handle</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-product-category-list-table-header-submitted-by">Submitted By</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-product-category-list-table-header-date">Date</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-product-category-list-table-header-status">Status</Table.HeaderCell>
+              <Table.HeaderCell data-testid="request-product-category-list-table-header-actions">Actions</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          <Table.Body>
+          <Table.Body data-testid="request-product-category-list-table-body">
             {requests?.map((request) => {
               const requestData = request.data as ProductCategoryDTO;
 
               return (
-                <Table.Row key={request.id}>
-                  <Table.Cell>{requestData.name}</Table.Cell>
-                  <Table.Cell>{requestData.handle}</Table.Cell>
-                  <Table.Cell>{request.seller?.name}</Table.Cell>
-                  <Table.Cell>
+                <Table.Row key={request.id} data-testid={`request-product-category-list-table-row-${request.id}`}>
+                  <Table.Cell data-testid={`request-product-category-list-table-row-${request.id}-name`}>{requestData.name}</Table.Cell>
+                  <Table.Cell data-testid={`request-product-category-list-table-row-${request.id}-handle`}>{requestData.handle}</Table.Cell>
+                  <Table.Cell data-testid={`request-product-category-list-table-row-${request.id}-submitted-by`}>{request.seller?.name}</Table.Cell>
+                  <Table.Cell data-testid={`request-product-category-list-table-row-${request.id}-date`}>
                     <div className="flex items-center gap-2">
                       <History />
                       {formatDate(request.created_at!)}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell data-testid={`request-product-category-list-table-row-${request.id}-status`}>
                     {getRequestStatusBadge(request.status!)}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell data-testid={`request-product-category-list-table-row-${request.id}-actions`}>
                     <RequestMenu
                       handleDetail={handleDetail}
                       request={request}
@@ -104,7 +104,7 @@ export const RequestProductCategoryList = () => {
           </Table.Body>
         </Table>
         <Table.Pagination
-          canNextPage={PAGE_SIZE * (currentPage + 1) < count!}
+          canNextPage={PAGE_SIZE * (currentPage + 1) < count}
           canPreviousPage={currentPage > 0}
           previousPage={() => {
             setCurrentPage(currentPage - 1);
@@ -112,10 +112,11 @@ export const RequestProductCategoryList = () => {
           nextPage={() => {
             setCurrentPage(currentPage + 1);
           }}
-          count={count!}
-          pageCount={Math.ceil(count! / PAGE_SIZE)}
+          count={count ?? 0}
+          pageCount={Math.ceil(count / PAGE_SIZE)}
           pageIndex={currentPage}
           pageSize={PAGE_SIZE}
+          data-testid="request-product-category-list-pagination"
         />
       </div>
     </Container>

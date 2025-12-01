@@ -66,7 +66,7 @@ export const CustomerGroupListTable = () => {
         after: getWidgets("customer_group.list.after"),
       }}
     >
-      <Container className="overflow-hidden p-0">
+      <Container className="overflow-hidden p-0" data-testid="customer-group-list-container">
         <DataTable
           data={customer_groups}
           columns={columns}

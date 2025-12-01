@@ -46,13 +46,13 @@ export function ResolveReturnRequestPrompt({
   };
 
   return (
-    <Prompt open={open}>
-      <Prompt.Content>
-        <Prompt.Header>
-          <Prompt.Title>
+    <Prompt open={open} data-testid={`resolve-return-request-prompt-${id}`}>
+      <Prompt.Content data-testid={`resolve-return-request-prompt-${id}-content`}>
+        <Prompt.Header data-testid={`resolve-return-request-prompt-${id}-header`}>
+          <Prompt.Title data-testid={`resolve-return-request-prompt-${id}-title`}>
             {accept ? "Accept request?" : "Reject request?"}
           </Prompt.Title>
-          <Prompt.Description>
+          <Prompt.Description data-testid={`resolve-return-request-prompt-${id}-description`}>
             You can provide short note on your decision
           </Prompt.Description>
           <Input
@@ -60,13 +60,14 @@ export function ResolveReturnRequestPrompt({
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
+            data-testid={`resolve-return-request-prompt-${id}-note-input`}
           />
         </Prompt.Header>
-        <Prompt.Footer>
-          <Button variant="secondary" onClick={close}>
+        <Prompt.Footer data-testid={`resolve-return-request-prompt-${id}-footer`}>
+          <Button variant="secondary" onClick={close} data-testid={`resolve-return-request-prompt-${id}-cancel-button`}>
             Cancel
           </Button>
-          <Button onClick={handleReview}>Submit</Button>
+          <Button onClick={handleReview} data-testid={`resolve-return-request-prompt-${id}-submit-button`}>Submit</Button>
         </Prompt.Footer>
       </Prompt.Content>
     </Prompt>

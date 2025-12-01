@@ -100,16 +100,17 @@ export const DataTableOrderBy = <TData,>({
   }
 
   return (
-    <DropdownMenu dir={direction}>
+    <DropdownMenu dir={direction} data-testid="data-table-order-by-menu">
       <DropdownMenu.Trigger asChild>
-        <IconButton size="small">
+        <IconButton size="small" data-testid="data-table-order-by-button">
           <DescendingSorting />
         </IconButton>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="z-[1]" align="end">
+      <DropdownMenu.Content className="z-[1]" align="end" data-testid="data-table-order-by-content">
         <DropdownMenu.RadioGroup
           value={state.key}
           onValueChange={handleKeyChange}
+          data-testid="data-table-order-by-field-group"
         >
           {keys.map((key) => {
             const stringKey = String(key.key)
@@ -119,21 +120,24 @@ export const DataTableOrderBy = <TData,>({
                 key={stringKey}
                 value={stringKey}
                 onSelect={(event) => event.preventDefault()}
+                data-testid={`data-table-order-by-field-${stringKey}`}
               >
                 {key.label}
               </DropdownMenu.RadioItem>
             )
           })}
         </DropdownMenu.RadioGroup>
-        <DropdownMenu.Separator />
+        <DropdownMenu.Separator data-testid="data-table-order-by-separator" />
         <DropdownMenu.RadioGroup
           value={state.dir}
           onValueChange={handleDirChange}
+          data-testid="data-table-order-by-direction-group"
         >
           <DropdownMenu.RadioItem
             className="flex items-center justify-between"
             value="asc"
             onSelect={(event) => event.preventDefault()}
+            data-testid="data-table-order-by-asc"
           >
             {t("general.ascending")}
             <DropdownMenu.Label>1 - 30</DropdownMenu.Label>
@@ -142,6 +146,7 @@ export const DataTableOrderBy = <TData,>({
             className="flex items-center justify-between"
             value="desc"
             onSelect={(event) => event.preventDefault()}
+            data-testid="data-table-order-by-desc"
           >
             {t("general.descending")}
             <DropdownMenu.Label>30 - 1</DropdownMenu.Label>

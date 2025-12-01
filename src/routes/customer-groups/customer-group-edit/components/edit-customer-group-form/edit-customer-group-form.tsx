@@ -50,36 +50,37 @@ export const EditCustomerGroupForm = ({
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="edit-customer-group-form">
       <KeyboundForm
         onSubmit={handleSubmit}
         className="flex flex-1 flex-col overflow-hidden"
+        data-testid="edit-customer-group-form-keybound"
       >
-        <RouteDrawer.Body className="flex max-w-full flex-1 flex-col gap-y-8 overflow-y-auto">
+        <RouteDrawer.Body className="flex max-w-full flex-1 flex-col gap-y-8 overflow-y-auto" data-testid="edit-customer-group-form-body">
           <Form.Field
             control={form.control}
             name="name"
             render={({ field }) => {
               return (
-                <Form.Item>
-                  <Form.Label>{t("fields.name")}</Form.Label>
-                  <Form.Control>
-                    <Input {...field} size="small" />
+                <Form.Item data-testid="edit-customer-group-form-name-item">
+                  <Form.Label data-testid="edit-customer-group-form-name-label">{t("fields.name")}</Form.Label>
+                  <Form.Control data-testid="edit-customer-group-form-name-control">
+                    <Input {...field} size="small" data-testid="edit-customer-group-form-name-input" />
                   </Form.Control>
-                  <Form.ErrorMessage />
+                  <Form.ErrorMessage data-testid="edit-customer-group-form-name-error" />
                 </Form.Item>
               )
             }}
           />
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
-          <div className="flex items-center justify-end gap-x-2">
+        <RouteDrawer.Footer data-testid="edit-customer-group-form-footer">
+          <div className="flex items-center justify-end gap-x-2" data-testid="edit-customer-group-form-footer-actions">
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="edit-customer-group-form-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" type="submit" isLoading={isPending}>
+            <Button size="small" type="submit" isLoading={isPending} data-testid="edit-customer-group-form-submit-button">
               {t("actions.save")}
             </Button>
           </div>

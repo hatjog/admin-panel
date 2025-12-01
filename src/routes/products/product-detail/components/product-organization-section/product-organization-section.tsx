@@ -18,9 +18,9 @@ export const ProductOrganizationSection = ({
   const { getDisplays } = useExtension()
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("products.organization.header")}</Heading>
+    <Container className="divide-y p-0" data-testid="product-organization-section">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="product-organization-header">
+        <Heading level="h2" data-testid="product-organization-title">{t("products.organization.header")}</Heading>
         <ActionMenu
           groups={[
             {
@@ -33,6 +33,7 @@ export const ProductOrganizationSection = ({
               ],
             },
           ]}
+          data-testid="product-organization-action-menu"
         />
       </div>
 
@@ -49,6 +50,7 @@ export const ProductOrganizationSection = ({
               ))
             : undefined
         }
+        data-testid="product-tags-row"
       />
       <SectionRow
         title={t("fields.type")}
@@ -60,6 +62,7 @@ export const ProductOrganizationSection = ({
             />
           ) : undefined
         }
+        data-testid="product-type-row"
       />
 
       <SectionRow
@@ -72,6 +75,7 @@ export const ProductOrganizationSection = ({
             />
           ) : undefined
         }
+        data-testid="product-collection-row"
       />
 
       <SectionRow
@@ -87,6 +91,7 @@ export const ProductOrganizationSection = ({
               ))
             : undefined
         }
+        data-testid="product-categories-row"
       />
 
       {getDisplays("product", "organize").map((Component, i) => {
@@ -100,7 +105,7 @@ const OrganizationTag = ({ label, to }: { label: string; to: string }) => {
   return (
     <Tooltip content={label}>
       <Badge size="2xsmall" className="block w-fit truncate" asChild>
-        <Link to={to}>{label}</Link>
+        <Link to={to} data-testid={`organization-tag-${label.toLowerCase().replace(/\s+/g, "-")}`}>{label}</Link>
       </Badge>
     </Tooltip>
   )
