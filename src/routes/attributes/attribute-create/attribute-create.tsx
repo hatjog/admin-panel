@@ -1,9 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { FocusModal, Button, toast, ProgressTabs } from "@medusajs/ui";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AdminProductCategory } from "@medusajs/types";
-import { AttributeForm } from "../attribute-edit/components/attribute-form";
+import { AttributeForm, AttributeFormRef } from "../attribute-edit/components/attribute-form";
 import { z } from "zod";
 import { sdk } from "../../../lib/client";
 import { attributeQueryKeys } from "../../../hooks/api/attributes";
@@ -11,6 +11,7 @@ import { CreateAttributeFormSchema } from "../attribute-edit/schema";
 
 export const AttributeCreate = () => {
   const navigate = useNavigate();
+  const formRef = useRef<AttributeFormRef>(null);
   const [categories, setCategories] = useState<AdminProductCategory[]>([]);
   const [activeTab, setActiveTab] = useState<"details" | "type">("details");
   const [tabStatuses, setTabStatuses] = useState<{
@@ -63,6 +64,30 @@ export const AttributeCreate = () => {
     navigate(-1);
   };
 
+  const handleTabChange = (value: string) => {
+    const newTab = value as "details" | "type";
+    
+    // Guard: prevent switching to type tab if details are not started
+    if (newTab === "type" && tabStatuses.detailsStatus === "not-started") {
+      toast.warning("Please fill in at least the name field before proceeding to Type configuration.");
+      return;
+    }
+    
+    setActiveTab(newTab);
+  };
+
+  const handleNext = async () => {
+    // Validate critical fields before advancing to Type tab
+    if (formRef.current) {
+      const isValid = await formRef.current.validateFields(["name"]);
+      if (isValid) {
+        setActiveTab("type");
+      }
+    } else {
+      setActiveTab("type");
+    }
+  };
+
   return (
     <FocusModal
       open={true}
@@ -74,7 +99,7 @@ export const AttributeCreate = () => {
       <FocusModal.Content data-testid="attribute-create-modal-content">
         <ProgressTabs
           value={activeTab}
-          onValueChange={(value) => setActiveTab(value as "details" | "type")}
+          onValueChange={handleTabChange}
           className="w-full h-full overflow-y-auto"
           data-testid="attribute-create-progress-tabs"
         >
@@ -101,9 +126,9 @@ export const AttributeCreate = () => {
           <FocusModal.Body className="flex flex-col items-center py-16" data-testid="attribute-create-modal-body">
             <div>
               <AttributeForm
+                ref={formRef}
                 //@ts-expect-error The received values will be for create form
                 onSubmit={handleSave}
-                onCancel={handleClose}
                 categories={categories}
                 activeTab={activeTab}
                 onFormStateChange={setTabStatuses}
@@ -115,9 +140,15 @@ export const AttributeCreate = () => {
           <Button variant="secondary" onClick={handleClose} data-testid="attribute-create-modal-cancel-button">
             Cancel
           </Button>
-          <Button type="submit" form="attribute-form" data-testid="attribute-create-modal-save-button">
-            Save
-          </Button>
+          {activeTab === "details" ? (
+            <Button type="button" onClick={handleNext} data-testid="attribute-create-modal-next-button">
+              Next
+            </Button>
+          ) : (
+            <Button type="submit" form="attribute-form" data-testid="attribute-create-modal-save-button">
+              Save
+            </Button>
+          )}
         </FocusModal.Footer>
       </FocusModal.Content>
     </FocusModal>
