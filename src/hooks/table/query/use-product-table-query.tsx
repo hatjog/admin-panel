@@ -7,6 +7,10 @@ type UseProductTableQueryProps = {
   pageSize?: number
 }
 
+type ExtendedAdminProductListParams = HttpTypes.AdminProductListParams & {
+  tag_id?: string[]
+}
+
 const DEFAULT_FIELDS =
   "id,title,handle,status,*collection,*sales_channels,variants.id,thumbnail"
 
