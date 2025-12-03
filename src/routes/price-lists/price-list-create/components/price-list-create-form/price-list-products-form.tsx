@@ -110,6 +110,7 @@ export const PriceListProductsForm = ({ form }: PriceListProductsFormProps) => {
       updater,
     },
     pageSize: PAGE_SIZE,
+    prefix: PREFIX,
   })
 
   if (isError) {
