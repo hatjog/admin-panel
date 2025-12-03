@@ -29,6 +29,7 @@ const PREFIX = "p"
 function getInitialSelection(products: { id: string }[]) {
   return products.reduce((acc, curr) => {
     acc[curr.id] = true
+    
     return acc
   }, {} as RowSelectionState)
 }
@@ -44,6 +45,7 @@ export const PriceListPricesAddProductIdsForm = ({
     return priceList.prices.reduce(
       (acc, curr) => {
         acc[curr.variant_id] = true
+
         return acc
       },
       {} as Record<string, boolean>

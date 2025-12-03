@@ -87,13 +87,14 @@ export const PriceListPricesAddForm = ({
 
   const partialFormValidation = (
     fields: FieldPath<PriceListPricesAddSchema>[],
-    schema: z.ZodSchema<any>
+    schema: z.ZodSchema<unknown>
   ) => {
     form.clearErrors(fields)
 
     const values = fields.reduce(
       (acc, key) => {
         acc[key] = form.getValues(key)
+
         return acc
       },
       {} as Record<string, unknown>
@@ -149,6 +150,7 @@ export const PriceListPricesAddForm = ({
       }))
 
       setTab(update)
+
       return
     }
 

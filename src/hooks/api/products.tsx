@@ -15,6 +15,7 @@ import { AttributeDTO } from "../../types/index.ts";
 import {
   AdminProductResponse,
   AdminProductUpdate,
+  ExtendedAdminProductListParams,
 } from "../../types/product/common.ts";
 
 const PRODUCTS_QUERY_KEY = "products" as const;
@@ -295,7 +296,7 @@ export const useProduct = (
 };
 
 export const useProducts = (
-  query?: HttpTypes.AdminProductListParams & { tag_id?: string },
+  query?: ExtendedAdminProductListParams,
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminProductListResponse,

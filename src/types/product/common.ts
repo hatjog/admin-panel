@@ -19,3 +19,7 @@ export interface AdminProductUpdate extends HttpTypes.AdminUpdateProduct {
 export type AdminProductListResponse = PaginatedResponse<{
   products: AdminProduct[];
 }>;
+
+export interface ExtendedAdminProductListParams extends HttpTypes.AdminProductListParams {
+  tag_id?: string | string[]
+}

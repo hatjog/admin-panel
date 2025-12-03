@@ -1,9 +1,8 @@
 import { useParams, useSearchParams } from "react-router-dom"
-import { RouteFocusModal } from "../../../components/modals"
-import { usePriceList } from "../../../hooks/api/price-lists"
-import { useProducts } from "../../../hooks/api/products"
-import { usePriceListCurrencyData } from "../common/hooks/use-price-list-currency-data"
 import { PriceListPricesEditForm } from "./components/price-list-prices-edit-form"
+import { usePriceList, useProducts } from "@hooks/api"
+import { RouteFocusModal } from "@components/modals"
+import { usePriceListCurrencyData } from "../common/hooks/use-price-list-currency-data"
 
 export const PriceListPricesEdit = () => {
   const { id } = useParams()
@@ -25,11 +24,10 @@ export const PriceListPricesEdit = () => {
     fields: "title,thumbnail,*variants",
   })
 
-  const { isReady, regions, currencies, pricePreferences } =
-    usePriceListCurrencyData()
+  const currencyData = usePriceListCurrencyData()
 
-  const ready =
-    !isLoading && !!price_list && !isProductsLoading && !!products && isReady
+  const ready = currencyData.isReady &&
+    !isLoading && !!price_list && !isProductsLoading && !!products
 
   if (isError) {
     throw error
@@ -51,9 +49,7 @@ export const PriceListPricesEdit = () => {
         <PriceListPricesEditForm
           priceList={price_list}
           products={products}
-          regions={regions}
-          currencies={currencies}
-          pricePreferences={pricePreferences}
+          {...currencyData}
         />
       )}
     </RouteFocusModal>

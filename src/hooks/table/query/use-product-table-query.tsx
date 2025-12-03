@@ -1,13 +1,10 @@
-import { HttpTypes } from "@medusajs/types"
-import { useQueryParams } from "../../use-query-params"
+import type { HttpTypes } from "@medusajs/types"
+import type { ExtendedAdminProductListParams } from "@custom-types/product"
+import { useQueryParams } from "@hooks/use-query-params"
 
 type UseProductTableQueryProps = {
   prefix?: string
   pageSize?: number
-}
-
-type ExtendedAdminProductListParams = HttpTypes.AdminProductListParams & {
-  tag_id?: string[]
 }
 
 const DEFAULT_FIELDS =
