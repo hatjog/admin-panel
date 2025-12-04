@@ -28,7 +28,7 @@ const EditCustomerSchema = zod.object({
 export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
   const { t } = useTranslation()
   const { handleSuccess } = useRouteModal()
-
+  
   const form = useForm<zod.infer<typeof EditCustomerSchema>>({
     defaultValues: {
       email: customer.email || "",
@@ -46,10 +46,10 @@ export const EditCustomerForm = ({ customer }: EditCustomerFormProps) => {
     await mutateAsync(
       {
         email: customer.has_account ? undefined : data.email,
-        first_name: data.first_name || null,
-        last_name: data.last_name || null,
-        phone: data.phone || null,
-        company_name: data.company_name || null,
+        first_name: data.first_name || undefined,
+        last_name: data.last_name || undefined,
+        phone: data.phone || undefined,
+        company_name: data.company_name || undefined,
       },
       {
         onSuccess: ({ customer }) => {

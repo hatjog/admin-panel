@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 
 import { RouteDrawer } from "../../../components/modals"
-import { usePaymentProviders } from "../../../hooks/api/payments"
 import { useRegion } from "../../../hooks/api/regions"
 import { useStore } from "../../../hooks/api/store"
 import { currencies } from "../../../lib/data/currencies"
@@ -62,9 +61,9 @@ export const RegionEdit = () => {
   }
 
   return (
-    <RouteDrawer>
-      <RouteDrawer.Header>
-        <Heading>{t("regions.editRegion")}</Heading>
+    <RouteDrawer data-testid="region-edit-drawer">
+      <RouteDrawer.Header data-testid="region-edit-drawer-header">
+        <Heading data-testid="region-edit-drawer-heading">{t("regions.editRegion")}</Heading>
       </RouteDrawer.Header>
       {!isLoading && region && (
         <EditRegionForm

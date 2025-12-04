@@ -4,7 +4,6 @@ import { ChevronDownMini } from "@medusajs/icons"
 
 interface SaveViewDropdownProps {
   isDefaultView: boolean
-  currentViewId?: string | null
   currentViewName?: string | null
   onSaveAsDefault: () => void
   onUpdateExisting: () => void
@@ -13,12 +12,12 @@ interface SaveViewDropdownProps {
 
 export const SaveViewDropdown: React.FC<SaveViewDropdownProps> = ({
   isDefaultView,
-  currentViewId,
   currentViewName,
   onSaveAsDefault,
   onUpdateExisting,
   onSaveAsNew,
 }) => {
+
   const prompt = usePrompt()
 
   const handleSaveAsDefault = async () => {

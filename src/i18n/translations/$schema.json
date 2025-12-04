@@ -3216,9 +3216,16 @@
                 },
                 "quantityOutOfRange": {
                   "type": "string"
+                },
+                "idRequired": {
+                  "type": "string"
                 }
               },
-              "required": ["noAvaliableQuantity", "quantityOutOfRange"],
+              "required": [
+                "noAvaliableQuantity",
+                "quantityOutOfRange",
+                "idRequired"
+              ],
               "additionalProperties": false
             }
           },
@@ -4287,6 +4294,9 @@
             "createSuccessToast": {
               "type": "string"
             },
+            "duplicateItemErrorToast": {
+              "type": "string"
+            },
             "activeChangeError": {
               "type": "string"
             },
@@ -4344,6 +4354,7 @@
             "noteHint",
             "cancelSuccessToast",
             "createSuccessToast",
+            "duplicateItemErrorToast",
             "activeChangeError",
             "panel",
             "toast",

@@ -880,7 +880,7 @@ export const CreatePromotionForm = () => {
                       <Form.Field
                         control={form.control}
                         name="application_method.max_quantity"
-                        render={({ field }) => {
+                        render={() => {
                           return (
                             <Form.Item className="basis-1/2" data-testid="promotion-create-form-max-quantity-item">
                               <Form.Label data-testid="promotion-create-form-max-quantity-label">

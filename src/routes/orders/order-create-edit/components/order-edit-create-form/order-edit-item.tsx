@@ -104,6 +104,12 @@ function OrderEditItem({ item, currencyCode, orderId }: OrderEditItemProps) {
   }
 
   const onDuplicate = async () => {
+    if (!item.variant_id) {
+      toast.error(t("orders.edits.duplicateItemErrorToast"))
+      
+      return
+    }
+
     try {
       await addItems({
         items: [
@@ -114,7 +120,7 @@ function OrderEditItem({ item, currencyCode, orderId }: OrderEditItemProps) {
         ],
       })
     } catch (e) {
-      toast.error(e.message)
+      toast.error(e instanceof Error ? e.message : "An error occurred")
     }
   }
 

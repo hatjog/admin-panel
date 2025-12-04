@@ -71,11 +71,10 @@ export const OrderEditItemsSection = ({
     const lowerFilterTerm = filterTerm.toLowerCase();
     return preview.items.filter(
       (i) =>
-        i.title.toLowerCase().includes(lowerFilterTerm) ||
-        i.product_title?.toLowerCase().includes(lowerFilterTerm) ||
-        false,
-    );
-  }, [preview, filterTerm]);
+        i.title.toLowerCase().includes(filterTerm) ||
+        i.product_title?.toLowerCase().includes(filterTerm)
+    )
+  }, [preview, filterTerm])
 
   return (
     <div>

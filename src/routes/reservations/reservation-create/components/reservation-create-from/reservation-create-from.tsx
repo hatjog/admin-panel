@@ -53,7 +53,7 @@ export const ReservationCreateForm = (props: { inventoryItemId?: string }) => {
 
   const form = useForm<zod.infer<typeof CreateReservationSchema>>({
     defaultValues: {
-      inventory_item_id: props.inventoryItemId || "",
+      inventory_item_id: props.inventoryItemId ?? undefined,
       location_id: "",
       quantity: 0,
       description: "",

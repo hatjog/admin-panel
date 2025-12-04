@@ -81,7 +81,7 @@ const UnfulfilledItem = ({
             </div>
           )}
           <Text size="small">
-            {item.variant?.options.map((o) => o.value).join(" · ")}
+            {item.variant?.options?.map((o) => o.value).join(" · ")}
           </Text>
         </div>
       </div>
