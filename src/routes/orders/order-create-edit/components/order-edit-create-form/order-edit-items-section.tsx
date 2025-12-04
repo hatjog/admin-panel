@@ -72,9 +72,9 @@ export const OrderEditItemsSection = ({
     return preview.items.filter(
       (i) =>
         i.title.toLowerCase().includes(filterTerm) ||
-        i.product_title?.toLowerCase().includes(filterTerm)
-    )
-  }, [preview, filterTerm])
+        i.product_title?.toLowerCase().includes(filterTerm),
+    );
+  }, [preview, filterTerm]);
 
   return (
     <div>
@@ -143,7 +143,7 @@ export const OrderEditItemsSection = ({
       ))}
 
       {filterTerm && !filteredItems.length && (
-        <div className="flex flex-col items-center justify-center gap-y-2 rounded-xl bg-ui-bg-subtle p-3 shadow-elevation-card-rest">
+        <div className="flex flex-col items-center justify-center gap-y-2 rounded-xl bg-ui-bg-subtle p-3 text-center shadow-elevation-card-rest">
           <MagnifyingGlass className="text-ui-fg-subtle" />
           <Text size="small" leading="compact" weight="plus">
             {t("general.noSearchResults")}
