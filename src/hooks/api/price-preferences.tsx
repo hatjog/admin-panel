@@ -31,7 +31,7 @@ export const usePricePreference = (
 ) => {
   const { data, ...rest } = useQuery({
     queryFn: () => sdk.admin.pricePreference.retrieve(id, query),
-    queryKey: pricePreferencesQueryKeys.detail(),
+    queryKey: pricePreferencesQueryKeys.detail(id),
     ...options,
   })
 
@@ -71,7 +71,10 @@ export const useUpsertPricePreference = (
   return useMutation({
     mutationFn: (payload) => {
       if (id) {
-        return sdk.admin.pricePreference.update(id, payload, query)
+        return sdk.admin.pricePreference.update(id, {
+          ...payload,
+          attribute: payload.attribute ?? undefined,
+        }, query)
       }
       return sdk.admin.pricePreference.create(payload, query)
     },

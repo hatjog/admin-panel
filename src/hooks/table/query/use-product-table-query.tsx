@@ -6,6 +6,10 @@ type UseProductTableQueryProps = {
   pageSize?: number
 }
 
+type ExtendedAdminProductListParams = HttpTypes.AdminProductListParams & {
+  tag_id?: string[]
+}
+
 const DEFAULT_FIELDS =
   "id,title,handle,status,*collection,*sales_channels,variants.id,thumbnail"
 
@@ -47,7 +51,7 @@ export const useProductTableQuery = ({
     q,
   } = queryObject
 
-  const searchParams: HttpTypes.AdminProductListParams = {
+  const searchParams: ExtendedAdminProductListParams = {
     limit: pageSize,
     offset: offset ? Number(offset) : 0,
     sales_channel_id: sales_channel_id?.split(","),

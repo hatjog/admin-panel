@@ -58,7 +58,7 @@ export const useViewConfigurations = (entity: string) => {
       handleError(error, "Failed to update active view")
     },
   })
-
+  
   return useMemo(() => ({
     isViewConfigEnabled,
     listViews,

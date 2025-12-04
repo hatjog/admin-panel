@@ -35,7 +35,7 @@ export const CreateProductOptionForm = ({
   })
 
   const { mutateAsync, isPending } = useUpdateProductOption(
-    option.product_id,
+    option.product_id!,
     option.id
   )
 

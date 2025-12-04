@@ -23,6 +23,7 @@ import { useCustomerGroupTableColumns } from "../../../../../hooks/table/columns
 import { useCustomerGroupTableFilters } from "../../../../../hooks/table/filters/use-customer-group-table-filters"
 import { useCustomerGroupTableQuery } from "../../../../../hooks/table/query/use-customer-group-table-query"
 import { useDataTable } from "../../../../../hooks/use-data-table"
+import { FetchError } from "@medusajs/js-sdk"
 
 type AddCustomerGroupsFormProps = {
   customerId: string
@@ -129,7 +130,7 @@ export const AddCustomerGroupsForm = ({
 
       handleSuccess(`/customers/${customerId}`)
     } catch (e) {
-      toast.error(e.message)
+      toast.error(e instanceof FetchError ? e.message : "An error occurred")
     } finally {
       setIsPending(false)
     }

@@ -18,7 +18,7 @@ import { useUpdateProduct } from "../../../../../hooks/api/products"
 import { HttpTypes } from "@medusajs/types"
 
 type ProductMedisaSectionProps = {
-  product: HttpTypes.AdminProduct
+  product: HttpTypes.AdminProduct 
 }
 
 export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
@@ -65,7 +65,7 @@ export const ProductMediaSection = ({ product }: ProductMedisaSectionProps) => {
     }
 
     const mediaToKeep = product.images
-      .filter((i) => !ids.includes(i.id))
+      ?.filter((i) => !ids.includes(i.id))
       .map((i) => ({ url: i.url}))
 
     await mutateAsync(

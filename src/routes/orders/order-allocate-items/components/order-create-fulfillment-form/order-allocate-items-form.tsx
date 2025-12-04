@@ -50,13 +50,13 @@ export function OrderAllocateItemsForm({ order }: OrderAllocateItemsFormProps) {
   const filteredItems = useMemo(() => {
     return itemsToAllocate.filter(
       (i) =>
-        i.variant_title.toLowerCase().includes(filterTerm) ||
-        i.product_title.toLowerCase().includes(filterTerm)
+        i.variant_title?.toLowerCase().includes(filterTerm) ||
+        i.product_title?.toLowerCase().includes(filterTerm)
     )
   }, [itemsToAllocate, filterTerm])
 
   // TODO - empty state UI
-  const noItemsToAllocate = !itemsToAllocate.length
+  // const noItemsToAllocate = !itemsToAllocate.length
 
   const form = useForm<zod.infer<typeof AllocateItemsSchema>>({
     defaultValues: {

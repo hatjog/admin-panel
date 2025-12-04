@@ -48,7 +48,7 @@ function DismissedQuantity({
   )
 
   // quantities only for this return
-  const [receivedQuantity, dismissedQuantity] = useMemo(() => {
+  const [dismissedQuantity] = useMemo(() => {
     const receivedAction = item.actions?.find(
       (a) => a.action === "RECEIVE_RETURN_ITEM"
     )

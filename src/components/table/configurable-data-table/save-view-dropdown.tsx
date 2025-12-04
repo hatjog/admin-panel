@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next"
 
 interface SaveViewDropdownProps {
   isDefaultView: boolean
-  currentViewId?: string
   currentViewName?: string
   onSaveAsDefault: () => void
   onUpdateExisting: () => void
@@ -14,7 +13,6 @@ interface SaveViewDropdownProps {
 
 export const SaveViewDropdown: React.FC<SaveViewDropdownProps> = ({
   isDefaultView,
-  currentViewId,
   currentViewName,
   onSaveAsDefault,
   onUpdateExisting,

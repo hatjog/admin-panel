@@ -246,7 +246,7 @@ export const CreateRefundForm = ({ order }: CreateRefundFormProps) => {
                         </Select.Trigger>
 
                         <Select.Content>
-                          {refund_reasons?.map((reason) => (
+                          {refund_reasons?.map((reason: HttpTypes.AdminRefundReason) => (
                             <Select.Item key={reason.id} value={reason.id}>
                               {reason.label}
                             </Select.Item>

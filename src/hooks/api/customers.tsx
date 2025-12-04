@@ -83,7 +83,7 @@ export const useUpdateCustomer = (
   options?: UseMutationOptions<
     { customer: HttpTypes.AdminCustomer },
     FetchError,
-    HttpTypes.AdminUpdateCustomer
+    HttpTypes.AdminUpdateCustomer & { email?: string }
   >
 ) => {
   return useMutation({

@@ -96,7 +96,7 @@ export const EditCampaignBudgetForm = ({
                           key="usage"
                           min={0}
                           {...field}
-                          value={value}
+                          value={value ?? undefined}
                           onChange={(e) => {
                             onChange(
                               e.target.value === ""

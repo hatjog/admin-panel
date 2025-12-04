@@ -295,7 +295,7 @@ export const useProduct = (
 };
 
 export const useProducts = (
-  query?: HttpTypes.AdminProductListParams,
+  query?: HttpTypes.AdminProductListParams & { tag_id?: string },
   options?: Omit<
     UseQueryOptions<
       HttpTypes.AdminProductListResponse,
