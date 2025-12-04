@@ -1,5 +1,5 @@
 import type React from 'react'
-import type { useState } from "react"
+import { useState } from "react"
 import {
   Button,
   Input,
