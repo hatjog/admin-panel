@@ -1,17 +1,19 @@
-import { FetchError } from "@medusajs/js-sdk"
-import { HttpTypes } from "@medusajs/types"
+import type { FetchError } from "@medusajs/js-sdk"
+import type { HttpTypes } from "@medusajs/types"
 import {
-  QueryKey,
+  type QueryKey,
   useMutation,
-  UseMutationOptions,
+  type UseMutationOptions,
   useQuery,
-  UseQueryOptions,
+  type UseQueryOptions,
 } from "@tanstack/react-query"
-import { sdk } from "../../lib/client"
-import { queryClient } from "../../lib/query-client"
-import { queryKeysFactory } from "../../lib/query-key-factory"
+import { sdk } from "@lib/client"
+import { queryClient } from "@lib/query-client"
+import { queryKeysFactory } from "@lib/query-key-factory"
 import { ordersQueryKeys } from "./orders"
 import { returnsQueryKeys } from "./returns"
+import type { ExtendedAdminExchange } from "@custom-types/exchanges"
+import type { ExtendedAdminExchangeListResponse } from "@custom-types/exchanges/common"
 
 const EXCHANGES_QUERY_KEY = "exchanges" as const
 export const exchangesQueryKeys = queryKeysFactory(EXCHANGES_QUERY_KEY)
@@ -21,16 +23,16 @@ export const useExchange = (
   query?: HttpTypes.AdminExchangeListParams,
   options?: Omit<
     UseQueryOptions<
-      HttpTypes.AdminExchangeResponse,
+      ExtendedAdminExchange,
       FetchError,
-      HttpTypes.AdminExchangeResponse,
+      ExtendedAdminExchange,
       QueryKey
     >,
     "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.exchange.retrieve(id, query),
+    queryFn: async () => sdk.admin.exchange.retrieve(id, query) as unknown as Promise<ExtendedAdminExchange>,
     queryKey: exchangesQueryKeys.detail(id, query),
     ...options,
   })
@@ -42,16 +44,16 @@ export const useExchanges = (
   query?: HttpTypes.AdminExchangeListParams,
   options?: Omit<
     UseQueryOptions<
-      HttpTypes.AdminExchangeListParams,
+      ExtendedAdminExchangeListResponse,
       FetchError,
-      HttpTypes.AdminExchangeListResponse,
+      ExtendedAdminExchangeListResponse,
       QueryKey
     >,
     "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.exchange.list(query),
+    queryFn: async () => sdk.admin.exchange.list(query) as unknown as Promise<ExtendedAdminExchangeListResponse>,
     queryKey: exchangesQueryKeys.list(query),
     ...options,
   })
