@@ -8,13 +8,18 @@ export const usePricingTableQuery = ({
   pageSize?: number
   prefix?: string
 }) => {
-  const raw = useQueryParams(["offset", "q", "order", "status"], prefix)
+  const raw = useQueryParams(
+    ["offset", "q", "order", "status", "starts_at", "ends_at"],
+    prefix
+  )
 
   const searchParams: HttpTypes.AdminPriceListListParams = {
     limit: pageSize,
     offset: raw.offset ? Number(raw.offset) : 0,
     order: raw.order,
     status: raw.status?.split(",") as PriceListStatus[],
+    starts_at: raw.starts_at ? JSON.parse(raw.starts_at) : undefined,
+    ends_at: raw.ends_at ? JSON.parse(raw.ends_at) : undefined,
     q: raw.q,
   }
 
