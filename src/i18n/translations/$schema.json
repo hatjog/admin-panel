@@ -11441,6 +11441,15 @@
         "order": {
           "type": "string"
         },
+        "orderId": {
+          "type": "string"
+        },
+        "groupId": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
         "fulfillment": {
           "type": "string"
         },
@@ -11722,6 +11731,9 @@
         "customer",
         "date",
         "order",
+        "orderId",
+        "groupId",
+        "vendor",
         "fulfillment",
         "provider",
         "payment",
