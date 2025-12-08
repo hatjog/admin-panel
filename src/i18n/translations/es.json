@@ -3,6 +3,8 @@
   "general": {
     "ascending": "Ascendente",
     "descending": "Descendente",
+    "expandAll": "Expandir todas las filas",
+    "collapseAll": "Contraer todas las filas",
     "add": "Agregar",
     "start": "Iniciar",
     "end": "Finalizar",
@@ -1098,7 +1100,9 @@
     "cancelWarning": "Estás a punto de cancelar el pedido {{id}}. Esta acción no puede deshacerse.",
     "onDateFromSalesChannel": "{{date}} desde {{salesChannel}}",
     "list": {
-      "noRecordsMessage": "Tus pedidos aparecerán aquí."
+      "noRecordsMessage": "Tus pedidos aparecerán aquí.",
+      "multipleVendors": "{{count}} vendedores",
+      "vendorFallback": "Vendedor desconocido"
     },
     "summary": {
       "requestReturn": "Solicitar devolución",

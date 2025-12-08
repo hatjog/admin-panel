@@ -3,6 +3,8 @@
   "general": {
     "ascending": "Възходящо",
     "descending": "Низходящо",
+    "expandAll": "Разгъни всички редове",
+    "collapseAll": "Свий всички редове",
     "add": "Добави",
     "start": "Начало",
     "end": "Край",
@@ -994,7 +996,9 @@
     "orderCanceled": "Поръчката беше успешно анулирана",
     "onDateFromSalesChannel": "{{date}} от {{salesChannel}}",
     "list": {
-      "noRecordsMessage": "Вашите поръчки ще се покажат тук."
+      "noRecordsMessage": "Вашите поръчки ще се покажат тук.",
+      "multipleVendors": "{{count}} продавачи",
+      "vendorFallback": "Неизвестен продавач"
     },
     "status": {
       "not_paid": "Неплатена",
