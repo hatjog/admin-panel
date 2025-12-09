@@ -21,7 +21,7 @@ const ID = ({ data }: { data: HttpTypes.AdminOrder }) => {
         to={`/customers/${id}`}
         className="focus:shadow-borders-focus rounded-[4px] outline-none transition-shadow"
       >
-        <div className="flex items-center gap-x-2 overflow-hidden">
+        <div className="flex items-center gap-x-2">
           <Avatar size="2xsmall" fallback={fallback} />
           <Text
             size="small"
