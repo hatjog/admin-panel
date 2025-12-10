@@ -20,16 +20,22 @@ export function createProductTableAdapter(): TableAdapter<HttpTypes.AdminProduct
         {
           placeholderData: (previousData, previousQuery) => {
             // Only keep placeholder data if the fields haven't changed
-            const prevFields = previousQuery?.[previousQuery.length - 1]?.query?.fields
+            const queryKey = previousQuery?.queryKey
+            const prevFields = Array.isArray(queryKey) 
+              ? (queryKey[queryKey.length - 1] as { query?: { fields?: string } } | undefined)?.query?.fields
+              : undefined
+
             if (prevFields && prevFields !== fields) {
               // Fields changed, don't use placeholder data
               return undefined
             }
+
             // Fields are the same, keep previous data for smooth transitions
             return previousData
           },
         }
       )
+      
       return { data: products, count, isLoading, isError, error }
     },
     getRowHref: (row) => `/products/${row.id}`,

@@ -57,8 +57,10 @@ export const ProductCreateVariantsForm = ({
     pricePreferences,
   })
 
+  console.log(variants, 'variants')
+
   const variantData = useMemo(() => {
-    const ret = []
+    const ret: Array<ProductCreateVariantSchema & { originalIndex: number }> = []
 
     variants.forEach((v, i) => {
       if (v.should_create) {

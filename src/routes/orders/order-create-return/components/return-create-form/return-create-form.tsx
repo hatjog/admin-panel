@@ -477,12 +477,12 @@ export const ReturnCreateForm = ({
                 }
 
                 return (
-                  <ReturnItem
-                    key={item.id}
-                    item={orderItem}
-                    previewItem={previewItem}
-                    currencyCode={order.currency_code}
-                    form={form}
+                <ReturnItem
+                  key={item.id}
+                  item={orderItem}
+                  previewItem={previewItem}
+                  currencyCode={order.currency_code}
+                  form={form}
                   onRemove={() => {
                     const actionId = previewItems
                       .find((i) => i.id === item.item_id)
@@ -515,8 +515,8 @@ export const ReturnCreateForm = ({
                       )
                     }
                   }}
-                    index={index}
-                  />
+                  index={index}
+                />
                 )
               })}
             {!showPlaceholder && (

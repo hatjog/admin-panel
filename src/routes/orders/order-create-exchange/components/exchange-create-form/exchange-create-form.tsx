@@ -153,10 +153,10 @@ export const ExchangeCreateForm = ({
         outbound_items: outboundPreviewItems
           .filter((i): i is typeof i & { variant_id: string } => !!i.variant_id)
           .map((i) => ({
-            item_id: i.id,
-            variant_id: i.variant_id,
-            quantity: i.detail.quantity,
-          })),
+          item_id: i.id,
+          variant_id: i.variant_id,
+          quantity: i.detail.quantity,
+        })),
         inbound_option_id: inboundShippingMethod
           ? inboundShippingMethod.shipping_option_id
           : "",
