@@ -392,7 +392,7 @@ export const RulesFormField = ({
       })}
 
       <div className={fields.length ? "mt-6" : ""} data-testid={`rules-form-field-actions-${ruleType}`}>
-        <Button
+        {fields.length !== attributes?.length && <Button
           type="button"
           variant="secondary"
           className="inline-block"
@@ -407,7 +407,7 @@ export const RulesFormField = ({
           data-testid={`rules-form-field-add-condition-button-${ruleType}`}
         >
           {t("promotions.fields.addCondition")}
-        </Button>
+        </Button>}
 
         {!!fields.length && (
           <Button
