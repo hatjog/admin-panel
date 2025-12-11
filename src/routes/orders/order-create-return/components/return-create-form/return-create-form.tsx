@@ -464,13 +464,30 @@ export const ReturnCreateForm = ({
               </StackedFocusModal>
             </div>
             {showPlaceholder && (
-              <div className="mt-4 rounded-lg border border-ui-border-base">
-                <NoRecords
-                  icon={<Tag className="text-ui-fg-muted" />}
-                  title={t("orders.returns.noAddedItems")}
-                  message={t("orders.returns.addAtLeastOneItem")}
-                />
-              </div>
+              <Form.Field
+                control={form.control}
+                name="items"
+                render={({ fieldState }) => (
+                  <Form.Item>
+                    <div className="flex flex-col gap-y-4">
+                      <div
+                        className={`mt-4 rounded-lg border ${
+                          fieldState.error
+                            ? "border-ui-border-error"
+                            : "border-ui-border-base"
+                        }`}
+                      >
+                        <NoRecords
+                          icon={<Tag className="text-ui-fg-muted" />}
+                          title={t("orders.returns.noAddedItems")}
+                          message={t("orders.returns.addAtLeastOneItem")}
+                        />
+                      </div>
+                      <Form.ErrorMessage />
+                    </div>
+                  </Form.Item>
+                )}
+              />
             )}
             {items
               .filter((item) => !!previewItemsMap.get(item.item_id))
