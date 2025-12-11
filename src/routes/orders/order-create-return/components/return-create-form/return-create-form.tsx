@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PencilSquare } from "@medusajs/icons"
+import { PencilSquare, Tag } from "@medusajs/icons"
 import {
   AdminOrder,
   AdminOrderPreview,
@@ -29,6 +29,7 @@ import {
 } from "../../../../../components/modals"
 
 import { Form } from "../../../../../components/common/form"
+import { NoRecords } from "../../../../../components/common/empty-table-content"
 import { Combobox } from "../../../../../components/inputs/combobox"
 import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
 import {
@@ -463,13 +464,13 @@ export const ReturnCreateForm = ({
               </StackedFocusModal>
             </div>
             {showPlaceholder && (
-              <div
-                style={{
-                  background:
-                    "repeating-linear-gradient(-45deg, rgb(212, 212, 216, 0.15), rgb(212, 212, 216,.15) 10px, transparent 10px, transparent 20px)",
-                }}
-                className="bg-ui-bg-field mt-4 block h-[56px] w-full rounded-lg border border-dashed"
-              />
+              <div className="mt-4 rounded-lg border border-ui-border-base">
+                <NoRecords
+                  icon={<Tag className="text-ui-fg-muted" />}
+                  title={t("orders.returns.noAddedItems")}
+                  message={t("orders.returns.addAtLeastOneItem")}
+                />
+              </div>
             )}
             {items
               .filter((item) => !!previewItemsMap.get(item.item_id))

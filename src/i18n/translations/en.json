@@ -1203,6 +1203,8 @@
       "locationHint": "Choose which location you want to return the items to.",
       "inboundShipping": "Return shipping",
       "inboundShippingHint": "Choose which method you want to use.",
+      "noAddedItems": "No added items",
+      "addAtLeastOneItem": "Add at least one item from the order to create the return",
       "returnableQuantityLabel": "Returnable quantity",
       "refundableAmountLabel": "Refundable amount",
       "returnRequestedInfo": "{{requestedItemsCount}}x items return requested",
