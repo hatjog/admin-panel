@@ -1230,10 +1230,11 @@
         "title": "Receive items for #{{returnId}}",
         "sendNotificationHint": "Notify customer about received return.",
         "inventoryWarning": "Please note that we will automatically adjust the inventory levels based on your input above.",
+        "quantityInputLabel": "How many items were received in {{location}}?",
         "writeOffInputLabel": "How many of the items are damaged?",
         "toast": {
           "success": "Return received successfully.",
-          "errorLargeValue": "Quantity is greater than requested item quantity.",
+          "errorLargeValue": "You cannot receive more items than were requested for return.",
           "errorNegativeValue": "Quantity cannot be a negative value.",
           "errorLargeDamagedValue": "Damaged items quantity + non damaged received quantity exceeds total item quantity on the return. Please decrease quantity of non damaged items."
         }

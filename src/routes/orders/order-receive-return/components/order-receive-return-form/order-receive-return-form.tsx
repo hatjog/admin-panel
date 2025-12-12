@@ -219,16 +219,12 @@ export function OrderReceiveReturnForm({
             <div>
               {stock_location && (
                 <div className="flex items-center gap-2">
-                  <ArrowRight className="text-ui-fg-subtle" />{" "}
                   <span className="text-ui-fg-base txt-small font-medium">
-                    {stock_location.name}
+                    {t("orders.returns.receive.quantityInputLabel", {location: stock_location.name})}
                   </span>
                 </div>
               )}
             </div>
-            <span className="text-ui-fg-muted txt-small text-right">
-              {t("orders.returns.receive.itemsLabel")}
-            </span>
           </div>
           {previewItems.map((item, ind) => {
             const originalItem = itemsMap[item.id]
@@ -308,8 +304,8 @@ export function OrderReceiveReturnForm({
 
           {/* TOTALS*/}
 
-          <div className="my-6 border-b border-t border-dashed py-4">
-            <div className="mb-2 flex items-center justify-between">
+          <div className="my-6 border-b border-t py-4">
+            <div className="mb-4 flex items-center justify-between">
               <span className="txt-small text-ui-fg-subtle">
                 {t("fields.total")}
               </span>
@@ -318,7 +314,7 @@ export function OrderReceiveReturnForm({
               </span>
             </div>
 
-            <div className="mt-4 flex items-center justify-between border-t border-dotted pt-4">
+            <div className="flex items-center justify-between ">
               <span className="txt-small font-medium">
                 {t("orders.returns.outstandingAmount")}
               </span>
