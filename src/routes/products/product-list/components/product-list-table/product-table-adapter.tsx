@@ -1,8 +1,14 @@
-import { HttpTypes } from "@medusajs/types"
-import { useProducts } from "../../../../../hooks/api/products"
-import { productColumnAdapter } from "../../../../../lib/table/entity-adapters"
-import { createTableAdapter, TableAdapter } from "../../../../../lib/table/table-adapters"
+import type { HttpTypes } from "@medusajs/types"
+import { useProducts } from "@hooks/api/products"
+import { productColumnAdapter } from "@lib/table/entity-adapters"
+import { createTableAdapter, type TableAdapter } from "@lib/table/table-adapters"
 import { useProductTableFilters } from "./use-product-table-filters"
+
+type PreviousQuery = {
+  query?: {
+    fields?: string
+  }
+}
 
 export function createProductTableAdapter(): TableAdapter<HttpTypes.AdminProduct> {
   return createTableAdapter<HttpTypes.AdminProduct>({
@@ -22,7 +28,7 @@ export function createProductTableAdapter(): TableAdapter<HttpTypes.AdminProduct
             // Only keep placeholder data if the fields haven't changed
             const queryKey = previousQuery?.queryKey
             const prevFields = Array.isArray(queryKey) 
-              ? (queryKey[queryKey.length - 1] as { query?: { fields?: string } } | undefined)?.query?.fields
+              ? (queryKey[queryKey.length - 1] as PreviousQuery)?.query?.fields
               : undefined
 
             if (prevFields && prevFields !== fields) {

@@ -181,9 +181,6 @@ export const ExchangeCreateForm = ({
   })
 
   useEffect(() => {
-    console.log(customInboundShippingAmount, 'custom inbound shipping amount')
-    console.log(customOutboundShippingAmount, 'custom OUTBOUND shipping amount')
-
     if (inboundShipping) {
       setCustomInboundShippingAmount({
         value: inboundShipping.total.toString(),

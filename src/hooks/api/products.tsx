@@ -288,11 +288,7 @@ export const useProduct = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => {
-      const response = await sdk.admin.product.retrieve(id, query)
-      
-      return response as unknown as AdminProductResponse
-    },
+    queryFn: async () => sdk.admin.product.retrieve(id, query) as Promise<AdminProductResponse>,
     queryKey: productsQueryKeys.detail(id, query),
     ...options,
   });
@@ -313,11 +309,7 @@ export const useProducts = (
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => {
-      const response = await sdk.admin.product.list(query)
-
-      return response as unknown as AdminProductListResponse
-    },
+    queryFn: async () => sdk.admin.product.list(query) as Promise<AdminProductListResponse>,
     queryKey: productsQueryKeys.list(query),
     ...options,
   });
@@ -355,11 +347,7 @@ export const useUpdateProduct = (
   >
 ) => {
   return useMutation({
-    mutationFn: async (payload) => {
-      const response = await sdk.admin.product.update(id, payload)
-      
-      return response as unknown as AdminProductResponse
-    },
+    mutationFn: async (payload) => sdk.admin.product.update(id, payload) as Promise<AdminProductResponse>,
     onSuccess: async (data, variables, context) => {
       await queryClient.invalidateQueries({
         queryKey: productsQueryKeys.lists(),

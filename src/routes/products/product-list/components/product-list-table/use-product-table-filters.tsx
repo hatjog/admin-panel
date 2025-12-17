@@ -9,8 +9,6 @@ import type { ExtendedAdminProductListParams } from "@custom-types/product"
 
 const filterHelper = createDataTableFilterHelper<ExtendedAdminProductListParams>()
 
-// const filterHelper = createDataTableFilterHelper<HttpTypes.AdminProduct & ExtendedAdminProductListParams>()
-
 /**
  * Hook to create filters in the format expected by @medusajs/ui DataTable
  */
