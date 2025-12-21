@@ -29,6 +29,7 @@ export const OrderRemainingOrdersGroupSection = () => {
             order.items.length > 1
               ? `${order.items[0].subtitle} + ${order.items.length - 1} more`
               : order.items[0].subtitle;
+              
           return (
             <Button
               variant="secondary"

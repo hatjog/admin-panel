@@ -1,11 +1,8 @@
 import { Buildings, XCircle } from "@medusajs/icons"
 import {
-  AdminOrder,
-  AdminOrderFulfillment,
   AdminOrderLineItem,
-  HttpTypes,
-  OrderLineItemDTO,
 } from "@medusajs/types"
+import { ExtendedAdminOrder, ExtendedAdminOrderFulfillment } from "@custom-types/order"
 import {
   Button,
   Container,
@@ -33,7 +30,7 @@ import { getLocaleAmount } from "../../../../../lib/money-amount-helpers"
 import { FulfillmentSetType } from "../../../../locations/common/constants"
 
 type OrderFulfillmentSectionProps = {
-  order: AdminOrder
+  order: ExtendedAdminOrder
 }
 
 export const OrderFulfillmentSection = ({
@@ -55,7 +52,7 @@ const UnfulfilledItem = ({
   item,
   currencyCode,
 }: {
-  item: OrderLineItemDTO & { variant: HttpTypes.AdminProductVariant }
+  item: AdminOrderLineItem
   currencyCode: string
 }) => {
   return (
@@ -101,7 +98,7 @@ const UnfulfilledItem = ({
         </div>
         <div className="flex items-center justify-end">
           <Text size="small">
-            {getLocaleAmount(item.subtotal || 0, currencyCode)}
+            {getLocaleAmount(Number(item.subtotal || 0), currencyCode)}
           </Text>
         </div>
       </div>
@@ -109,7 +106,7 @@ const UnfulfilledItem = ({
   )
 }
 
-const UnfulfilledItemBreakdown = ({ order }: { order: AdminOrder }) => {
+const UnfulfilledItemBreakdown = ({ order }: { order: ExtendedAdminOrder }) => {
   // Create an array of order items that haven't been fulfilled or at least not fully fulfilled
   const unfulfilledItemsWithShipping = order.items!.filter(
     (i) => i.requires_shipping && i.detail.fulfilled_quantity < i.quantity
@@ -145,7 +142,7 @@ const UnfulfilledItemDisplay = ({
   unfulfilledItems,
   requiresShipping = false,
 }: {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   unfulfilledItems: AdminOrderLineItem[]
   requiresShipping: boolean
 }) => {
@@ -204,8 +201,8 @@ const Fulfillment = ({
   order,
   index,
 }: {
-  fulfillment: AdminOrderFulfillment
-  order: AdminOrder
+  fulfillment: ExtendedAdminOrderFulfillment
+  order: ExtendedAdminOrder
   index: number
 }) => {
   const { t } = useTranslation()
@@ -215,7 +212,7 @@ const Fulfillment = ({
   const showLocation = !!fulfillment.location_id
 
   const isPickUpFulfillment =
-    fulfillment.shipping_option?.service_zone.fulfillment_set.type ===
+    fulfillment.shipping_option?.service_zone?.fulfillment_set?.type ===
     FulfillmentSetType.Pickup
 
   const { stock_location, isError, error } = useStockLocation(
@@ -294,6 +291,7 @@ const Fulfillment = ({
   const handleCancel = async () => {
     if (fulfillment.shipped_at) {
       toast.warning(t("orders.fulfillment.toast.fulfillmentShipped"))
+
       return
     }
 
@@ -365,8 +363,8 @@ const Fulfillment = ({
           {t("orders.fulfillment.itemsLabel")}
         </Text>
         <ul>
-          {fulfillment.items.map((f_item) => (
-            <li key={f_item.line_item_id}>
+          {fulfillment.items?.map((f_item) => (
+            <li key={f_item.line_item_id || f_item.id}>
               <Text size="small" leading="compact">
                 {f_item.quantity}x {f_item.title}
               </Text>

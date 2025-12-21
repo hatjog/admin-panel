@@ -14,12 +14,10 @@ import {
 } from "@medusajs/icons"
 import {
   AdminClaim,
-  AdminOrder,
   AdminOrderLineItem,
   AdminOrderPreview,
   AdminPaymentCollection,
   AdminPlugin,
-  AdminRegion,
   AdminReturn,
 } from "@medusajs/types"
 import {
@@ -64,9 +62,10 @@ import { CopyPaymentLink } from "../copy-payment-link/copy-payment-link"
 import ReturnInfoPopover from "./return-info-popover"
 import ShippingInfoPopover from "./shipping-info-popover"
 import { formatPercentage } from "../../../../../lib/percentage-helpers.ts"
+import type { ExtendedAdminOrder } from "@custom-types/order/common.ts"
 
 type OrderSummarySectionProps = {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   plugins: AdminPlugin[]
 }
 
@@ -289,7 +288,7 @@ const Header = ({
   order,
   orderPreview,
 }: {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   orderPreview?: AdminOrderPreview
 }) => {
   const { t } = useTranslation()
@@ -489,7 +488,7 @@ const ItemBreakdown = ({
   order,
   reservations,
 }: {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   reservations?: AdminReservation[]
 }) => {
   const { claims = [] } = useClaims({
@@ -564,7 +563,7 @@ const Cost = ({
 const CostBreakdown = ({
   order,
 }: {
-  order: AdminOrder & { region?: AdminRegion | null }
+  order: ExtendedAdminOrder
 }) => {
   const { t } = useTranslation()
   const [isTaxOpen, setIsTaxOpen] = useState(false)
@@ -638,7 +637,7 @@ const CostBreakdown = ({
                   <div>
                     <span className="txt-small">
                       {sm.name}
-                      {sm.detail.return_id &&
+                      {sm.detail?.return_id &&
                         ` (${t("fields.returnShipping")})`}{" "}
                       <ShippingInfoPopover key={i} shippingMethod={sm} />
                     </span>
@@ -727,7 +726,7 @@ const DiscountAndTotalBreakdown = ({
   order,
   plugins,
 }: {
-  order: AdminOrder & { region?: AdminRegion | null }
+  order: ExtendedAdminOrder
   plugins: AdminPlugin[]
 }) => {
   const { t } = useTranslation()
@@ -769,6 +768,7 @@ const DiscountAndTotalBreakdown = ({
         ).sort(),
       })
     }
+    
     return discounts
   }, [order])
 
@@ -958,6 +958,8 @@ const InventoryKitBreakdown = ({ item }: { item: AdminOrderLineItem }) => {
       {isOpen && (
         <div className="flex flex-col gap-1 px-6 pb-4">
           {inventory.map((i) => {
+            if (!i.inventory) return null
+
             return (
               <div
                 key={i.inventory.id}
@@ -1214,7 +1216,7 @@ const ExchangeBreakdown = ({
   )
 }
 
-const Total = ({ order }: { order: AdminOrder }) => {
+const Total = ({ order }: { order: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
 
   return (
@@ -1255,7 +1257,7 @@ const Total = ({ order }: { order: AdminOrder }) => {
           {t("orders.returns.outstandingAmount")}
         </Text>
         <Text
-          className="text-ui-fg-subtle text-bold" // ici
+          className="text-ui-fg-subtle text-bold"
           size="small"
           leading="compact"
         >

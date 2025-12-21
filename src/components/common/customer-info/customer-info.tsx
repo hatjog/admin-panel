@@ -1,10 +1,10 @@
 import { Avatar, Copy, Text } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
-import { HttpTypes } from "@medusajs/types"
-import { getFormattedAddress, isSameAddress } from "../../../lib/addresses"
+import { getFormattedAddress, isSameAddress } from "@lib/addresses"
+import type { ExtendedAdminOrder } from "@custom-types/order"
 
-const ID = ({ data }: { data: HttpTypes.AdminOrder }) => {
+const ID = ({ data }: { data: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
 
   const id = data.customer_id
@@ -36,7 +36,7 @@ const ID = ({ data }: { data: HttpTypes.AdminOrder }) => {
   )
 }
 
-const Company = ({ data }: { data: HttpTypes.AdminOrder }) => {
+const Company = ({ data }: { data: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
   const company =
     data.shipping_address?.company || data.billing_address?.company
@@ -57,7 +57,7 @@ const Company = ({ data }: { data: HttpTypes.AdminOrder }) => {
   )
 }
 
-const Contact = ({ data }: { data: HttpTypes.AdminOrder }) => {
+const Contact = ({ data }: { data: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
 
   const phone = data.shipping_address?.phone || data.billing_address?.phone
@@ -107,8 +107,8 @@ const AddressPrint = ({
   type,
 }: {
   address:
-    | HttpTypes.AdminOrder["shipping_address"]
-    | HttpTypes.AdminOrder["billing_address"]
+    | ExtendedAdminOrder["shipping_address"]
+    | ExtendedAdminOrder["billing_address"]
   type: "shipping" | "billing"
 }) => {
   const { t } = useTranslation()
@@ -148,7 +148,7 @@ const AddressPrint = ({
   )
 }
 
-const Addresses = ({ data }: { data: HttpTypes.AdminOrder }) => {
+const Addresses = ({ data }: { data: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
 
   return (
@@ -185,7 +185,7 @@ export const CustomerInfo = Object.assign(
   }
 )
 
-const getOrderCustomer = (obj: HttpTypes.AdminOrder) => {
+const getOrderCustomer = (obj: ExtendedAdminOrder) => {
   const { first_name: sFirstName, last_name: sLastName } =
     obj.shipping_address || {}
   const { first_name: bFirstName, last_name: bLastName } =

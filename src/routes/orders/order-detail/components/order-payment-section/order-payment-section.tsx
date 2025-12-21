@@ -1,5 +1,5 @@
 import { ArrowDownRightMini, DocumentText, XCircle } from "@medusajs/icons"
-import type { AdminOrder, AdminPayment, HttpTypes, OrderCreditLineDTO } from "@medusajs/types"
+import type { AdminPayment, HttpTypes, OrderCreditLineDTO } from "@medusajs/types"
 import {
   Badge,
   Button,
@@ -25,9 +25,10 @@ import { getOrderPaymentStatus } from "@lib/order-helpers"
 import { getPaymentsFromOrder } from "@lib/orders"
 import { getTotalCaptured, getTotalPending } from "@lib/payment"
 import { getLoyaltyPlugin } from "@lib/plugins"
+import type { ExtendedAdminOrder } from "@custom-types/order"
 
 type OrderPaymentSectionProps = {
-  order: HttpTypes.AdminOrder
+  order: ExtendedAdminOrder
   plugins: HttpTypes.AdminPlugin[]
 }
 
@@ -360,7 +361,7 @@ const PaymentBreakdown = ({
   currencyCode,
   plugins,
 }: {
-  order: HttpTypes.AdminOrder
+  order: ExtendedAdminOrder
   payments: HttpTypes.AdminPayment[]
   refunds: HttpTypes.AdminRefund[]
   currencyCode: string
@@ -438,7 +439,7 @@ const PaymentBreakdown = ({
   )
 }
 
-const Total = ({ order }: { order: AdminOrder }) => {
+const Total = ({ order }: { order: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
   const totalPending = getTotalPending(order.payment_collections)
 

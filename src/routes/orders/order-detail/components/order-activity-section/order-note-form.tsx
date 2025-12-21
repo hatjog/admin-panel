@@ -5,20 +5,21 @@ import { useRef } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { AdminOrder } from "@medusajs/types"
 import { useTranslation } from "react-i18next"
-import { Form } from "../../../../../components/common/form"
-import { KeyboundForm } from "../../../../../components/utilities/keybound-form"
+import { Form } from "@components/common/form"
+import { KeyboundForm } from "@components/utilities/keybound-form"
 
-type OrderNoteFormProps = {
-  order: AdminOrder
-}
+// TODO: Re-add when we have support for notes, commented out for now
+
+// type OrderNoteFormProps = {
+//   order: ExtendedAdminOrder
+// }
 
 const OrderNoteSchema = z.object({
   value: z.string().min(1),
 })
 
-export const OrderNoteForm = ({ order }: OrderNoteFormProps) => {
+export const OrderNoteForm = () => {
   const { t } = useTranslation()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -29,23 +30,23 @@ export const OrderNoteForm = ({ order }: OrderNoteFormProps) => {
     resolver: zodResolver(OrderNoteSchema),
   })
 
-  const { mutateAsync, isLoading } = {}
+  // const { mutateAsync, isLoading } = {}
 
-  const handleSubmit = form.handleSubmit(async (values) => {
-    mutateAsync(
-      {
-        resource_id: order.id,
-        resource_type: "order",
-        value: values.value,
-      },
-      {
-        onSuccess: () => {
-          form.reset()
-          handleResetSize()
-        },
-      }
-    )
-  })
+  // const handleSubmit = form.handleSubmit(async (values) => {
+    // mutateAsync(
+    //   {
+    //     resource_id: order.id,
+    //     resource_type: "order",
+    //     value: values.value,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       form.reset()
+    //       handleResetSize()
+    //     },
+    //   }
+    // )
+  // })
 
   const handleResize = () => {
     const textarea = textareaRef.current
@@ -55,17 +56,19 @@ export const OrderNoteForm = ({ order }: OrderNoteFormProps) => {
     }
   }
 
-  const handleResetSize = () => {
-    const textarea = textareaRef.current
-    if (textarea) {
-      textarea.style.height = "auto"
-    }
-  }
+  // const handleResetSize = () => {
+  //   const textarea = textareaRef.current
+  //   if (textarea) {
+  //     textarea.style.height = "auto"
+  //   }
+  // }
 
   return (
     <div>
       <Form {...form}>
-        <KeyboundForm onSubmit={handleSubmit}>
+        <KeyboundForm 
+        // onSubmit={handleSubmit}
+        >
           <div className="bg-ui-bg-field shadow-borders-base flex flex-col gap-y-2 rounded-md px-2 py-1.5">
             <Form.Field
               control={form.control}
@@ -93,7 +96,7 @@ export const OrderNoteForm = ({ order }: OrderNoteFormProps) => {
             <div className="flex items-center justify-end">
               <IconButton
                 type="submit"
-                isLoading={isLoading}
+                // isLoading={isLoading}
                 variant="transparent"
                 size="small"
                 className="text-ui-fg-muted hover:text-ui-fg-subtle active:text-ui-fg-subtle"

@@ -1,5 +1,4 @@
 import { XCircle } from "@medusajs/icons"
-import { HttpTypes } from "@medusajs/types"
 import {
   Container,
   Copy,
@@ -18,9 +17,10 @@ import {
   getOrderFulfillmentStatus,
   getOrderPaymentStatus,
 } from "../../../../../lib/order-helpers"
+import type { ExtendedAdminOrder } from "@custom-types/order"
 
 type OrderGeneralSectionProps = {
-  order: HttpTypes.AdminOrder
+  order: ExtendedAdminOrder
 }
 
 export const OrderGeneralSection = ({ order }: OrderGeneralSectionProps) => {
@@ -93,7 +93,7 @@ export const OrderGeneralSection = ({ order }: OrderGeneralSectionProps) => {
   )
 }
 
-const FulfillmentBadge = ({ order }: { order: HttpTypes.AdminOrder }) => {
+const FulfillmentBadge = ({ order }: { order: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
 
   const { label, color } = getOrderFulfillmentStatus(
@@ -108,7 +108,7 @@ const FulfillmentBadge = ({ order }: { order: HttpTypes.AdminOrder }) => {
   )
 }
 
-const PaymentBadge = ({ order }: { order: HttpTypes.AdminOrder }) => {
+const PaymentBadge = ({ order }: { order: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
 
   const { label, color } = getOrderPaymentStatus(t, order.payment_status)
@@ -120,7 +120,7 @@ const PaymentBadge = ({ order }: { order: HttpTypes.AdminOrder }) => {
   )
 }
 
-const OrderBadge = ({ order }: { order: HttpTypes.AdminOrder }) => {
+const OrderBadge = ({ order }: { order: ExtendedAdminOrder }) => {
   const { t } = useTranslation()
   const orderStatus = getCanceledOrderStatus(t, order.status)
 

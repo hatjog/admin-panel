@@ -12,51 +12,17 @@ import type { HttpTypes } from "@medusajs/types"
 import { Thumbnail } from "../../../../../components/common/thumbnail"
 import { useNavigate } from "react-router-dom"
 import { getErrorMessage } from "@utils/error-helper"
+import type { ExtendedAdminOrder } from "@custom-types/order"
 
 type OrderActiveEditSectionProps = {
-  order: HttpTypes.AdminOrder
-  quantity: number
-}
-
-function EditItem({
-  item,
-  quantity,
-}: {
-  item: HttpTypes.AdminOrderLineItem
-  quantity: number
-}) {
-  return (
-    <div key={item.id} className="text-ui-fg-subtle items-center gap-x-2">
-      <div className="flex items-center gap-x-2">
-        <div className="w-fit min-w-[27px]">
-          <span className="txt-small tabular-nums">{quantity}</span>x
-        </div>
-
-        <Thumbnail src={item.thumbnail} />
-
-        <span className="txt-small text-ui-fg-subtle font-medium">
-          {item.title}
-        </span>
-
-        {item.variant_sku && " · "}
-
-        {item.variant_sku && (
-          <div className="flex items-center gap-x-1">
-            <span className="txt-small">{item.variant_sku}</span>
-            <Copy content={item.variant_sku} className="text-ui-fg-muted" />
-          </div>
-        )}
-      </div>
-    </div>
-  )
+  order: ExtendedAdminOrder
 }
 
 export const OrderActiveEditSection = ({
-  order,
+  order
 }: OrderActiveEditSectionProps) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-
   const { order: orderPreview } = useOrderPreview(order.id)
 
   const { mutateAsync: cancelOrderEdit } = useCancelOrderEdit(order.id)
@@ -75,6 +41,7 @@ export const OrderActiveEditSection = ({
 
       if (!originalItem) {
         added.push({ item: currentItem, quantity: currentItem.quantity })
+        
         return
       }
 
@@ -198,3 +165,28 @@ export const OrderActiveEditSection = ({
     </div>
   )
 }
+
+const EditItem = ({ item, quantity }: { item: HttpTypes.AdminOrderLineItem, quantity: number }) => (
+    <div key={item.id} className="text-ui-fg-subtle items-center gap-x-2">
+      <div className="flex items-center gap-x-2">
+        <div className="w-fit min-w-[27px]">
+          <span className="txt-small tabular-nums">{quantity}</span>x
+        </div>
+
+        <Thumbnail src={item.thumbnail} />
+
+        <span className="txt-small text-ui-fg-subtle font-medium">
+          {item.title}
+        </span>
+
+        {item.variant_sku && " · "}
+
+        {item.variant_sku && (
+          <div className="flex items-center gap-x-1">
+            <span className="txt-small">{item.variant_sku}</span>
+            <Copy content={item.variant_sku} className="text-ui-fg-muted" />
+          </div>
+        )}
+      </div>
+    </div>
+  )

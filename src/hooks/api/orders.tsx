@@ -12,6 +12,7 @@ import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory, TQueryKey } from "../../lib/query-key-factory"
 import { inventoryItemsQueryKeys } from "./inventory"
 import { reservationItemsQueryKeys } from "./reservations"
+import { ExtendedAdminOrder, ExtendedAdminOrderResponse } from "@custom-types/order"
 
 const ORDERS_QUERY_KEY = "orders" as const
 const _orderKeys = queryKeysFactory(ORDERS_QUERY_KEY) as TQueryKey<"orders"> & {
@@ -41,14 +42,14 @@ export const ordersQueryKeys = _orderKeys
 
 export const useOrder = (
   id: string,
-  query?: Record<string, any>,
+  query?: Record<string, unknown>,
   options?: Omit<
-    UseQueryOptions<any, FetchError, any, QueryKey>,
+    UseQueryOptions<ExtendedAdminOrderResponse, FetchError, ExtendedAdminOrderResponse, QueryKey>,
     "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.order.retrieve(id, query),
+    queryFn: async () => sdk.admin.order.retrieve(id, query) as Promise<ExtendedAdminOrderResponse>,
     queryKey: ordersQueryKeys.detail(id, query),
     ...options,
   })

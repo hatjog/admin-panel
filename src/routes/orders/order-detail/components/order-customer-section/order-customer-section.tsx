@@ -1,12 +1,12 @@
 import { Container, Heading } from "@medusajs/ui"
 import { useTranslation } from "react-i18next"
 import { ArrowPath, CurrencyDollar, Envelope, FlyingBox } from "@medusajs/icons"
-import { ActionMenu } from "../../../../../components/common/action-menu"
-import { CustomerInfo } from "../../../../../components/common/customer-info"
-import { HttpTypes } from "@medusajs/types"
+import { ActionMenu } from "@components/common/action-menu"
+import { CustomerInfo } from "@components/common/customer-info"
+import type{ ExtendedAdminOrder } from "@custom-types/order"
 
 type OrderCustomerSectionProps = {
-  order: HttpTypes.AdminOrder
+  order: ExtendedAdminOrder
 }
 
 export const OrderCustomerSection = ({ order }: OrderCustomerSectionProps) => {

@@ -37,7 +37,7 @@ export const OrderDetail = () => {
       initialData,
     }
   );
-
+console.log(order)
   // TODO: Retrieve endpoints don't have an order ability, so a JS sort until this is available
   if (order) {
     order.items = order.items.sort((itemA, itemB) => {
