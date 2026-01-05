@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PencilSquare } from "@medusajs/icons"
-import type { AdminOrder, AdminOrderPreview } from "@medusajs/types"
+import type { AdminOrderPreview } from "@medusajs/types"
 import {
   Button,
   CurrencyInput,
@@ -36,9 +36,10 @@ import { currencies } from "../../../../../lib/data/currencies"
 import { ExchangeInboundSection } from "./exchange-inbound-section.tsx"
 import { ExchangeOutboundSection } from "./exchange-outbound-section"
 import type { ExtendedAdminExchange } from "@custom-types/exchanges/common.ts"
+import type { ExtendedAdminOrder } from "@custom-types/order/common.ts"
 
 type ReturnCreateFormProps = {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   exchange: ExtendedAdminExchange
   preview: AdminOrderPreview
   orderReturn?: AdminReturn
@@ -181,9 +182,6 @@ export const ExchangeCreateForm = ({
   })
 
   useEffect(() => {
-    console.log(customInboundShippingAmount, 'custom inbound shipping amount')
-    console.log(customOutboundShippingAmount, 'custom OUTBOUND shipping amount')
-
     if (inboundShipping) {
       setCustomInboundShippingAmount({
         value: inboundShipping.total.toString(),

@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
 
 import { IconButton, Input, Text } from "@medusajs/ui"
-import { UseFormReturn } from "react-hook-form"
-import { HttpTypes, AdminOrderLineItem } from "@medusajs/types"
+import type { UseFormReturn } from "react-hook-form"
+import type { HttpTypes } from "@medusajs/types"
 import { ChatBubble, DocumentText, XCircle, XMark } from "@medusajs/icons"
 
 import { Thumbnail } from "../../../../../components/common/thumbnail"
@@ -11,10 +11,11 @@ import { Form } from "../../../../../components/common/form"
 import { ActionMenu } from "../../../../../components/common/action-menu"
 import { Combobox } from "../../../../../components/inputs/combobox"
 import { useReturnReasons } from "../../../../../hooks/api/return-reasons"
+import { ExtendedAdminOrderLineItem } from "@custom-types/order"
 
 type OrderEditItemProps = {
-  item: AdminOrderLineItem
-  previewItem: AdminOrderLineItem
+  item: ExtendedAdminOrderLineItem
+  previewItem: ExtendedAdminOrderLineItem
   currencyCode: string
   index: number
 
@@ -147,7 +148,7 @@ function ReturnItem({
                 <Form.Field
                   control={form.control}
                   name={`items.${index}.reason_id`}
-                  render={({ field: { ref, value, onChange, ...field } }) => {
+                  render={({ field: { value, onChange, ...field } }) => {
                     return (
                       <Form.Item>
                         <Form.Control>
@@ -201,7 +202,7 @@ function ReturnItem({
                 <Form.Field
                   control={form.control}
                   name={`items.${index}.note`}
-                  render={({ field: { ref, onChange, ...field } }) => {
+                  render={({ field: { onChange, ...field } }) => {
                     return (
                       <Form.Item>
                         <Form.Control>

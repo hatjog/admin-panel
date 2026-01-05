@@ -39,7 +39,6 @@ export const ProductAdditionalAttributeSection = () => {
   const form = useForm<any>({
     defaultValues: {},
   });
-console.log(product?.attribute_values, 'PRODUCT ATTRIBUTE VALUES')
   // Reset form when product data is loaded
   useEffect(() => {
     if (product?.attribute_values) {

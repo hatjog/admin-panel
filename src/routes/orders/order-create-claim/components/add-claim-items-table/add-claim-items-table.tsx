@@ -1,19 +1,19 @@
-import {
+import type {
   AdminOrderLineItem,
   DateComparisonOperator,
   NumericalComparisonOperator,
 } from "@medusajs/types"
-import { OnChangeFn, RowSelectionState } from "@tanstack/react-table"
+import type { OnChangeFn, RowSelectionState } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
 
 import { useTranslation } from "react-i18next"
-import { _DataTable } from "../../../../../components/table/data-table"
-import { useDataTable } from "../../../../../hooks/use-data-table"
-import { getStylizedAmount } from "../../../../../lib/money-amount-helpers"
-import { getReturnableQuantity } from "../../../../../lib/rma"
+import { _DataTable } from "@components/table/data-table"
+import { useDataTable } from "@hooks/use-data-table"
+import { getReturnableQuantity } from "@lib/rma"
 import { useClaimItemTableColumns } from "./use-claim-item-table-columns"
 import { useClaimItemTableFilters } from "./use-claim-item-table-filters"
 import { useClaimItemTableQuery } from "./use-claim-item-table-query"
+import type { ExtendedAdminOrderLineItem } from "@custom-types/order"
 
 const PAGE_SIZE = 50
 const PREFIX = "rit"
@@ -21,7 +21,7 @@ const PREFIX = "rit"
 type AddReturnItemsTableProps = {
   onSelectionChange: (ids: string[]) => void
   selectedItems: string[]
-  items: AdminOrderLineItem[]
+  items: ExtendedAdminOrderLineItem[]
   currencyCode: string
 }
 
@@ -36,6 +36,7 @@ export const AddClaimItemsTable = ({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(
     selectedItems.reduce((acc, id) => {
       acc[id] = true
+
       return acc
     }, {} as RowSelectionState)
   )
@@ -65,7 +66,7 @@ export const AddClaimItemsTable = ({
       returnable_quantity,
     } = searchParams
 
-    let results: AdminOrderLineItem[] = items
+    let results = items
 
     if (q) {
       results = results.filter((i) => {
@@ -96,8 +97,7 @@ export const AddClaimItemsTable = ({
       results = filterByNumber(
         results,
         returnable_quantity,
-        "returnable_quantity",
-        currencyCode
+        "returnable_quantity"
       )
     }
 
@@ -105,8 +105,7 @@ export const AddClaimItemsTable = ({
       results = filterByNumber(
         results,
         refundable_amount,
-        "refundable_amount",
-        currencyCode
+        "refundable_amount"
       )
     }
 
@@ -164,7 +163,7 @@ export const AddClaimItemsTable = ({
 }
 
 const sortItems = (
-  items: AdminOrderLineItem[],
+  items: ExtendedAdminOrderLineItem[],
   field: string,
   direction: "asc" | "desc"
 ) => {
@@ -195,12 +194,13 @@ const sortItems = (
     if (aValue > bValue) {
       return direction === "asc" ? 1 : -1
     }
+
     return 0
   })
 }
 
 const filterByDate = (
-  items: AdminOrderLineItem[],
+  items: ExtendedAdminOrderLineItem[],
   date: DateComparisonOperator,
   field: "created_at" | "updated_at"
 ) => {
@@ -239,10 +239,9 @@ const defaultOperators = {
 }
 
 const filterByNumber = (
-  items: AdminOrderLineItem[],
+  items: ExtendedAdminOrderLineItem[],
   value: NumericalComparisonOperator | number,
-  field: "returnable_quantity" | "refundable_amount",
-  currency_code: string
+  field: "returnable_quantity" | "refundable_amount"
 ) => {
   const { eq, gt, lt, gte, lte } =
     typeof value === "object"
@@ -251,7 +250,7 @@ const filterByNumber = (
 
   return items.filter((i) => {
     const returnableQuantity = i.quantity - (i.returned_quantity || 0)
-    const refundableAmount = getStylizedAmount(i.refundable || 0, currency_code)
+    const refundableAmount = i.refundable || 0
 
     const itemValue =
       field === "returnable_quantity" ? returnableQuantity : refundableAmount

@@ -28,7 +28,6 @@ export const ProductVariantDetail = () => {
       initialData,
     }
   )
-console.log(variant, 'VARIANT')
   const { getWidgets } = useExtension()
 
   if (isLoading || !variant) {

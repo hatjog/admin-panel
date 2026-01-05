@@ -13,13 +13,13 @@ import {
   TriangleDownMini,
 } from "@medusajs/icons"
 import {
-  AdminClaim,
-  AdminOrderLineItem,
   AdminOrderPreview,
   AdminPaymentCollection,
   AdminPlugin,
-  AdminReturn,
 } from "@medusajs/types"
+import type { ExtendedAdminReturn } from "@custom-types/returns"
+import type { ExtendedAdminClaim } from "@custom-types/claims"
+import type { ExtendedAdminOrderLineItem } from "@custom-types/order"
 import {
   Badge,
   Button,
@@ -386,11 +386,11 @@ const Item = ({
   claims,
   exchanges,
 }: {
-  item: AdminOrderLineItem
+  item: ExtendedAdminOrderLineItem
   currencyCode: string
   reservation?: AdminReservation
-  returns: AdminReturn[]
-  claims: AdminClaim[]
+  returns: ExtendedAdminReturn[]
+  claims: ExtendedAdminClaim[]
   exchanges: ExtendedAdminExchange[]
 }) => {
   const { t } = useTranslation()
@@ -399,7 +399,7 @@ const Item = ({
   const hasInventoryKit =
     isInventoryManaged &&
     ((item.variant?.inventory_items?.length || 0) > 1 ||
-      item.variant?.inventory_items?.some((i) => i.required_quantity > 1))
+      item.variant?.inventory_items?.some((i) => (i.required_quantity || 0) > 1))
   const hasUnfulfilledItems = item.quantity - item.detail.fulfilled_quantity > 0
 
   return (
@@ -933,7 +933,7 @@ const DiscountAndTotalBreakdown = ({
   )
 }
 
-const InventoryKitBreakdown = ({ item }: { item: AdminOrderLineItem }) => {
+const InventoryKitBreakdown = ({ item }: { item: ExtendedAdminOrderLineItem }) => {
   const { t } = useTranslation()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -996,7 +996,7 @@ const ReturnBreakdownWithDamages = ({
   orderReturn,
   itemId,
 }: {
-  orderReturn: AdminReturn
+  orderReturn: ExtendedAdminReturn
   itemId: string
 }) => {
   const { t } = useTranslation()
@@ -1051,7 +1051,7 @@ const ReturnBreakdown = ({
   orderReturn,
   itemId,
 }: {
-  orderReturn: AdminReturn
+  orderReturn: ExtendedAdminReturn
   itemId: string
 }) => {
   const { t } = useTranslation()
@@ -1141,12 +1141,12 @@ const ClaimBreakdown = ({
   claim,
   itemId,
 }: {
-  claim: AdminClaim
+  claim: ExtendedAdminClaim
   itemId: string
 }) => {
   const { t } = useTranslation()
   const { getRelativeDate } = useDate()
-  const items = claim.additional_items.filter(
+  const items = (claim.additional_items || []).filter(
     (item) => item.item?.id === itemId
   )
 

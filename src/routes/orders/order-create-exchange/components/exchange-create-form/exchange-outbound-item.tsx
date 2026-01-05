@@ -1,5 +1,5 @@
 import { XCircle } from "@medusajs/icons"
-import { AdminOrderLineItem, HttpTypes } from "@medusajs/types"
+import type { HttpTypes } from "@medusajs/types"
 import { Input, Text } from "@medusajs/ui"
 import { UseFormReturn } from "react-hook-form"
 import { useTranslation } from "react-i18next"
@@ -9,9 +9,10 @@ import { Form } from "../../../../../components/common/form"
 import { Thumbnail } from "../../../../../components/common/thumbnail"
 import { MoneyAmountCell } from "../../../../../components/table/table-cells/common/money-amount-cell"
 import { CreateExchangeSchemaType } from "./schema"
+import { ExtendedAdminOrderLineItem } from "@custom-types/order"
 
 type ExchangeOutboundItemProps = {
-  previewItem: AdminOrderLineItem
+  previewItem: ExtendedAdminOrderLineItem
   currencyCode: string
   index: number
 

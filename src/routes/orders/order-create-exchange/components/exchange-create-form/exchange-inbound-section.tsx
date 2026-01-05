@@ -1,6 +1,5 @@
 import {
   AdminExchange,
-  AdminOrder,
   AdminOrderPreview,
   AdminReturn,
   InventoryLevelDTO,
@@ -34,9 +33,10 @@ import { AddExchangeInboundItemsTable } from "../add-exchange-inbound-items-tabl
 import { ExchangeInboundItem } from "./exchange-inbound-item"
 import { CreateExchangeSchemaType } from "./schema"
 import { ExtendedAdminProductVariantListResponse } from "@custom-types/product"
+import type { ExtendedAdminOrder } from "@custom-types/order"
 
 type ExchangeInboundSectionProps = {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   orderReturn?: AdminReturn
   exchange: AdminExchange
   preview: AdminOrderPreview

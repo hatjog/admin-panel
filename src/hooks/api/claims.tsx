@@ -13,7 +13,7 @@ import { queryClient } from "@lib/query-client"
 import { queryKeysFactory } from "@lib/query-key-factory"
 import { ordersQueryKeys } from "./orders"
 import { returnsQueryKeys } from "./returns"
-import type { AdminAddClaimOutboundItemsPayload } from "@custom-types/claims"
+import type { ExtendedAdminClaimListResponse, AdminAddClaimOutboundItemsPayload } from "@custom-types/claims"
 
 const CLAIMS_QUERY_KEY = "claims" as const
 export const claimsQueryKeys = queryKeysFactory(CLAIMS_QUERY_KEY)
@@ -44,16 +44,16 @@ export const useClaims = (
   query?: HttpTypes.AdminClaimListParams,
   options?: Omit<
     UseQueryOptions<
-      HttpTypes.AdminClaimListParams,
+      ExtendedAdminClaimListResponse,
       FetchError,
-      HttpTypes.AdminClaimListResponse,
+      ExtendedAdminClaimListResponse,
       QueryKey
     >,
     "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.claim.list(query),
+    queryFn: async () => sdk.admin.claim.list(query) as Promise<ExtendedAdminClaimListResponse>,
     queryKey: claimsQueryKeys.list(query),
     ...options,
   })

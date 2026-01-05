@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PencilSquare } from "@medusajs/icons"
 import type {
-  AdminOrder,
   AdminOrderPreview,
   AdminReturn,
   InventoryLevelDTO,
@@ -53,9 +52,10 @@ import { ReturnShippingPlaceholder } from "../../../common/placeholders"
 import { AddReturnItemsTable } from "../add-return-items-table"
 import { ReturnItem } from "./return-item"
 import { ReturnCreateSchema, ReturnCreateSchemaType } from "./schema"
+import type { ExtendedAdminOrder } from "@custom-types/order"
 
 type ReturnCreateFormProps = {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   activeReturn: AdminReturn
   preview: AdminOrderPreview
 }

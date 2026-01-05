@@ -10,11 +10,11 @@ import {
 import { useTranslation } from "react-i18next"
 import { _DataTable } from "../../../../../components/table/data-table"
 import { useDataTable } from "../../../../../hooks/use-data-table"
-import { getStylizedAmount } from "../../../../../lib/money-amount-helpers"
 import { getReturnableQuantity } from "../../../../../lib/rma"
 import { useReturnItemTableColumns } from "./use-return-item-table-columns"
 import { useReturnItemTableFilters } from "./use-return-item-table-filters"
 import { useReturnItemTableQuery } from "./use-return-item-table-query"
+import type { ExtendedAdminOrderLineItem } from "@custom-types/order"
 
 const PAGE_SIZE = 50
 const PREFIX = "rit"
@@ -22,7 +22,7 @@ const PREFIX = "rit"
 type AddReturnItemsTableProps = {
   onSelectionChange: (ids: string[]) => void
   selectedItems: string[]
-  items: AdminOrderLineItem[]
+  items: ExtendedAdminOrderLineItem[]
   currencyCode: string
 }
 
@@ -67,7 +67,7 @@ export const AddReturnItemsTable = ({
       returnable_quantity,
     } = searchParams
 
-    let results: AdminOrderLineItem[] = items
+    let results = items
 
     if (q) {
       results = results.filter((i) => {
@@ -99,7 +99,6 @@ export const AddReturnItemsTable = ({
         results,
         returnable_quantity,
         "returnable_quantity",
-        currencyCode
       )
     }
 
@@ -108,7 +107,6 @@ export const AddReturnItemsTable = ({
         results,
         refundable_amount,
         "refundable_amount",
-        currencyCode
       )
     }
 
@@ -166,7 +164,7 @@ export const AddReturnItemsTable = ({
 }
 
 const sortItems = (
-  items: AdminOrderLineItem[],
+  items: ExtendedAdminOrderLineItem[],
   field: string,
   direction: "asc" | "desc"
 ) => {
@@ -197,12 +195,13 @@ const sortItems = (
     if (aValue > bValue) {
       return direction === "asc" ? 1 : -1
     }
+
     return 0
   })
 }
 
 const filterByDate = (
-  items: AdminOrderLineItem[],
+  items: ExtendedAdminOrderLineItem[],
   date: DateComparisonOperator,
   field: "created_at" | "updated_at"
 ) => {
@@ -241,10 +240,9 @@ const defaultOperators = {
 }
 
 const filterByNumber = (
-  items: AdminOrderLineItem[],
+  items: ExtendedAdminOrderLineItem[],
   value: NumericalComparisonOperator | number,
   field: "returnable_quantity" | "refundable_amount",
-  currency_code: string
 ) => {
   const { eq, gt, lt, gte, lte } =
     typeof value === "object"
@@ -253,7 +251,7 @@ const filterByNumber = (
 
   return items.filter((i) => {
     const returnableQuantity = i.quantity - (i.returned_quantity || 0)
-    const refundableAmount = getStylizedAmount(i.refundable || 0, currency_code)
+    const refundableAmount = i.refundable || 0
 
     const itemValue =
       field === "returnable_quantity" ? returnableQuantity : refundableAmount

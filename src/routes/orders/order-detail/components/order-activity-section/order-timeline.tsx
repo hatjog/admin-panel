@@ -4,8 +4,6 @@ import { Collapsible as RadixCollapsible } from "radix-ui"
 import { type PropsWithChildren, type ReactNode, useMemo, useState } from "react"
 
 import type {
-  AdminClaim,
-  AdminReturn,
   HttpTypes,
 } from "@medusajs/types"
 import { useTranslation } from "react-i18next"
@@ -15,6 +13,8 @@ import type {
   ExtendedAdminOrderFulfillment,
   ExtendedAdminOrderLineItem,
 } from "@custom-types/order"
+import type { ExtendedAdminReturn } from "@custom-types/returns"
+import type { ExtendedAdminClaim } from "@custom-types/claims"
 import {
   useCancelOrderTransfer,
   useCustomer,
@@ -110,9 +110,9 @@ type Activity = {
   timestamp: string | Date | null
   children?: ReactNode
   itemsToSend?:
-    | AdminClaim["additional_items"]
+    | ExtendedAdminClaim["additional_items"]
     | ExtendedAdminExchange["additional_items"]
-  itemsToReturn?: AdminReturn["items"]
+  itemsToReturn?: ExtendedAdminReturn["items"]
   itemsMap?: Map<string, ExtendedAdminOrderLineItem>
 }
 
@@ -293,7 +293,7 @@ const useActivityItems = (order: ExtendedAdminOrder): Activity[] => {
       }
     }
 
-    const returnMap = new Map<string, AdminReturn>()
+    const returnMap = new Map<string, ExtendedAdminReturn>()
 
     for (const ret of returns) {
       returnMap.set(ret.id, ret)
@@ -578,9 +578,9 @@ type OrderActivityItemProps = PropsWithChildren<{
   timestamp: string | Date | null
   isFirst?: boolean
   itemsToSend?:
-    | AdminClaim["additional_items"]
+    | ExtendedAdminClaim["additional_items"]
     | ExtendedAdminExchange["additional_items"]
-  itemsToReturn?: AdminReturn["items"]
+  itemsToReturn?: ExtendedAdminReturn["items"]
   itemsMap?: Map<string, ExtendedAdminOrderLineItem>
 }>
 
@@ -611,10 +611,10 @@ const OrderActivityItem = ({
         })}
       >
         <div className="flex items-center justify-between">
-          {itemsToSend?.length || itemsToReturn?.length ? (
+          {(itemsToSend?.length || itemsToReturn?.length) && typeof title === "string" ? (
             <ActivityItems
-              key={typeof title === "string" ? title : String(title)}
-              title={typeof title === "string" ? title : ""}
+              key={title}
+              title={title}
               itemsToSend={itemsToSend}
               itemsToReturn={itemsToReturn}
               itemsMap={itemsMap}
@@ -791,7 +791,7 @@ const ReturnBody = ({
   isCreated,
   isReceived,
 }: {
-  orderReturn: AdminReturn
+  orderReturn: ExtendedAdminReturn
   isCreated: boolean
   isReceived?: boolean
 }) => {
@@ -820,7 +820,7 @@ const ReturnBody = ({
     })
   }
 
-  const numberOfItems = orderReturn.items.reduce((acc, item) => {
+  const numberOfItems = (orderReturn.items || []).reduce((acc, item) => {
     return acc + (isReceived ? item.received_quantity : item.quantity) // TODO: revisit when we add dismissed quantity on ReturnItem
   }, 0)
 
@@ -852,8 +852,8 @@ const ClaimBody = ({
   claim,
   claimReturn,
 }: {
-  claim: AdminClaim
-  claimReturn?: AdminReturn
+  claim: ExtendedAdminClaim
+  claimReturn?: ExtendedAdminReturn
 }) => {
   const prompt = usePrompt()
   const { t } = useTranslation()
@@ -926,7 +926,7 @@ const ExchangeBody = ({
   exchangeReturn,
 }: {
   exchange: ExtendedAdminExchange
-  exchangeReturn?: AdminReturn
+  exchangeReturn?: ExtendedAdminReturn
 }) => {
   const prompt = usePrompt()
   const { t } = useTranslation()
@@ -1063,7 +1063,7 @@ const TransferOrderRequestBody = ({
   return (
     <div>
       <Text size="small" className="text-ui-fg-subtle">
-        {t("orders.activity.from")}: {action.details?.original_email || ""}
+        {t("orders.activity.from")}: {(action.details as { original_email?: string })?.original_email || ""}
       </Text>
 
       <Text size="small" className="text-ui-fg-subtle">

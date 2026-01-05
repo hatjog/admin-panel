@@ -11,9 +11,10 @@ import { useProductVariant } from "../../../../../hooks/api/products"
 import { getFulfillableQuantity } from "../../../../../lib/order-item"
 import { CreateFulfillmentSchema } from "./constants"
 import { InformationCircleSolid } from "@medusajs/icons"
+import type { ExtendedAdminOrderLineItem } from "@custom-types/order"
 
 type OrderEditItemProps = {
-  item: HttpTypes.AdminOrderLineItem
+  item: ExtendedAdminOrderLineItem
   currencyCode: string
   locationId?: string
   onItemRemove: (itemId: string) => void
@@ -213,7 +214,7 @@ export function OrderCreateFulfillmentItem({
 
                             field.onChange(val)
 
-                            if (!isNaN(val)) {
+                            if (val !== null && !isNaN(val)) {
                               if (val < minValue || val > maxValue) {
                                 form.setError(`quantity.${item.id}`, {
                                   type: "manual",

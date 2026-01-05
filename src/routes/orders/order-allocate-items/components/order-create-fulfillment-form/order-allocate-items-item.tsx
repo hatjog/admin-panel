@@ -1,32 +1,41 @@
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { InventoryItemDTO, OrderLineItemDTO } from "@medusajs/types"
 import {
   Component,
   ExclamationCircleSolid,
   TriangleDownMini,
 } from "@medusajs/icons"
-import { UseFormReturn, useWatch } from "react-hook-form"
+import { type UseFormReturn, useWatch } from "react-hook-form"
 import { Input, Text, clx } from "@medusajs/ui"
-import * as zod from "zod"
+import type * as zod from "zod"
 
-import { Thumbnail } from "../../../../../components/common/thumbnail"
-import { getFulfillableQuantity } from "../../../../../lib/order-item"
-import { Form } from "../../../../../components/common/form"
-import { AllocateItemsSchema } from "./constants"
-import { checkInventoryKit } from "./utils"
+import { Thumbnail } from "@components/common/thumbnail"
+import { getFulfillableQuantity } from "@lib/order-item"
+import { Form } from "@components/common/form"
+import type { AllocateItemsSchema } from "./constants"
+import {
+  checkInventoryKit,
+  getFirstInventoryId,
+  getFirstInventoryItem,
+  getInventory,
+  getQuantityKey,
+  getQuantityValue,
+  getRequiredQuantity,
+} from "./utils"
+import type { ExtendedAdminOrderLineItem } from "@custom-types/order"
+import type { ExtendedAdminProductVariantInventoryItem } from "@custom-types/product"
 
 type OrderEditItemProps = {
-  item: OrderLineItemDTO
+  item: ExtendedAdminOrderLineItem
   locationId?: string
   form: UseFormReturn<zod.infer<typeof AllocateItemsSchema>>
   onQuantityChange: (
-    inventoryItem: InventoryItemDTO,
-    lineItem: OrderLineItemDTO,
+    inventoryItem: ExtendedAdminProductVariantInventoryItem | undefined,
+    lineItem: ExtendedAdminOrderLineItem,
     hasInventoryKit: boolean,
     value: number | null,
     isRoot?: boolean
-  ) => {}
+  ) => void
 }
 
 export function OrderAllocateItemsItem({
@@ -38,7 +47,9 @@ export function OrderAllocateItemsItem({
   const { t } = useTranslation()
 
   const variant = item.variant
-  const inventory = item.variant?.inventory || []
+  const inventory = getInventory(variant)
+  const firstInventoryItem = getFirstInventoryItem(item)
+  const firstInventoryId = getFirstInventoryId(item)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -68,12 +79,13 @@ export function OrderAllocateItemsItem({
     }
   }, [variant, locationId])
 
+  const quantityKey = getQuantityKey(item.id, firstInventoryId, hasInventoryKit)
+  const quantityValue = getQuantityValue(quantityField, quantityKey)
   const hasQuantityError =
     !hasInventoryKit &&
-    availableQuantity &&
-    quantityField[`${item.id}-${item.variant?.inventory[0].id}`] &&
-    quantityField[`${item.id}-${item.variant?.inventory[0].id}`] >
-      availableQuantity
+    availableQuantity !== undefined &&
+    quantityValue !== null &&
+    quantityValue > availableQuantity
 
   const minValue = 0
   const maxValue = Math.min(
@@ -128,19 +140,12 @@ export function OrderAllocateItemsItem({
                     {t("labels.available")}
                   </span>
                   <span className="text-ui-fg-muted">
-                    {availableQuantity || "-"}
-                    {availableQuantity &&
+                    {availableQuantity ?? "-"}
+                    {availableQuantity !== undefined &&
                       !hasInventoryKit &&
-                      quantityField[
-                        `${item.id}-${item.variant?.inventory[0].id}`
-                      ] && (
+                      quantityValue !== null && (
                         <span className="text-ui-fg-error txt-small ml-1">
-                          -
-                          {
-                            quantityField[
-                              `${item.id}-${item.variant?.inventory[0].id}`
-                            ]
-                          }
+                          -{quantityValue}
                         </span>
                       )}
                   </span>
@@ -168,14 +173,10 @@ export function OrderAllocateItemsItem({
             <div className="text-ui-fg-subtle txt-small mr-2 flex flex-row items-center gap-2">
               <Form.Field
                 control={form.control}
-                name={
-                  hasInventoryKit
-                    ? `quantity.${item.id}-`
-                    : `quantity.${item.id}-${item.variant?.inventory[0].id}`
-                }
+                name={`quantity.${quantityKey}` as `quantity.${string}`}
                 rules={{
                   required: !hasInventoryKit,
-                  min: !hasInventoryKit && minValue,
+                  min: !hasInventoryKit ? minValue : undefined,
                   max: maxValue,
                 }}
                 render={({ field }) => {
@@ -194,7 +195,7 @@ export function OrderAllocateItemsItem({
                                 : Number(e.target.value)
 
                             onQuantityChange(
-                              item.variant?.inventory[0],
+                              firstInventoryItem ?? undefined,
                               item,
                               hasInventoryKit,
                               val,
@@ -233,14 +234,17 @@ export function OrderAllocateItemsItem({
       )}
 
       {isOpen &&
-        variant.inventory.map((i, ind) => {
-          const location = i.location_levels.find(
+        inventory.map((i, ind) => {
+          const location = i?.location_levels?.find(
             (l) => l.location_id === locationId
           )
 
+          const itemQuantityKey = `${item.id}-${i.id}`
+          const itemQuantityValue = getQuantityValue(quantityField, itemQuantityKey)
           const hasQuantityError =
-            !!quantityField[`${item.id}-${i.id}`] &&
-            quantityField[`${item.id}-${i.id}`] > location.available_quantity
+            itemQuantityValue !== null &&
+            location !== undefined &&
+            itemQuantityValue > location.available_quantity
 
           return (
             <div key={i.id} className="txt-small flex items-center gap-x-3 p-4">
@@ -250,11 +254,11 @@ export function OrderAllocateItemsItem({
                 )}
                 <div className="flex flex-col">
                   <span className="text-ui-fg-subtle">{i.title}</span>
-                  <span className="text-ui-fg-muted">
-                    {t("orders.allocateItems.requires", {
-                      num: variant.inventory_items[ind].required_quantity,
-                    })}
-                  </span>
+                    <span className="text-ui-fg-muted">
+                      {t("orders.allocateItems.requires", {
+                        num: getRequiredQuantity(variant, ind),
+                      })}
+                    </span>
                 </div>
               </div>
 
@@ -267,11 +271,11 @@ export function OrderAllocateItemsItem({
                       {t("labels.available")}
                     </span>
                     <span className="text-ui-fg-muted">
-                      {location?.available_quantity || "-"}
-                      {location?.available_quantity &&
-                        quantityField[`${item.id}-${i.id}`] && (
+                      {location?.available_quantity ?? "-"}
+                      {location?.available_quantity !== undefined &&
+                        itemQuantityValue !== null && (
                           <span className="text-ui-fg-error txt-small ml-1">
-                            -{quantityField[`${item.id}-${i.id}`]}
+                            -{itemQuantityValue}
                           </span>
                         )}
                     </span>
@@ -332,8 +336,7 @@ export function OrderAllocateItemsItem({
                       }}
                     />
                     /{" "}
-                    {item.quantity *
-                      variant.inventory_items[ind].required_quantity}{" "}
+                    {item.quantity * getRequiredQuantity(variant, ind)}{" "}
                     {t("fields.qty")}
                   </div>
                 </div>

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { PencilSquare } from "@medusajs/icons"
 import type {
   AdminClaim,
-  AdminOrder,
   AdminOrderPreview,
   InventoryLevelDTO,
 } from "@medusajs/types"
@@ -57,9 +56,10 @@ import { currencies } from "../../../../../lib/data/currencies"
 import { ReturnShippingPlaceholder } from "../../../common/placeholders"
 import { ClaimOutboundSection } from "./claim-outbound-section"
 import { ItemPlaceholder } from "./item-placeholder"
+import { ExtendedAdminOrder } from "@custom-types/order/common.ts"
 
 type ReturnCreateFormProps = {
-  order: AdminOrder
+  order: ExtendedAdminOrder
   claim: AdminClaim
   preview: AdminOrderPreview
   orderReturn?: AdminReturn
@@ -608,7 +608,7 @@ export const ClaimCreateForm = ({
                   <StackedFocusModal.Header />
 
                   <AddClaimItemsTable
-                    items={order.items!}
+                    items={order.items}
                     selectedItems={inboundItems.map((i) => i.item_id)}
                     currencyCode={order.currency_code}
                     onSelectionChange={(finalSelection) => {

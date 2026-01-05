@@ -1,12 +1,12 @@
 import { InformationCircleSolid } from "@medusajs/icons"
-import { AdminReturn } from "@medusajs/types"
 import { Badge, Popover, Text } from "@medusajs/ui"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useDate } from "../../../../../hooks/use-date"
+import type { ExtendedAdminReturn } from "@custom-types/returns"
 
 type ReturnInfoPopoverProps = {
-  orderReturn: AdminReturn
+  orderReturn: ExtendedAdminReturn
 }
 
 function ReturnInfoPopover({ orderReturn }: ReturnInfoPopoverProps) {
@@ -66,7 +66,7 @@ function ReturnInfoPopover({ orderReturn }: ReturnInfoPopoverProps) {
               {t(`orders.returns.returnRequested`)}
             </span>
             {" · "}
-            {getFullDate({ date: orderReturn.requested_at, includeTime: true })}
+            {getFullDate({ date: orderReturn.requested_at || orderReturn.created_at, includeTime: true })}
           </Text>
 
           <Text size="xsmall">

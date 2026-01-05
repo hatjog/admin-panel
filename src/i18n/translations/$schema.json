@@ -5029,6 +5029,9 @@
             },
             "toastCreated": {
               "type": "string"
+            },
+            "toastFulfillmentNotFound": {
+              "type": "string"
             }
           },
           "required": [
@@ -5037,7 +5040,8 @@
             "addTracking",
             "sendNotification",
             "sendNotificationHint",
-            "toastCreated"
+            "toastCreated",
+            "toastFulfillmentNotFound"
           ],
           "additionalProperties": false
         },

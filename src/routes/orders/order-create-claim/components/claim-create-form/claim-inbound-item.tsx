@@ -1,7 +1,7 @@
 import { ChatBubble, DocumentText, XCircle, XMark } from "@medusajs/icons"
-import { AdminOrderLineItem, HttpTypes } from "@medusajs/types"
+import type { HttpTypes } from "@medusajs/types"
 import { IconButton, Input, Text } from "@medusajs/ui"
-import { UseFormReturn } from "react-hook-form"
+import type { UseFormReturn } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 
 import { ActionMenu } from "../../../../../components/common/action-menu"
@@ -10,10 +10,11 @@ import { Thumbnail } from "../../../../../components/common/thumbnail"
 import { Combobox } from "../../../../../components/inputs/combobox"
 import { MoneyAmountCell } from "../../../../../components/table/table-cells/common/money-amount-cell"
 import { useReturnReasons } from "../../../../../hooks/api/return-reasons"
+import { ExtendedAdminOrderLineItem } from "@custom-types/order"
 
 type OrderEditItemProps = {
-  item: AdminOrderLineItem
-  previewItem: AdminOrderLineItem
+  item: ExtendedAdminOrderLineItem
+  previewItem: ExtendedAdminOrderLineItem
   currencyCode: string
   index: number
 

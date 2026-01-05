@@ -29,7 +29,6 @@ export const ProductDetail = () => {
       initialData: initialData,
     },
   );
-console.log(product, 'PRODUCT')
   const { getWidgets } = useExtension();
 
   const after = getWidgets("product.details.after");

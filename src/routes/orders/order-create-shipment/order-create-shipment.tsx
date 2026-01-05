@@ -1,12 +1,14 @@
 import { useParams } from "react-router-dom"
-import { HttpTypes } from "@medusajs/types"
 
-import { RouteFocusModal } from "../../../components/modals"
-import { useOrder } from "../../../hooks/api/orders"
+import { useOrder } from "@/hooks/api/orders"
 import { OrderCreateShipmentForm } from "./components/order-create-shipment-form"
+import { toast } from "@medusajs/ui"
+import { useTranslation } from "react-i18next"
+import { RouteFocusModal } from "@components/modals"
 
 export function OrderCreateShipment() {
   const { id, f_id } = useParams()
+  const { t } = useTranslation()
 
   const { order, isLoading, isError, error } = useOrder(id!, {
     fields: "*fulfillments,*fulfillments.items,*fulfillments.labels",
@@ -17,13 +19,19 @@ export function OrderCreateShipment() {
   }
 
   const ready = !isLoading && order
+  const fulfillment = order?.fulfillments.find((f) => f.id === f_id)
+
+  if (!fulfillment) {
+    toast.error(t("orders.shipment.toastFulfillmentNotFound"))
+    throw new Error("Fulfillment not found")
+  }
 
   return (
     <RouteFocusModal>
       {ready && (
         <OrderCreateShipmentForm
           order={order}
-          fulfillment={order.fulfillments?.find((f: HttpTypes.AdminOrderFulfillment) => f.id === f_id)}
+          fulfillment={fulfillment}
         />
       )}
     </RouteFocusModal>

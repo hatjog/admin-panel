@@ -1,19 +1,17 @@
-import {
-  AdminClaim,
-  AdminReturn,
-} from "@medusajs/types"
 import { Popover, Text } from "@medusajs/ui"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Thumbnail } from "../../../../../components/common/thumbnail"
 import type { ExtendedAdminExchange } from "../../../../../types/exchanges"
 import type { ExtendedAdminOrderLineItem } from "@custom-types/order"
+import type { ExtendedAdminClaim } from "@custom-types/claims"
+import type { ExtendedAdminReturn } from "@custom-types/returns"
 
 type ActivityItemsProps = {
   itemsToSend?:
-    | AdminClaim["additional_items"]
+    | ExtendedAdminClaim["additional_items"]
     | ExtendedAdminExchange["additional_items"]
-  itemsToReturn?: AdminReturn["items"]
+  itemsToReturn?: ExtendedAdminReturn["items"]
   itemsMap?: Map<string, ExtendedAdminOrderLineItem>
   title: string
 }

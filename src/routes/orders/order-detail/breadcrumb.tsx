@@ -1,9 +1,9 @@
-import { HttpTypes } from "@medusajs/types"
-import { UIMatch } from "react-router-dom"
-import { useOrder } from "../../../hooks/api"
+import type { UIMatch } from "react-router-dom"
+import { useOrder } from "@hooks/api"
 import { DEFAULT_FIELDS } from "./constants"
+import type { ExtendedAdminOrderResponse } from "@custom-types/order"
 
-type OrderDetailBreadcrumbProps = UIMatch<HttpTypes.AdminOrderResponse>
+type OrderDetailBreadcrumbProps = UIMatch<ExtendedAdminOrderResponse>
 
 export const OrderDetailBreadcrumb = (props: OrderDetailBreadcrumbProps) => {
   const { id } = props.params || {}

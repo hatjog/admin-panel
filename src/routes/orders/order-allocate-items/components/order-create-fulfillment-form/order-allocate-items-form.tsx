@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import * as zod from "zod"
 
-import { InventoryItemDTO, OrderLineItemDTO } from "@medusajs/types"
 import { Alert, Button, Heading, Input, Select, toast } from "@medusajs/ui"
 import { useForm, useWatch } from "react-hook-form"
 
@@ -19,10 +18,19 @@ import { useStockLocations } from "../../../../../hooks/api/stock-locations"
 import { queryClient } from "../../../../../lib/query-client"
 import { AllocateItemsSchema } from "./constants"
 import { OrderAllocateItemsItem } from "./order-allocate-items-item"
-import { checkInventoryKit } from "./utils"
+import {
+  checkInventoryKit,
+  getFirstInventoryId,
+  getInventory,
+  getInventoryItems,
+  getQuantityKey,
+  getRequiredQuantity,
+} from "./utils"
 import { useDocumentDirection } from "../../../../../hooks/use-document-direction"
 import { getErrorMessage } from "@utils/error-helper"
-import { ExtendedAdminOrder, ExtendedAdminOrderLineItem } from "@custom-types/order"
+import type { ExtendedAdminOrder, ExtendedAdminOrderLineItem } from "@custom-types/order"
+import type { ExtendedAdminProductVariantInventoryItem } from "@custom-types/product"
+
 
 type OrderAllocateItemsFormProps = {
   order: ExtendedAdminOrder
@@ -128,59 +136,62 @@ export function OrderAllocateItemsForm({ order }: OrderAllocateItemsFormProps) {
   })
 
   const onQuantityChange = (
-    inventoryItem: InventoryItemDTO,
-    lineItem: OrderLineItemDTO,
+    inventoryItem: ExtendedAdminProductVariantInventoryItem | undefined,
+    lineItem: ExtendedAdminOrderLineItem,
     hasInventoryKit: boolean,
     value: number | null,
     isRoot?: boolean
-  ) => {
+  ): void => {
     let shouldDisableSubmit = false
 
-    const key =
-      isRoot && hasInventoryKit
-        ? `quantity.${lineItem.id}-`
-        : `quantity.${lineItem.id}-${inventoryItem.id}`
+    const inventoryId = inventoryItem?.id
+    const key = getQuantityKey(lineItem.id, inventoryId, !!(isRoot && hasInventoryKit))
+    const formKey = `quantity.${key}` as `quantity.${string}`
 
-    form.setValue(key, value)
+    form.setValue(formKey, value ?? "")
 
-    if (value) {
-      const location = inventoryItem.location_levels.find(
-        (l) => l.location_id === selectedLocationId
+    if (value && inventoryItem && selectedLocationId) {
+      const location = inventoryItem.location_levels?.find(
+        (l: { location_id: string }) => l.location_id === selectedLocationId
       )
-      if (location) {
-        if (location.available_quantity < value) {
-          shouldDisableSubmit = true
-        }
+      if (location && location.available_quantity < value) {
+        shouldDisableSubmit = true
       }
     }
 
     if (hasInventoryKit && !isRoot) {
-      // changed subitem in the kit -> we need to set parent to "-"
-      form.resetField(`quantity.${lineItem.id}-`, { defaultValue: "" })
+      const parentKey = `quantity.${lineItem.id}-` as `quantity.${string}`
+      form.resetField(parentKey, { defaultValue: "" })
     }
 
     if (hasInventoryKit && isRoot) {
-      // changed root -> we need to set items to parent quantity x required_quantity
-
       const item = itemsToAllocate.find((i) => i.id === lineItem.id)
 
-      item.variant?.inventory_items.forEach((ii, ind) => {
-        const num = value || 0
-        const inventory = item.variant?.inventory[ind]
+      if (!item?.variant) {
+        return
+      }
 
-        form.setValue(
-          `quantity.${lineItem.id}-${inventory.id}`,
-          num * ii.required_quantity
-        )
+      const inventoryItems = getInventoryItems(item.variant)
+      const inventory = getInventory(item.variant)
+      const num = value || 0
 
-        if (value) {
-          const location = inventory?.location_levels.find(
-            (l) => l.location_id === selectedLocationId
+      inventoryItems.forEach((_ii, ind) => {
+        const inv = inventory[ind]
+        if (!inv) {
+          return
+        }
+
+        const requiredQty = getRequiredQuantity(item.variant, ind)
+        const childKey = `quantity.${lineItem.id}-${inv.id}` as `quantity.${string}`
+
+        form.setValue(childKey, num * requiredQty)
+
+        if (value && selectedLocationId) {
+          const location = inv.location_levels?.find(
+            (l: { location_id: string }) => l.location_id === selectedLocationId
           )
-          if (location) {
-            if (location.available_quantity < value) {
-              shouldDisableSubmit = true
-            }
+          if (location && location.available_quantity < value) {
+            shouldDisableSubmit = true
           }
         }
       })
@@ -333,20 +344,18 @@ function defaultAllocations(
 
   items.forEach((item) => {
     const hasInventoryKit = checkInventoryKit(item)
+    const firstInventoryId = getFirstInventoryId(item)
 
-    const firstInventoryId = item.variant?.inventory?.[0]?.id
     if (!firstInventoryId && !hasInventoryKit) {
       return
     }
 
-    const key = hasInventoryKit
-      ? `${item.id}-`
-      : `${item.id}-${firstInventoryId}`
-
+    const key = getQuantityKey(item.id, firstInventoryId, hasInventoryKit)
     ret[key] = ""
 
     if (hasInventoryKit) {
-      item.variant?.inventory?.forEach((i) => {
+      const inventory = getInventory(item.variant)
+      inventory.forEach((i) => {
         ret[`${item.id}-${i.id}`] = ""
       })
     }

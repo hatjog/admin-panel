@@ -25,7 +25,7 @@ import { getOrderPaymentStatus } from "@lib/order-helpers"
 import { getPaymentsFromOrder } from "@lib/orders"
 import { getTotalCaptured, getTotalPending } from "@lib/payment"
 import { getLoyaltyPlugin } from "@lib/plugins"
-import type { ExtendedAdminOrder } from "@custom-types/order"
+import type { ExtendedAdminOrder, ExtendedAdminRefund } from "@custom-types/order"
 
 type OrderPaymentSectionProps = {
   order: ExtendedAdminOrder
@@ -41,7 +41,7 @@ export const OrderPaymentSection = ({
   const refunds = payments
     .map((payment) => payment?.refunds)
     .flat(1)
-    .filter(Boolean) as HttpTypes.AdminRefund[]
+    .filter(Boolean) as ExtendedAdminRefund[]
 
   return (
     <Container className="divide-y divide-dashed p-0">
@@ -79,7 +79,7 @@ const Refund = ({
   refund,
   currencyCode,
 }: {
-  refund: HttpTypes.AdminRefund
+  refund: ExtendedAdminRefund
   currencyCode: string
 }) => {
   const { t } = useTranslation()
@@ -130,9 +130,9 @@ const Payment = ({
   refunds,
   currencyCode,
 }: {
-  order: HttpTypes.AdminOrder
+  order: ExtendedAdminOrder
   payment: HttpTypes.AdminPayment
-  refunds: HttpTypes.AdminRefund[]
+  refunds: ExtendedAdminRefund[]
   currencyCode: string
 }) => {
   const { t } = useTranslation()
@@ -363,7 +363,7 @@ const PaymentBreakdown = ({
 }: {
   order: ExtendedAdminOrder
   payments: HttpTypes.AdminPayment[]
-  refunds: HttpTypes.AdminRefund[]
+  refunds: ExtendedAdminRefund[]
   currencyCode: string
   plugins: HttpTypes.AdminPlugin[]
 }) => {
@@ -393,7 +393,7 @@ const PaymentBreakdown = ({
       return { event: entry, type }
     }) as (
     | { type: "payment"; event: HttpTypes.AdminPayment }
-    | { type: "refund"; event: HttpTypes.AdminRefund }
+    | { type: "refund"; event: ExtendedAdminRefund }
     | {
         type: "credit_line_refund"
         event: OrderCreditLineDTO

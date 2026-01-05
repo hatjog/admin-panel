@@ -12,6 +12,7 @@ import { sdk } from "../../lib/client"
 import { queryClient } from "../../lib/query-client"
 import { queryKeysFactory } from "../../lib/query-key-factory"
 import { ordersQueryKeys } from "./orders"
+import type { ExtendedAdminReturnsResponse } from "@custom-types/returns"
 
 const RETURNS_QUERY_KEY = "returns" as const
 export const returnsQueryKeys = queryKeysFactory(RETURNS_QUERY_KEY)
@@ -37,16 +38,16 @@ export const useReturns = (
   query?: HttpTypes.AdminReturnFilters,
   options?: Omit<
     UseQueryOptions<
-      HttpTypes.AdminReturnFilters,
+      ExtendedAdminReturnsResponse,
       FetchError,
-      HttpTypes.AdminReturnsResponse,
+      ExtendedAdminReturnsResponse,
       QueryKey
     >,
     "queryFn" | "queryKey"
   >
 ) => {
   const { data, ...rest } = useQuery({
-    queryFn: async () => sdk.admin.return.list(query),
+    queryFn: async () => sdk.admin.return.list(query) as Promise<ExtendedAdminReturnsResponse>,
     queryKey: returnsQueryKeys.list(query),
     ...options,
   })
