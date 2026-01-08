@@ -1,47 +1,49 @@
+import { useEffect } from "react";
+
 import {
   ApplicationMethodTargetTypeValues,
   HttpTypes,
   RuleTypeValues,
-} from "@medusajs/types"
-import { Input } from "@medusajs/ui"
-import { useWatch } from "react-hook-form"
-import { useTranslation } from "react-i18next"
-import { useEffect } from "react"
+} from "@medusajs/types";
+import { Input } from "@medusajs/ui";
 
-import { Form } from "../../../../../../components/common/form"
-import { Combobox } from "../../../../../../components/inputs/combobox"
-import { useStore } from "../../../../../../hooks/api"
-import { useComboboxData } from "../../../../../../hooks/use-combobox-data"
-import { sdk } from "../../../../../../lib/client"
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+
+import { Form } from "../../../../../../components/common/form";
+import { Combobox } from "../../../../../../components/inputs/combobox";
+import { useStore } from "../../../../../../hooks/api";
+import { useComboboxData } from "../../../../../../hooks/use-combobox-data";
+import { sdk } from "../../../../../../lib/client";
 
 type RuleValueFormFieldType = {
-  form: any
-  identifier: string
+  form: any;
+  identifier: string;
   scope:
     | "application_method.buy_rules"
     | "rules"
-    | "application_method.target_rules"
-  name: string
-  operator: string
-  fieldRule: any
-  attributes: HttpTypes.AdminRuleAttributeOption[]
-  ruleType: RuleTypeValues
-  applicationMethodTargetType: ApplicationMethodTargetTypeValues | undefined
-}
+    | "application_method.target_rules";
+  name: string;
+  operator: string;
+  fieldRule: any;
+  attributes: HttpTypes.AdminRuleAttributeOption[];
+  ruleType: RuleTypeValues;
+  applicationMethodTargetType: ApplicationMethodTargetTypeValues | undefined;
+};
 
 const buildFilters = (attribute?: string, store?: HttpTypes.AdminStore) => {
   if (!attribute || !store) {
-    return {}
+    return {};
   }
 
   if (attribute === "currency_code") {
     return {
       value: store.supported_currencies?.map((c) => c.currency_code),
-    }
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
 export const RuleValueFormField = ({
   form,
@@ -54,13 +56,18 @@ export const RuleValueFormField = ({
   ruleType,
   applicationMethodTargetType,
 }: RuleValueFormFieldType) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const attribute = attributes?.find(
-    (attr) => attr.value === fieldRule.attribute
-  )
+    (attr) => attr.value === fieldRule.attribute,
+  );
 
-  const { store, isLoading: isStoreLoading } = useStore()
+  const { store, isLoading: isStoreLoading } = useStore();
+
+  const watchValue = useWatch({
+    control: form.control,
+    name: name,
+  });
 
   const comboboxData = useComboboxData({
     queryFn: async (params) => {
@@ -71,8 +78,8 @@ export const RuleValueFormField = ({
           ...params,
           ...buildFilters(attribute?.id, store!),
           application_method_target_type: applicationMethodTargetType,
-        }
-      )
+        },
+      );
     },
     enabled:
       !!attribute?.id &&
@@ -80,32 +87,34 @@ export const RuleValueFormField = ({
       !isStoreLoading,
     getOptions: (data) => data.values,
     queryKey: ["rule-value-options", ruleType, attribute?.id],
-  })
+    defaultValue: watchValue,
+    defaultValueKey: "value",
+  });
 
   const watchOperator = useWatch({
     control: form.control,
     name: operator,
-  })
+  });
 
   useEffect(() => {
-    const hasDirtyRules = Object.keys(form.formState.dirtyFields).length > 0
+    const hasDirtyRules = Object.keys(form.formState.dirtyFields).length > 0;
 
     /**
      * Don't reset values if fileds didn't change - this is to prevent reset of form on initial render when editing an existing rule
      */
     if (!hasDirtyRules) {
-      return
+      return;
     }
 
     if (watchOperator === "eq") {
-      form.setValue(name, "")
+      form.setValue(name, "");
     } else {
-      form.setValue(name, [])
+      form.setValue(name, []);
     }
-  }, [watchOperator])
+  }, [watchOperator]);
 
-  const fieldIndex = name.split('.').slice(-2, -1)[0]
-  const testIdBase = `rule-value-form-field-${ruleType}-${fieldIndex}`
+  const fieldIndex = name.split(".").slice(-2, -1)[0];
+  const testIdBase = `rule-value-form-field-${ruleType}-${fieldIndex}`;
 
   return (
     <Form.Field
@@ -114,7 +123,10 @@ export const RuleValueFormField = ({
       render={({ field: { onChange, ref, ...field } }) => {
         if (attribute?.field_type === "number") {
           return (
-            <Form.Item className="basis-1/2" data-testid={`${testIdBase}-number-item`}>
+            <Form.Item
+              className="basis-1/2"
+              data-testid={`${testIdBase}-number-item`}
+            >
               <Form.Control data-testid={`${testIdBase}-number-control`}>
                 <Input
                   {...field}
@@ -129,10 +141,13 @@ export const RuleValueFormField = ({
               </Form.Control>
               <Form.ErrorMessage data-testid={`${testIdBase}-number-error`} />
             </Form.Item>
-          )
+          );
         } else if (attribute?.field_type === "text") {
           return (
-            <Form.Item className="basis-1/2" data-testid={`${testIdBase}-text-item`}>
+            <Form.Item
+              className="basis-1/2"
+              data-testid={`${testIdBase}-text-item`}
+            >
               <Form.Control data-testid={`${testIdBase}-text-control`}>
                 <Input
                   {...field}
@@ -145,10 +160,13 @@ export const RuleValueFormField = ({
               </Form.Control>
               <Form.ErrorMessage data-testid={`${testIdBase}-text-error`} />
             </Form.Item>
-          )
+          );
         } else {
           return (
-            <Form.Item className="basis-1/2" data-testid={`${testIdBase}-combobox-item`}>
+            <Form.Item
+              className="basis-1/2"
+              data-testid={`${testIdBase}-combobox-item`}
+            >
               <Form.Control data-testid={`${testIdBase}-combobox-control`}>
                 <Combobox
                   {...field}
@@ -166,9 +184,9 @@ export const RuleValueFormField = ({
               </Form.Control>
               <Form.ErrorMessage data-testid={`${testIdBase}-combobox-error`} />
             </Form.Item>
-          )
+          );
         }
       }}
     />
-  )
-}
+  );
+};

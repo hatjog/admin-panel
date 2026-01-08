@@ -33,10 +33,11 @@ export const OrderRemainingOrdersGroupSection = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
+    <Container className="divide-y p-0" data-testid="order-remaining-orders-group-section">
       <Heading
         level="h2"
         className="flex items-center justify-between px-6 py-4"
+        data-testid="order-remaining-orders-group-heading"
       >
         Other orders from this group #{display_id}
       </Heading>
@@ -54,6 +55,7 @@ export const OrderRemainingOrdersGroupSection = () => {
           <div
             className="items-center px-6 py-4 text-ui-fg-base"
             key={order.id}
+            data-testid={`order-remaining-orders-group-item-${order.id}`}
           >
             <div
               className="flex cursor-pointer items-center justify-between py-2"
@@ -62,7 +64,7 @@ export const OrderRemainingOrdersGroupSection = () => {
               }}
             >
               <div className="flex-1">
-                <Heading className="text-base font-medium">
+                <Heading className="text-base font-medium" data-testid={`order-remaining-orders-group-item-${order.id}-heading`}>
                   #{order.display_id}
                 </Heading>
                 <Text size="small" className="text-ui-fg-subtle">
@@ -72,7 +74,7 @@ export const OrderRemainingOrdersGroupSection = () => {
                   })}
                 </Text>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" data-testid={`order-remaining-orders-group-item-${order.id}-badges`}>
                 <StatusBadge color={paymentStatus.color}>
                   {paymentStatus.label}
                 </StatusBadge>

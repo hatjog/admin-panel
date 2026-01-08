@@ -407,6 +407,7 @@
   },
   "products": {
     "domain": "Produkty",
+    "additionalAttributes": "Dodatkowe atrybuty",
     "list": {
       "noRecordsMessage": "Utwórz swój pierwszy produkt, aby rozpocząć sprzedaż."
     },
@@ -2200,6 +2201,10 @@
         "across": {
           "title": "Przez",
           "description": "Stosuje wartość do wszystkich elementów"
+        },
+        "once": {
+          "title": "Raz",
+          "description": "Ogranicz rabat do maksymalnej ilości"
         }
       },
       "code": {

@@ -37,7 +37,7 @@ export const DataTableSearch = ({
         selectedParams.add(value)
       }
     }, 500),
-    [selectedParams]
+    [prefix]
   )
 
   useEffect(() => {

@@ -397,6 +397,7 @@
   },
   "products": {
     "domain": "Producten",
+    "additionalAttributes": "Aanvullende attributen",
     "list": {
       "noRecordsMessage": "Maak uw eerste product aan om te beginnen met verkopen."
     },
@@ -2080,6 +2081,10 @@
         "across": {
           "title": "Over alles",
           "description": "Past waarde toe over alle items"
+        },
+        "once": {
+          "title": "Eenmalig",
+          "description": "Beperk korting tot maximale hoeveelheid"
         }
       },
       "code": {

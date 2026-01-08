@@ -1,21 +1,25 @@
-import { useInventoryItemLevels } from "@hooks/api"
-import { useLocationListTableColumns } from "./use-location-list-table-columns"
-import { useLocationLevelTableQuery } from "./use-location-list-table-query"
-import { DataTable } from "@components/data-table"
-// import { _DataTable } from "../../../../../components/table/data-table"
+import type { ExtendedInventoryItemLevel } from "@custom-types/inventory";
 
-const PAGE_SIZE = 20
-const PREFIX = "invlvl"
+import { _DataTable } from "@components/table/data-table";
+
+import { useInventoryItemLevels } from "@hooks/api";
+import { useDataTable } from "@hooks/use-data-table";
+
+import { useLocationListTableColumns } from "./use-location-list-table-columns";
+import { useLocationLevelTableQuery } from "./use-location-list-table-query";
+
+const PAGE_SIZE = 20;
+const PREFIX = "invlvl";
 
 export const ItemLocationListTable = ({
   inventory_item_id,
 }: {
-  inventory_item_id: string
+  inventory_item_id: string;
 }) => {
-  const searchParams = useLocationLevelTableQuery({
+  const { searchParams, raw } = useLocationLevelTableQuery({
     pageSize: PAGE_SIZE,
     prefix: PREFIX,
-  })
+  });
 
   const {
     inventory_levels,
@@ -26,27 +30,34 @@ export const ItemLocationListTable = ({
   } = useInventoryItemLevels(inventory_item_id, {
     ...searchParams,
     fields: "+stock_locations.id,+stock_locations.name",
-  })
+  });
 
-  const columns = useLocationListTableColumns()
+  const columns = useLocationListTableColumns();
 
   if (isError) {
-    throw error
+    throw error;
   }
+
+  const { table } = useDataTable({
+    data: (inventory_levels ?? []) as ExtendedInventoryItemLevel[],
+    columns,
+    count,
+    enablePagination: true,
+    getRowId: (row) => row.id,
+    pageSize: PAGE_SIZE,
+  });
 
   return (
     <div data-testid="inventory-location-levels-table">
-      <DataTable
-        data={inventory_levels ?? []}
+      <_DataTable
+        table={table}
         columns={columns}
-        rowCount={count}
         pageSize={PAGE_SIZE}
-        getRowId={(row) => row.id}
+        count={count}
         isLoading={isLoading}
-        prefix={PREFIX}
-        layout="fill"
-        enableSearch={false}
+        pagination
+        queryObject={raw}
       />
     </div>
-  )
-}
+  );
+};

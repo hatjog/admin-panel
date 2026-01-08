@@ -26,7 +26,7 @@ export const ProductVariantMetadata = () => {
   ) => {
     try {
       const result = await mutateAsync({
-        metadata: params.metadata ?? undefined,
+        metadata: params.metadata === undefined ? undefined : params.metadata,
       })
       callbacks.onSuccess?.()
 

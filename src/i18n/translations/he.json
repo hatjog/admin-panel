@@ -397,6 +397,7 @@
   },
   "products": {
     "domain": "מוצרים",
+    "additionalAttributes": "תכונות נוספות",
     "list": {
       "noRecordsMessage": "צור את המוצר הראשון שלך כדי להתחיל למכור."
     },
@@ -2093,6 +2094,10 @@
         "across": {
           "title": "על פני",
           "description": "מיישם ערך על פני פריטים"
+        },
+        "once": {
+          "title": "פעם אחת",
+          "description": "הגבלת ההנחה לכמות המקסימלית"
         }
       },
       "code": {

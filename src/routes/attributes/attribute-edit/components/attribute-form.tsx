@@ -11,7 +11,7 @@ import {
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { AttributeDTO } from "../../../../types";
 import { AdminUpdateAttribute, CreateAttributeFormSchema } from "../schema";
 import { AdminProductCategory } from "@medusajs/types";
@@ -44,14 +44,18 @@ interface AttributeFormProps {
   }) => void;
 }
 
-export const AttributeForm = ({
+export interface AttributeFormRef {
+  validateFields: (fields: string[]) => Promise<boolean>;
+}
+
+export const AttributeForm = forwardRef<AttributeFormRef, AttributeFormProps>(({
   initialData,
   onSubmit,
   categories,
   mode = "create",
   activeTab = "details",
   onFormStateChange,
-}: AttributeFormProps) => {
+}, ref) => {
   const [showCategorySection, setShowCategorySection] = useState(
     (initialData?.product_categories?.length || 0) > 0
   );
@@ -100,6 +104,17 @@ export const AttributeForm = ({
       console.error(error);
     }
   });
+
+
+  useImperativeHandle(ref, () => ({
+    validateFields: async (fields: string[]) => {
+      const result = await form.trigger(
+        fields as (keyof (CreateFormValues | UpdateFormValues))[]
+      );
+
+      return result;
+    },
+  }));
 
   // Determine tab statuses based on form data
   const getTabStatus = () => {
@@ -375,4 +390,6 @@ export const AttributeForm = ({
       </form>
     </FormProvider>
   );
-};
+});
+
+AttributeForm.displayName = "AttributeForm";

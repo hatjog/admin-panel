@@ -395,9 +395,10 @@
     "sales_channels": {
       "availableIn": "Dostupné v <0>{{x}}</0> z <1>{{y}}</1> prodejních kanálů"
     },
-    "products": {
-      "domain": "Produkty",
-      "list": {
+  "products": {
+    "domain": "Produkty",
+    "additionalAttributes": "Další atributy",
+    "list": {
         "noRecordsMessage": "Vytvořte svůj první produkt, abyste mohli začít prodávat."
       },
       "edit": {
@@ -2124,6 +2125,10 @@
           "across": {
             "title": "Napříč",
             "description": "Aplikuje hodnotu napříč položkami"
+          },
+          "once": {
+            "title": "Jednou",
+            "description": "Omezit slevu na max. množství"
           }
         },
         "code": {

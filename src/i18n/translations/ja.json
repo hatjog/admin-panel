@@ -384,6 +384,7 @@
   },
   "products": {
     "domain": "商品",
+    "additionalAttributes": "追加属性",
     "list": {
       "noRecordsMessage": "最初の商品を作成して販売を開始しましょう。"
     },
@@ -1923,6 +1924,10 @@
         "across": {
           "title": "全体",
           "description": "アイテム全体に値を適用します。"
+        },
+        "once": {
+          "title": "1回",
+          "description": "割引を最大数量までに制限"
         }
       },
       "code": {

@@ -128,77 +128,82 @@ export function OrderCreateFulfillmentItem({
   )
 
   return (
-    <div className="bg-ui-bg-subtle shadow-elevation-card-rest my-2 rounded-xl">
-      <div className="flex flex-row items-center">
-        {disabled && (
-          <div className="ml-4 inline-flex items-center">
-            <Tooltip
-              content={t("orders.fulfillment.disabledItemTooltip")}
-              side="top"
-            >
-              <InformationCircleSolid className="text-ui-tag-orange-icon" />
-            </Tooltip>
-          </div>
-        )}
+    <Form.Field
+      control={form.control}
+      name={`quantity.${item.id}`}
+      rules={{
+        required: true,
+        min: minValue,
+        max: maxValue,
+      }}
+      render={({ field }) => {
+        return (
+          <div className="bg-ui-bg-subtle shadow-elevation-card-rest my-2 rounded-xl">
+            <div className="flex flex-row items-center">
+              {disabled && (
+                <div className="inline-flex items-center ml-4">
+                  <Tooltip
+                    content={t("orders.fulfillment.disabledItemTooltip")}
+                    side="top"
+                  >
+                    <InformationCircleSolid className="text-ui-tag-orange-icon" />
+                  </Tooltip>
+                </div>
+              )}
 
-        <div
-          className={clx(
-            "flex flex-1 flex-col gap-x-2 gap-y-2 border-b p-3 text-sm sm:flex-row",
-            disabled && "pointer-events-none opacity-50"
-          )}
-        >
-          <div className="flex flex-1 items-center gap-x-3">
-            <Thumbnail src={item.thumbnail} />
-            <div className="flex flex-col">
-              <div>
-                <Text className="txt-small" as="span" weight="plus">
-                  {item.title}
-                </Text>
-                {item.variant_sku && <span>({item.variant_sku})</span>}
-              </div>
-              <Text as="div" className="text-ui-fg-subtle txt-small">
-                {item.variant_title}
-              </Text>
-            </div>
-          </div>
+              <div
+                className={clx(
+                  "flex flex-col flex-1 gap-x-2 gap-y-2 p-3 text-sm sm:flex-row",
+                  disabled && "opacity-50 pointer-events-none"
+                )}
+              >
+                <div className="flex flex-1 items-center gap-x-3">
+                  <Thumbnail src={item.thumbnail} />
+                  <div className="flex flex-col">
+                    <div>
+                      <Text className="txt-small" as="span" weight="plus">
+                        {item.title}
+                      </Text>
+                      {item.variant_sku && <span>({item.variant_sku})</span>}
+                    </div>
+                    <Text as="div" className="text-ui-fg-subtle txt-small">
+                      {item.variant_title}
+                    </Text>
+                  </div>
+                </div>
 
-          <div className="flex flex-1 items-center gap-x-1">
-            <div className="mr-2 block h-[16px] w-[2px] bg-gray-200" />
+                <div className="flex flex-1 items-center gap-x-1">
+                  <div className="mr-2 block h-[16px] w-[2px] bg-gray-200" />
 
-            <div className="text-small flex flex-1 flex-col">
-              <span className="text-ui-fg-subtle font-medium">
-                {t("orders.fulfillment.available")}
-              </span>
-              <span className="text-ui-fg-subtle">
-                {availableQuantity || "N/A"}
-              </span>
-            </div>
-
-            <div className="flex flex-1 items-center gap-x-1">
-              <div className="mr-2 block h-[16px] w-[2px] bg-gray-200" />
-
-              <div className="flex flex-col">
-                <span className="text-ui-fg-subtle font-medium">
-                  {t("orders.fulfillment.inStock")}
-                </span>
-                <span className="text-ui-fg-subtle">
-                  {inStockQuantity || "N/A"}{" "}
-                  {inStockQuantity && (
-                    <span className="font-medium text-red-500">
-                      -{form.getValues(`quantity.${item.id}`)}
+                  <div className="text-small flex flex-1 flex-col">
+                    <span className="text-ui-fg-subtle font-medium">
+                      {t("orders.fulfillment.available")}
                     </span>
-                  )}
-                </span>
-              </div>
-            </div>
+                    <span className="text-ui-fg-subtle">
+                      {availableQuantity || "N/A"}
+                    </span>
+                  </div>
 
-            <div className="flex flex-1 items-center gap-1">
-              <Form.Field
-                control={form.control}
-                name={`quantity.${item.id}`}
-                rules={{ required: true, min: minValue, max: maxValue }}
-                render={({ field }) => {
-                  return (
+                  <div className="flex flex-1 items-center gap-x-1">
+                    <div className="mr-2 block h-[16px] w-[2px] bg-gray-200" />
+
+                    <div className="flex flex-col">
+                      <span className="text-ui-fg-subtle font-medium">
+                        {t("orders.fulfillment.inStock")}
+                      </span>
+                      <span className="text-ui-fg-subtle">
+                        {inStockQuantity || "N/A"}{" "}
+                        {inStockQuantity && (
+                          <span className="font-medium text-red-500">
+                            -{form.getValues(`quantity.${item.id}`)}
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-1 items-center gap-1">
+
                     <Form.Item>
                       <Form.Control>
                         <Input
@@ -232,19 +237,21 @@ export function OrderCreateFulfillmentItem({
                           }}
                         />
                       </Form.Control>
-                      <Form.ErrorMessage />
                     </Form.Item>
-                  )
-                }}
-              />
 
-              <span className="text-ui-fg-subtle">
-                / {item.quantity} {t("fields.qty")}
-              </span>
+
+                    <span className="text-ui-fg-subtle">
+                      / {item.quantity} {t("fields.qty")}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <Form.ErrorMessage className="flex justify-end pr-3 pb-2" />
           </div>
-        </div>
-      </div>
-    </div>
+        )
+      }}
+    />
   )
 }

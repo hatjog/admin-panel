@@ -397,6 +397,7 @@
   },
   "products": {
     "domain": "产品",
+    "additionalAttributes": "附加属性",
     "list": {
       "noRecordsMessage": "创建您的第一个产品以开始销售。"
     },
@@ -2093,6 +2094,10 @@
         "across": {
           "title": "跨商品",
           "description": "跨商品应用价值"
+        },
+        "once": {
+          "title": "一次",
+          "description": "将折扣限制在最大数量内"
         }
       },
       "code": {

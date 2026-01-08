@@ -383,6 +383,7 @@
   },
   "products": {
     "domain": "Produtos",
+    "additionalAttributes": "Atributos adicionais",
     "list": {
       "noRecordsMessage": "Crie seu primeiro produto para começar a vender."
     },
@@ -1897,6 +1898,10 @@
         "across": {
           "title": "Dividido",
           "description": "Aplica o valor entre os itens"
+        },
+        "once": {
+          "title": "Uma vez",
+          "description": "Limitar o desconto à quantidade máxima"
         }
       },
       "code": {

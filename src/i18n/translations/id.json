@@ -395,9 +395,10 @@
     "sales_channels": {
         "availableIn": "Tersedia di <0>{{x}}</0> dari <1>{{y}}</1> saluran penjualan"
     },
-    "products": {
-        "domain": "Produk",
-        "list": {
+  "products": {
+    "domain": "Produk",
+    "additionalAttributes": "Atribut Tambahan",
+    "list": {
             "noRecordsMessage": "Buat produk pertama Anda untuk mulai berjualan."
         },
         "edit": {
@@ -2093,6 +2094,10 @@
                 "across": {
                     "title": "Di Seluruh",
                     "description": "Terapkan nilai di seluruh item"
+                },
+                "once": {
+                    "title": "Sekali",
+                    "description": "Batasi diskon hingga kuantitas maksimum"
                 }
             },
             "code": {

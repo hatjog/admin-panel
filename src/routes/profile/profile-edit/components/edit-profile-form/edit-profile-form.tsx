@@ -69,21 +69,21 @@ export const EditProfileForm = ({ user }: EditProfileProps) => {
   })
 
   return (
-    <RouteDrawer.Form form={form}>
+    <RouteDrawer.Form form={form} data-testid="profile-edit-form">
       <KeyboundForm onSubmit={handleSubmit} className="flex flex-1 flex-col">
-        <RouteDrawer.Body>
+        <RouteDrawer.Body data-testid="profile-edit-body">
           <div className="flex flex-col gap-y-8">
             <div className="grid grid-cols-2 gap-4">
               <Form.Field
                 control={form.control}
                 name="first_name"
                 render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>{t("fields.firstName")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="profile-edit-first-name-item">
+                    <Form.Label data-testid="profile-edit-first-name-label">{t("fields.firstName")}</Form.Label>
+                    <Form.Control data-testid="profile-edit-first-name-control">
+                      <Input {...field} data-testid="profile-edit-first-name-input" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="profile-edit-first-name-error" />
                   </Form.Item>
                 )}
               />
@@ -91,12 +91,12 @@ export const EditProfileForm = ({ user }: EditProfileProps) => {
                 control={form.control}
                 name="last_name"
                 render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>{t("fields.lastName")}</Form.Label>
-                    <Form.Control>
-                      <Input {...field} />
+                  <Form.Item data-testid="profile-edit-last-name-item">
+                    <Form.Label data-testid="profile-edit-last-name-label">{t("fields.lastName")}</Form.Label>
+                    <Form.Control data-testid="profile-edit-last-name-control">
+                      <Input {...field} data-testid="profile-edit-last-name-input" />
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="profile-edit-last-name-error" />
                   </Form.Item>
                 )}
               />
@@ -105,19 +105,20 @@ export const EditProfileForm = ({ user }: EditProfileProps) => {
               control={form.control}
               name="language"
               render={({ field: { ref, ...field } }) => (
-                <Form.Item className="gap-y-4">
+                <Form.Item className="gap-y-4" data-testid="profile-edit-language-item">
                   <div>
-                    <Form.Label>{t("profile.fields.languageLabel")}</Form.Label>
-                    <Form.Hint>{t("profile.edit.languageHint")}</Form.Hint>
+                    <Form.Label data-testid="profile-edit-language-label">{t("profile.fields.languageLabel")}</Form.Label>
+                    <Form.Hint data-testid="profile-edit-language-hint">{t("profile.edit.languageHint")}</Form.Hint>
                   </div>
                   <div>
-                    <Form.Control>
+                    <Form.Control data-testid="profile-edit-language-control">
                       <Select
                         dir={direction}
                         {...field}
                         onValueChange={field.onChange}
+                        data-testid="profile-edit-language-select"
                       >
-                        <Select.Trigger ref={ref} className="py-1 text-[13px]">
+                        <Select.Trigger ref={ref} className="py-1 text-[13px]" data-testid="profile-edit-language-trigger">
                           <Select.Value
                             placeholder={t("profile.edit.languagePlaceholder")}
                           >
@@ -128,11 +129,12 @@ export const EditProfileForm = ({ user }: EditProfileProps) => {
                             }
                           </Select.Value>
                         </Select.Trigger>
-                        <Select.Content>
+                        <Select.Content data-testid="profile-edit-language-content">
                           {languages.map((language) => (
                             <Select.Item
                               key={language.code}
                               value={language.code}
+                              data-testid={`profile-edit-language-option-${language.code}`}
                             >
                               {language.display_name}
                             </Select.Item>
@@ -140,7 +142,7 @@ export const EditProfileForm = ({ user }: EditProfileProps) => {
                         </Select.Content>
                       </Select>
                     </Form.Control>
-                    <Form.ErrorMessage />
+                    <Form.ErrorMessage data-testid="profile-edit-language-error" />
                   </div>
                 </Form.Item>
               )}
@@ -187,14 +189,14 @@ export const EditProfileForm = ({ user }: EditProfileProps) => {
             /> */}
           </div>
         </RouteDrawer.Body>
-        <RouteDrawer.Footer>
+        <RouteDrawer.Footer data-testid="profile-edit-footer">
           <div className="flex items-center gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="secondary" data-testid="profile-edit-cancel-button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>
-            <Button size="small" type="submit" isLoading={isPending}>
+            <Button size="small" type="submit" isLoading={isPending} data-testid="profile-edit-save-button">
               {t("actions.save")}
             </Button>
           </div>

@@ -272,7 +272,7 @@ const ProductTable = ({
   const [rowSelection, setRowSelection] =
     useState<RowSelectionState>(initialRowState)
 
-  useCleanupSearchParams()
+  useCleanupSearchParams(PREFIX_PRODUCT)
 
   const { searchParams, raw } = useProductTableQuery({
     pageSize: PAGE_SIZE,
@@ -545,7 +545,7 @@ const ProductTypeTable = ({
   const [rowSelection, setRowSelection] =
     useState<RowSelectionState>(initialRowState)
 
-  useCleanupSearchParams()
+  useCleanupSearchParams(PREFIX_PRODUCT_TYPE)
 
   const { searchParams, raw } = useProductTypeTableQuery({
     pageSize: PAGE_SIZE,
@@ -681,7 +681,7 @@ const ShippingOptionTable = ({
   const [rowSelection, setRowSelection] =
     useState<RowSelectionState>(initialRowState)
 
-  useCleanupSearchParams()
+  useCleanupSearchParams(PREFIX_SHIPPING_OPTION)
 
   const { searchParams, raw } = useShippingOptionTableQuery({
     pageSize: PAGE_SIZE,
@@ -950,12 +950,25 @@ const useShippingOptionColumns = () => {
 //   )
 // }
 
-const useCleanupSearchParams = () => {
-  const [_, setSearchParams] = useSearchParams()
+const useCleanupSearchParams = (prefix?: string) => {
+  const [, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     return () => {
-      setSearchParams({})
+      setSearchParams((prev) => {
+        if (!prefix) {
+          return prev
+        }
+
+        const next = new URLSearchParams(prev)
+        Array.from(next.keys()).forEach((key) => {
+          if (key.startsWith(`${prefix}_`)) {
+            next.delete(key)
+          }
+        })
+
+        return next
+      })
     }
-  }, [])
+  }, [prefix])
 }

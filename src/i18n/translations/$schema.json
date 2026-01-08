@@ -1524,6 +1524,9 @@
         "domain": {
           "type": "string"
         },
+        "additionalAttributes": {
+          "type": "string"
+        },
         "list": {
           "type": "object",
           "properties": {
@@ -2724,6 +2727,7 @@
       },
       "required": [
         "domain",
+        "additionalAttributes",
         "list",
         "edit",
         "create",

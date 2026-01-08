@@ -44,18 +44,33 @@ export const AdminUpdateAttribute = z
   .strict();
 
 export type AdminCreateAttributeType = z.infer<typeof CreateAttribute>;
-export const CreateAttribute = z.object({
-  name: z.string().min(1),
-  description: z.string().max(250, { message: "Description must be at most 250 characters" }).optional(),
-  is_filterable: z.boolean().optional(),
-  is_required: z.boolean().optional(),
-  ui_component: z
-    .nativeEnum(AttributeUIComponent)
-    .default(AttributeUIComponent.SELECT),
-  handle: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
-  possible_values: z.array(AdminCreateAttributeValue).optional(),
-  product_category_ids: z.array(z.string()).optional(),
-});
+export const CreateAttribute = z
+  .object({
+    name: z.string().min(1),
+    description: z.string().max(250, { message: "Description must be at most 250 characters" }).optional(),
+    is_filterable: z.boolean().optional(),
+    is_required: z.boolean().optional(),
+    ui_component: z
+      .nativeEnum(AttributeUIComponent)
+      .default(AttributeUIComponent.SELECT),
+    handle: z.string().optional(),
+    metadata: z.record(z.unknown()).optional(),
+    possible_values: z.array(AdminCreateAttributeValue).optional(),
+    product_category_ids: z.array(z.string()).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Require possible_values for SELECT and MULTIVALUE ui_components
+    if (
+      (data.ui_component === AttributeUIComponent.SELECT ||
+        data.ui_component === AttributeUIComponent.MULTIVALUE) &&
+      (!data.possible_values || data.possible_values.length === 0)
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one possible value is required for this type",
+        path: ["possible_values"],
+      });
+    }
+  });
 
 export const CreateAttributeFormSchema = CreateAttribute;

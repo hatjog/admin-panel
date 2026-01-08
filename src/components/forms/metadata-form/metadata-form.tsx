@@ -393,16 +393,7 @@ function parseValues(
 
   const update: Record<string, unknown> = {}
 
-  // First, handle removed keys from original
-  if (original) {
-    Object.keys(original).forEach((originalKey) => {
-      const exists = metadata.some((field) => field.key === originalKey)
-      if (!exists) {
-        update[originalKey] = ""
-      }
-    })
-  }
-
+  // Build payload from current form rows only - removed keys are omitted entirely
   metadata.forEach((field) => {
     let key = field.key
     let value = field.value

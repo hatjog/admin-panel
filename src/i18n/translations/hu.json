@@ -397,6 +397,7 @@
   },
   "products": {
     "domain": "Termékek",
+    "additionalAttributes": "További attribútumok",
     "list": {
       "noRecordsMessage": "Hozza létre az első terméket"
     },
@@ -2080,6 +2081,10 @@
         "across": {
           "title": "Keresztül",
           "description": "Értéket alkalmaz a tételeken keresztül"
+        },
+        "once": {
+          "title": "Egyszer",
+          "description": "Korlátozza a kedvezményt a max mennyiségre"
         }
       },
       "code": {
