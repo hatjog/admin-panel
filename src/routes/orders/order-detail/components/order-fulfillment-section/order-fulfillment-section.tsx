@@ -42,7 +42,7 @@ export const OrderFulfillmentSection = ({
   const fulfillments = order.fulfillments || []
 
   return (
-    <div className="flex flex-col gap-y-3">
+    <div className="flex flex-col gap-y-3" data-testid="order-fulfillment-section">
       <UnfulfilledItemBreakdown order={order} />
       {fulfillments.map((f, index) => (
         <Fulfillment key={f.id} index={index} fulfillment={f} order={order} />
@@ -156,18 +156,18 @@ const UnfulfilledItemDisplay = ({
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">{t("orders.fulfillment.unfulfilledItems")}</Heading>
+    <Container className="divide-y p-0" data-testid="order-fulfillment-unfulfilled">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="order-fulfillment-unfulfilled-header">
+        <Heading level="h2" data-testid="order-fulfillment-unfulfilled-heading">{t("orders.fulfillment.unfulfilledItems")}</Heading>
 
-        <div className="flex items-center gap-x-4">
+        <div className="flex items-center gap-x-4" data-testid="order-fulfillment-unfulfilled-badges">
           {requiresShipping && (
-            <StatusBadge color="red" className="text-nowrap">
+            <StatusBadge color="red" className="text-nowrap" data-testid="order-fulfillment-unfulfilled-requires-shipping-badge">
               {t("orders.fulfillment.requiresShipping")}
             </StatusBadge>
           )}
 
-          <StatusBadge color="red" className="text-nowrap">
+          <StatusBadge color="red" className="text-nowrap" data-testid="order-fulfillment-unfulfilled-awaiting-badge">
             {t("orders.fulfillment.awaitingFulfillmentBadge")}
           </StatusBadge>
 
@@ -183,10 +183,11 @@ const UnfulfilledItemDisplay = ({
                 ],
               },
             ]}
+            data-testid="order-fulfillment-unfulfilled-action-menu"
           />
         </div>
       </div>
-      <div>
+      <div data-testid="order-fulfillment-unfulfilled-items">
         {unfulfilledItems.map((item: AdminOrderLineItem) => (
           <UnfulfilledItem
             key={item.id}
@@ -323,21 +324,21 @@ const Fulfillment = ({
   const isValidUrl = (url?: string) => url && url.length > 0 && url !== "#"
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading level="h2">
+    <Container className="divide-y p-0" data-testid={`order-fulfillment-${fulfillment.id}`}>
+      <div className="flex items-center justify-between px-6 py-4" data-testid={`order-fulfillment-${fulfillment.id}-header`}>
+        <Heading level="h2" data-testid={`order-fulfillment-${fulfillment.id}-heading`}>
           {t("orders.fulfillment.number", {
             number: index + 1,
           })}
         </Heading>
-        <div className="flex items-center gap-x-4">
+        <div className="flex items-center gap-x-4" data-testid={`order-fulfillment-${fulfillment.id}-status-container`}>
           <Tooltip
             content={format(
               new Date(statusTimestamp),
               "dd MMM, yyyy, HH:mm:ss"
             )}
           >
-            <StatusBadge color={statusColor} className="text-nowrap">
+            <StatusBadge color={statusColor} className="text-nowrap" data-testid={`order-fulfillment-${fulfillment.id}-status-badge`}>
               {statusText}
             </StatusBadge>
           </Tooltip>
@@ -357,6 +358,7 @@ const Fulfillment = ({
                 ],
               },
             ]}
+            data-testid={`order-fulfillment-${fulfillment.id}-action-menu`}
           />
         </div>
       </div>
@@ -463,9 +465,9 @@ const Fulfillment = ({
       </div>
 
       {(showShippingButton || showDeliveryButton) && (
-        <div className="bg-ui-bg-subtle flex items-center justify-end gap-x-2 rounded-b-xl px-4 py-4">
+        <div className="bg-ui-bg-subtle flex items-center justify-end gap-x-2 rounded-b-xl px-4 py-4" data-testid={`order-fulfillment-${fulfillment.id}-actions`}>
           {showDeliveryButton && (
-            <Button onClick={handleMarkAsDelivered} variant="secondary">
+            <Button onClick={handleMarkAsDelivered} variant="secondary" data-testid={`order-fulfillment-${fulfillment.id}-mark-delivered-button`}>
               {t(
                 isPickUpFulfillment
                   ? "orders.fulfillment.markAsPickedUp"
@@ -478,6 +480,7 @@ const Fulfillment = ({
             <Button
               onClick={() => navigate(`./${fulfillment.id}/create-shipment`)}
               variant="secondary"
+              data-testid={`order-fulfillment-${fulfillment.id}-mark-shipped-button`}
             >
               {t("orders.fulfillment.markAsShipped")}
             </Button>

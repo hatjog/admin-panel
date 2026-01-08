@@ -1898,6 +1898,10 @@
         "across": {
           "title": "Über",
           "description": "Wendet den Wert auf alle Elemente an"
+        },
+        "once": {
+          "title": "Einmal",
+          "description": "Rabatt auf maximale Menge begrenzen"
         }
       },
       "code": {

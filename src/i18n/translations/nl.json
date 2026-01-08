@@ -2081,6 +2081,10 @@
         "across": {
           "title": "Over alles",
           "description": "Past waarde toe over alle items"
+        },
+        "once": {
+          "title": "Eenmalig",
+          "description": "Beperk korting tot maximale hoeveelheid"
         }
       },
       "code": {

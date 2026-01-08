@@ -1898,6 +1898,10 @@
         "across": {
           "title": "Dividido",
           "description": "Aplica o valor entre os itens"
+        },
+        "once": {
+          "title": "Uma vez",
+          "description": "Limitar o desconto à quantidade máxima"
         }
       },
       "code": {

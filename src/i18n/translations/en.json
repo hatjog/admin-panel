@@ -2170,6 +2170,10 @@
         "across": {
           "title": "Across",
           "description": "Applies value across items"
+        },
+        "once": {
+          "title": "Once",
+          "description": "Limit discount to max quantity"
         }
       },
       "code": {

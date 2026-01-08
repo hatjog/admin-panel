@@ -1,29 +1,31 @@
-import { Button, Container, Heading, Text } from "@medusajs/ui"
+import { Button, Container, Heading, Text } from "@medusajs/ui";
 
-import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
-import { _DataTable } from "../../../../../components/table/data-table"
-import { useReservationItems } from "../../../../../hooks/api/reservations"
-import { useDataTable } from "../../../../../hooks/use-data-table"
-import { useReservationTableColumns } from "./use-reservation-table-columns"
-import { useReservationTableFilters } from "./use-reservation-table-filters"
-import { useReservationTableQuery } from "./use-reservation-table-query"
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-const PAGE_SIZE = 20
+import { _DataTable } from "@/components/table/data-table";
+import { useReservationItems } from "@/hooks/api/reservations";
+import { useDataTable } from "@/hooks/use-data-table";
+
+import { useReservationTableColumns } from "./use-reservation-table-columns";
+import { useReservationTableFilters } from "./use-reservation-table-filters";
+import { useReservationTableQuery } from "./use-reservation-table-query";
+
+const PAGE_SIZE = 20;
 
 export const ReservationListTable = () => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const { searchParams } = useReservationTableQuery({
+  const { searchParams, raw } = useReservationTableQuery({
     pageSize: PAGE_SIZE,
-  })
+  });
   const { reservations, count, isPending, isError, error } =
     useReservationItems({
       ...searchParams,
-    })
+    });
 
-  const filters = useReservationTableFilters()
-  const columns = useReservationTableColumns()
+  const filters = useReservationTableFilters();
+  const columns = useReservationTableColumns();
 
   const { table } = useDataTable({
     data: reservations || [],
@@ -32,10 +34,10 @@ export const ReservationListTable = () => {
     enablePagination: true,
     getRowId: (row) => row.id,
     pageSize: PAGE_SIZE,
-  })
+  });
 
   if (isError) {
-    throw error
+    throw error;
   }
 
   return (
@@ -58,10 +60,11 @@ export const ReservationListTable = () => {
         count={count}
         isLoading={isPending}
         filters={filters}
+        queryObject={raw}
         pagination
         navigateTo={(row) => row.id}
         search={false}
       />
     </Container>
-  )
-}
+  );
+};

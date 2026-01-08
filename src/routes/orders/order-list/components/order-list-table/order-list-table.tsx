@@ -54,30 +54,32 @@ export const OrderListTable = () => {
   }
 
   return (
-    <Container className="divide-y p-0">
-      <div className="flex items-center justify-between px-6 py-4">
-        <Heading>{t("orders.domain")}</Heading>
+    <Container className="divide-y p-0" data-testid="orders-container">
+      <div className="flex items-center justify-between px-6 py-4" data-testid="orders-header">
+        <Heading data-testid="orders-heading">{t("orders.domain")}</Heading>
       </div>
-      <_DataTable
-        columns={columns}
-        table={table}
-        pagination
-        navigateTo={(row) => `/orders/${row.original.id}`}
-        filters={filters}
-        count={count}
-        search
-        isLoading={isLoading}
-        pageSize={PAGE_SIZE}
-        orderBy={[
-          { key: "display_id", label: t("orders.fields.displayId") },
-          { key: "created_at", label: t("fields.createdAt") },
-          { key: "updated_at", label: t("fields.updatedAt") },
-        ]}
-        queryObject={raw}
-        noRecords={{
-          message: t("orders.list.noRecordsMessage"),
-        }}
-      />
+      <div data-testid="orders-table-wrapper">
+        <_DataTable
+          columns={columns}
+          table={table}
+          pagination
+          navigateTo={(row) => `/orders/${row.original.id}`}
+          filters={filters}
+          count={count}
+          search
+          isLoading={isLoading}
+          pageSize={PAGE_SIZE}
+          orderBy={[
+            { key: "display_id", label: t("orders.fields.displayId") },
+            { key: "created_at", label: t("fields.createdAt") },
+            { key: "updated_at", label: t("fields.updatedAt") },
+          ]}
+          queryObject={raw}
+          noRecords={{
+            message: t("orders.list.noRecordsMessage"),
+          }}
+        />
+      </div>
     </Container>
   )
 }

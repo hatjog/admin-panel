@@ -1,7 +1,6 @@
 const commonHiddenFields = [
   "type",
   "application_method.type",
-  "application_method.allocation",
 ]
 
 const amountOfOrderHiddenFields = [...commonHiddenFields]
@@ -25,6 +24,7 @@ const buyGetHiddenFields = [
 const freeShippingHiddenFields = [
   ...commonHiddenFields,
   "application_method.value",
+  "application_method.allocation",
   "is_tax_inclusive",
 ]
 
