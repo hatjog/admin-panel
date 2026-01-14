@@ -7,6 +7,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as zod from 'zod';
 
+import { NoRecords } from '../../../../../components/common/empty-table-content';
 import { Form } from '../../../../../components/common/form';
 import { Combobox } from '../../../../../components/inputs/combobox';
 import { RouteFocusModal, useRouteModal } from '../../../../../components/modals';
@@ -249,6 +250,8 @@ export function OrderCreateFulfillmentForm({
     return !allItemsHaveLocation;
   }, [fulfillableItems, selectedLocationId]);
 
+  const hasNoFulfillableItems = fulfillableItems.length === 0;
+
   return (
     <RouteFocusModal.Form
       form={form}
@@ -266,262 +269,274 @@ export function OrderCreateFulfillmentForm({
         >
           <div className="flex size-full w-[752px] max-w-[100%] flex-col gap-8 px-4 pt-16">
             <Heading level="h2">{t('orders.fulfillment.create')}</Heading>
-            <div className="flex w-full flex-col justify-center">
-              <div className="flex flex-col divide-y divide-dashed">
-                <div
-                  className="pb-8"
-                  data-testid="order-create-fulfillment-location-section"
-                >
-                  <Form.Field
-                    control={form.control}
-                    name="location_id"
-                    render={({ field: { ...field } }) => {
-                      return (
-                        <Form.Item data-testid="order-create-fulfillment-location-item">
-                          <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
-                            <div className="flex-1">
-                              <Form.Label data-testid="order-create-fulfillment-location-label">
-                                {t('fields.location')}
-                              </Form.Label>
-                              <Form.Hint data-testid="order-create-fulfillment-location-hint">
-                                {t('orders.fulfillment.locationDescription')}
-                              </Form.Hint>
-                            </div>
-                            <div className="flex-1">
-                              <Form.Control data-testid="order-create-fulfillment-location-control">
-                                <Combobox
-                                  {...field}
-                                  options={stockLocations.options}
-                                  searchValue={stockLocations.searchValue}
-                                  onSearchValueChange={stockLocations.onSearchValueChange}
-                                  disabled={stockLocations.disabled}
-                                  data-testid="order-create-fulfillment-location-combobox"
-                                />
-                              </Form.Control>
-                            </div>
-                          </div>
-                          <Form.ErrorMessage data-testid="order-create-fulfillment-location-error" />
-                        </Form.Item>
-                      );
-                    }}
-                  />
-                  {showLevelsWarning && (
-                    <Alert
-                      variant="warning"
-                      dismissible
-                      className="mt-4 p-3"
-                    >
-                      <Text
-                        weight="plus"
-                        leading="compact"
-                        className="mb-1 text-ui-fg-base"
-                        size="small"
-                      >
-                        {t('orders.returns.noInventoryLevel')}
-                      </Text>
-                      <Text
-                        leading="normal"
-                        className="text-ui-fg-subtle"
-                        size="small"
-                      >
-                        {t('orders.returns.noInventoryLevelDesc')}
-                      </Text>
-                    </Alert>
-                  )}
-                </div>
-
-                <div
-                  className="py-8"
-                  data-testid="order-create-fulfillment-shipping-section"
-                >
-                  <Form.Field
-                    control={form.control}
-                    name="shipping_option_id"
-                    render={({ field: { onChange, ref, ...field } }) => {
-                      return (
-                        <Form.Item data-testid="order-create-fulfillment-shipping-item">
-                          <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
-                            <div className="flex-1">
-                              <Form.Label data-testid="order-create-fulfillment-shipping-label">
-                                {t('fields.shippingMethod')}
-                              </Form.Label>
-                              <Form.Hint data-testid="order-create-fulfillment-shipping-hint">
-                                {t('orders.fulfillment.methodDescription')}
-                              </Form.Hint>
-                            </div>
-                            <div className="flex-1">
-                              <Form.Control data-testid="order-create-fulfillment-shipping-control">
-                                <Select
-                                  dir={direction}
-                                  onValueChange={onChange}
-                                  {...field}
-                                  disabled={!selectedLocationId}
-                                  data-testid="order-create-fulfillment-shipping-select"
-                                >
-                                  <Select.Trigger
-                                    className="bg-ui-bg-base"
-                                    ref={ref}
-                                    data-testid="order-create-fulfillment-shipping-trigger"
-                                  >
-                                    {isShippingOptionsLoading ? (
-                                      <span className="text-right">{t('labels.loading')}...</span>
-                                    ) : (
-                                      <Select.Value />
-                                    )}
-                                  </Select.Trigger>
-                                  <Select.Content data-testid="order-create-fulfillment-shipping-content">
-                                    {shipping_options.map(o => (
-                                      <Select.Item
-                                        key={o.id}
-                                        value={o.id}
-                                        data-testid={`order-create-fulfillment-shipping-option-${o.id}`}
-                                      >
-                                        {o.name}
-                                      </Select.Item>
-                                    ))}
-                                  </Select.Content>
-                                </Select>
-                              </Form.Control>
-                            </div>
-                          </div>
-                          <Form.ErrorMessage data-testid="order-create-fulfillment-shipping-error" />
-                        </Form.Item>
-                      );
-                    }}
-                  />
-
-                  {differentOptionSelected && (
-                    <Alert
-                      className="mt-4 border-none p-3 shadow-elevation-card-rest"
-                      variant="warning"
-                      dismissible
-                      data-testid="order-create-fulfillment-shipping-warning"
-                    >
-                      <span className="-mt-[3px] block font-medium">{t('labels.beaware')}</span>
-                      <span className="text-ui-fg-muted">
-                        {t('orders.fulfillment.differentOptionSelected')}
-                      </span>
-                    </Alert>
-                  )}
-                </div>
-                <div data-testid="order-create-fulfillment-items-section">
-                  <Form.Item
-                    className="mt-8 space-y-3"
-                    data-testid="order-create-fulfillment-items-item"
+            {hasNoFulfillableItems ? (
+              <NoRecords
+                title={t('orders.fulfillment.error.noItems')}
+                message={t('orders.fulfillment.error.noItemsDescription')}
+                className="h-[200px] text-center"
+                data-testid="order-create-fulfillment-no-items"
+              />
+            ) : (
+              <div className="flex w-full flex-col justify-center">
+                <div className="flex flex-col divide-y divide-dashed">
+                  <div
+                    className="pb-8"
+                    data-testid="order-create-fulfillment-location-section"
                   >
-                    <div>
-                      <Form.Label data-testid="order-create-fulfillment-items-label">
-                        {t('orders.fulfillment.itemsToFulfill')}
-                      </Form.Label>
-                      <Form.Hint data-testid="order-create-fulfillment-items-hint">
-                        {t('orders.fulfillment.itemsToFulfillDesc')}
-                      </Form.Hint>
-                    </div>
-
-                    <div
-                      className="flex flex-col gap-y-2"
-                      data-testid="order-create-fulfillment-items-list"
-                    >
-                      {fulfillableItems.map(item => {
-                        const isShippingProfileMatching =
-                          shipping_options.find(o => o.id === shippingOptionId)
-                            ?.shipping_profile_id === item.variant?.product?.shipping_profile?.id;
-
+                    <Form.Field
+                      control={form.control}
+                      name="location_id"
+                      render={({ field: { ...field } }) => {
                         return (
-                          <OrderCreateFulfillmentItem
-                            key={item.id}
-                            form={form}
-                            item={item}
-                            locationId={selectedLocationId}
-                            disabled={
-                              (requiresShipping && !isShippingProfileMatching) || showLevelsWarning
-                            }
-                            reservations={reservations}
-                          />
-                        );
-                      })}
-                    </div>
-                  </Form.Item>
-                  {form.formState.errors.root && (
-                    <Alert
-                      variant="error"
-                      dismissible={false}
-                      className="flex items-center"
-                      data-testid="order-create-fulfillment-items-error"
-                    >
-                      {form.formState.errors.root.message}
-                    </Alert>
-                  )}
-                </div>
-
-                <div
-                  className="mt-8 pt-8"
-                  data-testid="order-create-fulfillment-notification-section"
-                >
-                  <Form.Field
-                    control={form.control}
-                    name="send_notification"
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Form.Item data-testid="order-create-fulfillment-notification-item">
-                          <div className="flex gap-x-3 rounded-lg bg-ui-bg-component p-3 shadow-elevation-card-rest">
-                            <Form.Control data-testid="order-create-fulfillment-notification-control">
-                              <Form.Control>
-                                <Switch
-                                  dir="ltr"
-                                  className="rtl:rotate-180"
-                                  checked={!!value}
-                                  onCheckedChange={onChange}
-                                  {...field}
-                                  data-testid="order-create-fulfillment-notification-switch"
-                                />
-                              </Form.Control>
-                            </Form.Control>
-                            <div>
-                              <Form.Label data-testid="order-create-fulfillment-notification-label">
-                                {t('orders.returns.sendNotification')}
-                              </Form.Label>
-                              <Form.Hint
-                                className="!mt-1 text-ui-fg-subtle"
-                                data-testid="order-create-fulfillment-notification-hint"
-                              >
-                                {t('orders.fulfillment.sendNotificationHint')}
-                              </Form.Hint>
+                          <Form.Item data-testid="order-create-fulfillment-location-item">
+                            <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
+                              <div className="flex-1">
+                                <Form.Label data-testid="order-create-fulfillment-location-label">
+                                  {t('fields.location')}
+                                </Form.Label>
+                                <Form.Hint data-testid="order-create-fulfillment-location-hint">
+                                  {t('orders.fulfillment.locationDescription')}
+                                </Form.Hint>
+                              </div>
+                              <div className="flex-1">
+                                <Form.Control data-testid="order-create-fulfillment-location-control">
+                                  <Combobox
+                                    {...field}
+                                    options={stockLocations.options}
+                                    searchValue={stockLocations.searchValue}
+                                    onSearchValueChange={stockLocations.onSearchValueChange}
+                                    disabled={stockLocations.disabled}
+                                    data-testid="order-create-fulfillment-location-combobox"
+                                  />
+                                </Form.Control>
+                              </div>
                             </div>
-                          </div>
-                          <Form.ErrorMessage data-testid="order-create-fulfillment-notification-error" />
-                        </Form.Item>
-                      );
-                    }}
-                  />
+                            <Form.ErrorMessage data-testid="order-create-fulfillment-location-error" />
+                          </Form.Item>
+                        );
+                      }}
+                    />
+                    {showLevelsWarning && (
+                      <Alert
+                        variant="warning"
+                        dismissible
+                        className="mt-4 p-3"
+                      >
+                        <Text
+                          weight="plus"
+                          leading="compact"
+                          className="mb-1 text-ui-fg-base"
+                          size="small"
+                        >
+                          {t('orders.returns.noInventoryLevel')}
+                        </Text>
+                        <Text
+                          leading="normal"
+                          className="text-ui-fg-subtle"
+                          size="small"
+                        >
+                          {t('orders.returns.noInventoryLevelDesc')}
+                        </Text>
+                      </Alert>
+                    )}
+                  </div>
+
+                  <div
+                    className="py-8"
+                    data-testid="order-create-fulfillment-shipping-section"
+                  >
+                    <Form.Field
+                      control={form.control}
+                      name="shipping_option_id"
+                      render={({ field: { onChange, ref, ...field } }) => {
+                        return (
+                          <Form.Item data-testid="order-create-fulfillment-shipping-item">
+                            <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
+                              <div className="flex-1">
+                                <Form.Label data-testid="order-create-fulfillment-shipping-label">
+                                  {t('fields.shippingMethod')}
+                                </Form.Label>
+                                <Form.Hint data-testid="order-create-fulfillment-shipping-hint">
+                                  {t('orders.fulfillment.methodDescription')}
+                                </Form.Hint>
+                              </div>
+                              <div className="flex-1">
+                                <Form.Control data-testid="order-create-fulfillment-shipping-control">
+                                  <Select
+                                    dir={direction}
+                                    onValueChange={onChange}
+                                    {...field}
+                                    disabled={!selectedLocationId}
+                                    data-testid="order-create-fulfillment-shipping-select"
+                                  >
+                                    <Select.Trigger
+                                      className="bg-ui-bg-base"
+                                      ref={ref}
+                                      data-testid="order-create-fulfillment-shipping-trigger"
+                                    >
+                                      {isShippingOptionsLoading ? (
+                                        <span className="text-right">{t('labels.loading')}...</span>
+                                      ) : (
+                                        <Select.Value />
+                                      )}
+                                    </Select.Trigger>
+                                    <Select.Content data-testid="order-create-fulfillment-shipping-content">
+                                      {shipping_options.map(o => (
+                                        <Select.Item
+                                          key={o.id}
+                                          value={o.id}
+                                          data-testid={`order-create-fulfillment-shipping-option-${o.id}`}
+                                        >
+                                          {o.name}
+                                        </Select.Item>
+                                      ))}
+                                    </Select.Content>
+                                  </Select>
+                                </Form.Control>
+                              </div>
+                            </div>
+                            <Form.ErrorMessage data-testid="order-create-fulfillment-shipping-error" />
+                          </Form.Item>
+                        );
+                      }}
+                    />
+
+                    {differentOptionSelected && (
+                      <Alert
+                        className="mt-4 border-none p-3 shadow-elevation-card-rest"
+                        variant="warning"
+                        dismissible
+                        data-testid="order-create-fulfillment-shipping-warning"
+                      >
+                        <span className="-mt-[3px] block font-medium">{t('labels.beaware')}</span>
+                        <span className="text-ui-fg-muted">
+                          {t('orders.fulfillment.differentOptionSelected')}
+                        </span>
+                      </Alert>
+                    )}
+                  </div>
+                  <div data-testid="order-create-fulfillment-items-section">
+                    <Form.Item
+                      className="mt-8 space-y-3"
+                      data-testid="order-create-fulfillment-items-item"
+                    >
+                      <div>
+                        <Form.Label data-testid="order-create-fulfillment-items-label">
+                          {t('orders.fulfillment.itemsToFulfill')}
+                        </Form.Label>
+                        <Form.Hint data-testid="order-create-fulfillment-items-hint">
+                          {t('orders.fulfillment.itemsToFulfillDesc')}
+                        </Form.Hint>
+                      </div>
+
+                      <div
+                        className="flex flex-col gap-y-2"
+                        data-testid="order-create-fulfillment-items-list"
+                      >
+                        {fulfillableItems.map(item => {
+                          const isShippingProfileMatching =
+                            shipping_options.find(o => o.id === shippingOptionId)
+                              ?.shipping_profile_id === item.variant?.product?.shipping_profile?.id;
+
+                          return (
+                            <OrderCreateFulfillmentItem
+                              key={item.id}
+                              form={form}
+                              item={item}
+                              locationId={selectedLocationId}
+                              disabled={
+                                (requiresShipping && !isShippingProfileMatching) ||
+                                showLevelsWarning
+                              }
+                              reservations={reservations}
+                            />
+                          );
+                        })}
+                      </div>
+                    </Form.Item>
+                    {form.formState.errors.root && (
+                      <Alert
+                        variant="error"
+                        dismissible={false}
+                        className="flex items-center"
+                        data-testid="order-create-fulfillment-items-error"
+                      >
+                        {form.formState.errors.root.message}
+                      </Alert>
+                    )}
+                  </div>
+
+                  <div
+                    className="mt-8 pt-8"
+                    data-testid="order-create-fulfillment-notification-section"
+                  >
+                    <Form.Field
+                      control={form.control}
+                      name="send_notification"
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Form.Item data-testid="order-create-fulfillment-notification-item">
+                            <div className="flex gap-x-3 rounded-lg bg-ui-bg-component p-3 shadow-elevation-card-rest">
+                              <Form.Control data-testid="order-create-fulfillment-notification-control">
+                                <Form.Control>
+                                  <Switch
+                                    dir="ltr"
+                                    className="rtl:rotate-180"
+                                    checked={!!value}
+                                    onCheckedChange={onChange}
+                                    {...field}
+                                    data-testid="order-create-fulfillment-notification-switch"
+                                  />
+                                </Form.Control>
+                              </Form.Control>
+                              <div>
+                                <Form.Label data-testid="order-create-fulfillment-notification-label">
+                                  {t('orders.returns.sendNotification')}
+                                </Form.Label>
+                                <Form.Hint
+                                  className="!mt-1 text-ui-fg-subtle"
+                                  data-testid="order-create-fulfillment-notification-hint"
+                                >
+                                  {t('orders.fulfillment.sendNotificationHint')}
+                                </Form.Hint>
+                              </div>
+                            </div>
+                            <Form.ErrorMessage data-testid="order-create-fulfillment-notification-error" />
+                          </Form.Item>
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             <div className="py-4" />
           </div>
         </RouteFocusModal.Body>
-        <RouteFocusModal.Footer data-testid="order-create-fulfillment-footer">
-          <div className="flex items-center justify-end gap-x-2">
-            <RouteFocusModal.Close asChild>
+        {!hasNoFulfillableItems && (
+          <RouteFocusModal.Footer data-testid="order-create-fulfillment-footer">
+            <div className="flex items-center justify-end gap-x-2">
+              <RouteFocusModal.Close asChild>
+                <Button
+                  size="small"
+                  variant="secondary"
+                  data-testid="order-create-fulfillment-cancel-button"
+                >
+                  {t('actions.cancel')}
+                </Button>
+              </RouteFocusModal.Close>
               <Button
                 size="small"
-                variant="secondary"
-                data-testid="order-create-fulfillment-cancel-button"
+                type="submit"
+                isLoading={isMutating}
+                disabled={!shippingOptionId}
+                data-testid="order-create-fulfillment-create-button"
               >
-                {t('actions.cancel')}
+                {t('actions.confirm')}
               </Button>
-            </RouteFocusModal.Close>
-            <Button
-              size="small"
-              type="submit"
-              isLoading={isMutating}
-              disabled={!shippingOptionId}
-              data-testid="order-create-fulfillment-create-button"
-            >
-              {t('actions.confirm')}
-            </Button>
-          </div>
-        </RouteFocusModal.Footer>
+            </div>
+          </RouteFocusModal.Footer>
+        )}
       </KeyboundForm>
     </RouteFocusModal.Form>
   );

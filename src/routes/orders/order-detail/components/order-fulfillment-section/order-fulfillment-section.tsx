@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Buildings, XCircle } from '@medusajs/icons';
+import { Buildings, InformationCircle, XCircle } from '@medusajs/icons';
 import {
   AdminOrder,
   AdminOrderFulfillment,
@@ -238,6 +238,12 @@ const UnfulfilledItemDisplay = ({
           />
         </div>
       </div>
+      {!canAdminFulfill && (
+        <div className="flex items-center gap-x-3 bg-ui-bg-subtle px-6 py-4 text-ui-fg-subtle">
+          <InformationCircle className="text-ui-fg-subtle" />
+          <Text size="small">{t('orders.fulfillment.noAdminLocationsMessage')}</Text>
+        </div>
+      )}
       <div data-testid="order-fulfillment-unfulfilled-items">
         {unfulfilledItems.map((item: AdminOrderLineItem) => (
           <UnfulfilledItem
