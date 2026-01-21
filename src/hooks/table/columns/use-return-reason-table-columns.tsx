@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { HttpTypes } from '@medusajs/types';
+import { HttpTypes } from '@medusajs/types';
 import { Badge } from '@medusajs/ui';
 import { createColumnHelper } from '@tanstack/react-table';
 
@@ -10,12 +10,15 @@ export const useReturnReasonTableColumns = () => {
   return useMemo(
     () => [
       columnHelper.accessor('value', {
-        cell: ({ getValue }) => <Badge size="2xsmall">{getValue()}</Badge>
+        cell: ({ getValue }) => (
+          <div className="py-4">
+            <Badge className="h-fit">{getValue()}</Badge>
+          </div>
+        )
       }),
       columnHelper.accessor('label', {
         cell: ({ row }) => {
           const { label, description } = row.original;
-
           return (
             <div className="py-4">
               <div className="flex h-full w-full flex-col justify-center">

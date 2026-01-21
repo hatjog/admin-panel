@@ -1,15 +1,19 @@
-import type { HttpTypes } from "@medusajs/types";
-import { toast, usePrompt } from "@medusajs/ui";
+import { HttpTypes } from '@medusajs/types';
+import { toast, usePrompt } from '@medusajs/ui';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { useDeletePriceList } from "@hooks/api";
+
+import { useDeletePriceList } from '@hooks/api';
+
 
 export const useDeletePriceListAction = ({
-  priceList,
-}: {
+                                           priceList,
+                                           navigateOnSuccess = true
+                                         }: {
   priceList: HttpTypes.AdminPriceList;
+  navigateOnSuccess?: boolean;
 }) => {
   const { t } = useTranslation();
   const prompt = usePrompt();
@@ -17,14 +21,17 @@ export const useDeletePriceListAction = ({
 
   const { mutateAsync } = useDeletePriceList(priceList.id);
 
-  const handleDelete = async () => {
+
+
+
+  return async () => {
     const res = await prompt({
-      title: t("general.areYouSure"),
-      description: t("priceLists.delete.confirmation", {
-        title: priceList.title,
+      title: t('general.areYouSure'),
+      description: t('priceLists.delete.confirmation', {
+        title: priceList.title
       }),
-      confirmText: t("actions.delete"),
-      cancelText: t("actions.cancel"),
+      confirmText: t('actions.delete'),
+      cancelText: t('actions.cancel')
     });
 
     if (!res) {
@@ -34,18 +41,18 @@ export const useDeletePriceListAction = ({
     await mutateAsync(undefined, {
       onSuccess: () => {
         toast.success(
-          t("priceLists.delete.successToast", {
-            title: priceList.title,
-          }),
+          t('priceLists.delete.successToast', {
+            title: priceList.title
+          })
         );
 
-        navigate("/price-lists");
+        if (navigateOnSuccess) {
+          navigate('/price-lists');
+        }
       },
-      onError: (e) => {
+      onError: e => {
         toast.error(e.message);
-      },
+      }
     });
   };
-
-  return handleDelete;
 };

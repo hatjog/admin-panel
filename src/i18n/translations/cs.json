@@ -2291,7 +2291,8 @@
       "header": "Produkty",
       "actions": {
         "addProducts": "Přidat produkty",
-        "editPrices": "Upravit ceny"
+        "editPrices": "Upravit ceny",
+        "editPricesDisabled": "Přidejte produkty před úpravou cen"
       },
       "delete": {
         "confirmation_one": "Chystáte se smazat ceny pro {{count}} produkt v ceníku. Tuto akci nelze vrátit zpět.",
@@ -2567,8 +2568,7 @@
         "heading": "Žádné výsledky",
         "description": "Žádné prodejní kanály neodpovídají aktuálním filtrům."
       }
-    },
-    "createSalesChannel": "Vytvořit prodejní kanál",
+    },"createSalesChannel": "Vytvořit prodejní kanál",
     "createSalesChannelHint": "Vytvořte nový prodejní kanál pro prodej vašich produktů.",
     "enabledHint": "Určete, zda je prodejní kanál povolen.",
     "removeProductsWarning_one": "Chystáte se odstranit {{count}} produkt z {{sales_channel}}.",

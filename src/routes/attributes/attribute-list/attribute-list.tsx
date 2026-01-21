@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import { DataTableTableWithTestIds } from '@components/data-table/components/data-table-table-with-test-ids';
 import { SingleColumnLayout } from '@components/layout/single-column';
-import { useAttributes } from '@hooks/api/attributes';
-import { useAttributeTableColumns } from '@hooks/table/columns/use-attribute-table-columns';
+import { useAttributes } from '@hooks/api/attributes.tsx';
+import { useAttributeTableColumns } from '@hooks/table/columns/use-attribute-table-columns.tsx';
 import { DescendingSorting, XMark } from '@medusajs/icons';
 import {
   Badge,
@@ -197,7 +198,7 @@ export const AttributeList = () => {
             Product Attributes
           </Heading>
           <Button
-            variant="primary"
+            variant="secondary"
             size="small"
             onClick={() => navigate('/settings/attributes/create')}
             data-testid="attribute-list-create-button"
@@ -241,7 +242,7 @@ export const AttributeList = () => {
                           onClick={() => addFilter('filterable', true)}
                           data-testid="attribute-list-filterable-dropdown-yes"
                         >
-                          {filters.filterable === true ? (
+                          {filters.filterable ? (
                             <span className="mr-2">•</span>
                           ) : (
                             <span className="ml-4" />
@@ -252,7 +253,7 @@ export const AttributeList = () => {
                           onClick={() => addFilter('filterable', false)}
                           data-testid="attribute-list-filterable-dropdown-no"
                         >
-                          {filters.filterable === false ? (
+                          {!filters.filterable ? (
                             <span className="mr-2">•</span>
                           ) : (
                             <span className="ml-4" />
@@ -294,7 +295,7 @@ export const AttributeList = () => {
                           onClick={() => addFilter('global', true)}
                           data-testid="attribute-list-global-dropdown-yes"
                         >
-                          {filters.global === true ? (
+                          {filters.global ? (
                             <span className="mr-2">•</span>
                           ) : (
                             <span className="ml-4" />
@@ -305,7 +306,7 @@ export const AttributeList = () => {
                           onClick={() => addFilter('global', false)}
                           data-testid="attribute-list-global-dropdown-no"
                         >
-                          {filters.global === false ? (
+                          {!filters.global ? (
                             <span className="mr-2">•</span>
                           ) : (
                             <span className="ml-4" />
@@ -434,7 +435,7 @@ export const AttributeList = () => {
                         Updated At
                       </DropdownMenu.Item>
                     </div>
-                    <DropdownMenu.Separator />
+                    <DropdownMenu.Separator data-testid="attribute-list-sort-dropdown-separator" />
                     <div className="px-2 py-1">
                       <DropdownMenu.Item
                         onClick={() => handleSortOrderChange('asc')}
@@ -463,7 +464,7 @@ export const AttributeList = () => {
                 </DropdownMenu>
               </div>
             </DataTable.Toolbar>
-            <DataTable.Table data-testid="attribute-list-table-content" />
+            <DataTableTableWithTestIds instance={table} />
             <DataTable.Pagination data-testid="attribute-list-table-pagination" />
           </DataTable>
         </div>

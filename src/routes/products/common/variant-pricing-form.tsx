@@ -1,28 +1,29 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-import type { HttpTypes } from "@medusajs/types";
-
-import type { UseFormReturn } from "react-hook-form";
-import { useWatch } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import { HttpTypes } from '@medusajs/types';
+import { UseFormReturn, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import {
-  DataGrid,
   createDataGridHelper,
   createDataGridPriceColumns,
-} from "@components/data-grid";
-import { useRouteModal } from "@components/modals";
-
-import { useRegions, useStore } from "@hooks/api";
-import { usePricePreferences } from "@hooks/api/price-preferences";
-
-import type { ProductCreateSchemaType } from "@routes/products/product-create/types";
+  DataGrid
+} from '@components/data-grid';
+import { useRouteModal } from '@components/modals';
+import { usePricePreferences } from '@hooks/api/price-preferences.tsx';
+import { useRegions } from '@hooks/api';
+import { useStore } from '@hooks/api';
+import { ProductCreateSchemaType } from '../product-create/types';
 
 type VariantPricingFormProps = {
   form: UseFormReturn<ProductCreateSchemaType>;
+  'data-testid'?: string;
 };
 
-export const VariantPricingForm = ({ form }: VariantPricingFormProps) => {
+export const VariantPricingForm = ({
+                                     form,
+                                     'data-testid': dataTestId
+                                   }: VariantPricingFormProps) => {
   const { store } = useStore();
   const { regions } = useRegions({ limit: 9999 });
   const { price_preferences: pricePreferences } = usePricePreferences({});
@@ -32,37 +33,35 @@ export const VariantPricingForm = ({ form }: VariantPricingFormProps) => {
   const columns = useVariantPriceGridColumns({
     currencies: store?.supported_currencies,
     regions,
-    pricePreferences,
+    pricePreferences
   });
 
   const variants = useWatch({
     control: form.control,
-    name: "variants",
-    // @todo fix any type
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    name: 'variants'
   }) as any;
 
   return (
-    <DataGrid
-      columns={columns}
-      data={variants}
-      state={form}
-      onEditingChange={(editing) => setCloseOnEscape(!editing)}
-    />
+    <div data-testid={dataTestId}>
+      <DataGrid
+        columns={columns}
+        data={variants}
+        state={form}
+        onEditingChange={editing => setCloseOnEscape(!editing)}
+        data-testid={dataTestId}
+      />
+    </div>
   );
 };
 
-const columnHelper = createDataGridHelper<
-  HttpTypes.AdminProductVariant,
-  ProductCreateSchemaType
->();
+const columnHelper = createDataGridHelper<HttpTypes.AdminProductVariant, ProductCreateSchemaType>();
 
 const useVariantPriceGridColumns = ({
-  currencies = [],
-  regions = [],
-  pricePreferences = [],
-}: {
-  currencies?: HttpTypes.AdminStore["supported_currencies"];
+                                      currencies = [],
+                                      regions = [],
+                                      pricePreferences = []
+                                    }: {
+  currencies?: HttpTypes.AdminStore['supported_currencies'];
   regions?: HttpTypes.AdminRegion[];
   pricePreferences?: HttpTypes.AdminPricePreference[];
 }) => {
@@ -71,11 +70,10 @@ const useVariantPriceGridColumns = ({
   return useMemo(() => {
     return [
       columnHelper.column({
-        id: t("fields.title"),
-        header: t("fields.title"),
-        cell: (context) => {
+        id: t('fields.title'),
+        header: t('fields.title'),
+        cell: context => {
           const entity = context.row.original;
-
           return (
             <DataGrid.ReadonlyCell context={context}>
               <div className="flex h-full w-full items-center gap-x-2 overflow-hidden">
@@ -84,24 +82,20 @@ const useVariantPriceGridColumns = ({
             </DataGrid.ReadonlyCell>
           );
         },
-        disableHiding: true,
+        disableHiding: true
       }),
-      ...createDataGridPriceColumns<
-        HttpTypes.AdminProductVariant,
-        ProductCreateSchemaType
-      >({
-        currencies: currencies.map((c) => c.currency_code),
+      ...createDataGridPriceColumns<HttpTypes.AdminProductVariant, ProductCreateSchemaType>({
+        currencies: currencies.map(c => c.currency_code),
         regions,
         pricePreferences,
         getFieldName: (context, value) => {
-          if (context.column.id?.startsWith("currency_prices")) {
+          if (context.column.id?.startsWith('currency_prices')) {
             return `variants.${context.row.index}.prices.${value}`;
           }
-
           return `variants.${context.row.index}.prices.${value}`;
         },
-        t,
-      }),
+        t
+      })
     ];
   }, [t, currencies, regions, pricePreferences]);
 };

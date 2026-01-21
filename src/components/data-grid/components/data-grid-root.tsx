@@ -1,16 +1,34 @@
-import {
+import React, {
+  CSSProperties,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode
+  useState
 } from 'react';
-import type React from 'react';
 
-import { ConditionalTooltip } from '@components/common/conditional-tooltip';
-import { DataGridContext } from '@components/data-grid/context';
+import { Adjustments, AdjustmentsDone, ExclamationCircle } from '@medusajs/icons';
+import { Button, clx, DropdownMenu } from '@medusajs/ui';
+import {
+  Cell,
+  CellContext,
+  Column,
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  Row,
+  useReactTable,
+  VisibilityState
+} from '@tanstack/react-table';
+import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+
+import { useCommandHistory } from '@hooks/use-command-history';
+import { useDocumentDirection } from '@hooks/use-document-direction';
+import { ConditionalTooltip } from '../../common/conditional-tooltip';
+import { DataGridContext, useDataGridContext } from '../context';
 import {
   useDataGridCellHandlers,
   useDataGridCellMetadata,
@@ -23,29 +41,10 @@ import {
   useDataGridMouseUpEvent,
   useDataGridNavigation,
   useDataGridQueryTool
-} from '@components/data-grid/hooks';
-import { DataGridMatrix } from '@components/data-grid/models';
-import type { DataGridCoordinates, GridColumnOption } from '@components/data-grid/types';
-import { isCellMatch, isSpecialFocusKey } from '@components/data-grid/utils';
-import { useCommandHistory } from '@hooks/use-command-history.tsx';
-import { useDocumentDirection } from '@hooks/use-document-direction.tsx';
-import { Adjustments, AdjustmentsDone, ExclamationCircle } from '@medusajs/icons';
-import { Button, clx, DropdownMenu } from '@medusajs/ui';
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  type Cell,
-  type CellContext,
-  type Column,
-  type ColumnDef,
-  type Row,
-  type VisibilityState
-} from '@tanstack/react-table';
-import { useVirtualizer, type VirtualItem } from '@tanstack/react-virtual';
-import type { FieldValues, UseFormReturn } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-
+} from '../hooks';
+import { DataGridMatrix } from '../models';
+import { DataGridCoordinates, GridColumnOption } from '../types';
+import { isCellMatch, isSpecialFocusKey } from '../utils';
 import { DataGridKeyboardShortcutModal } from './data-grid-keyboard-shortcut-modal';
 
 export interface DataGridRootProps<TData, TFieldValues extends FieldValues = FieldValues> {
@@ -56,6 +55,7 @@ export interface DataGridRootProps<TData, TFieldValues extends FieldValues = Fie
   onEditingChange?: (isEditing: boolean) => void;
   disableInteractions?: boolean;
   multiColumnSelection?: boolean;
+  'data-testid'?: string;
 }
 
 const ROW_HEIGHT = 40;
@@ -90,14 +90,15 @@ const getCommonPinningStyles = <TData,>(column: Column<TData>): CSSProperties =>
  */
 
 export const DataGridRoot = <TData, TFieldValues extends FieldValues = FieldValues>({
-  data = [],
-  columns,
-  state,
-  getSubRows,
-  onEditingChange,
-  disableInteractions,
-  multiColumnSelection = false
-}: DataGridRootProps<TData, TFieldValues>) => {
+                                                                                      data = [],
+                                                                                      columns,
+                                                                                      state,
+                                                                                      getSubRows,
+                                                                                      onEditingChange,
+                                                                                      disableInteractions,
+                                                                                      multiColumnSelection = false,
+                                                                                      'data-testid': dataTestId
+                                                                                    }: DataGridRootProps<TData, TFieldValues>) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { redo, undo, execute } = useCommandHistory();
@@ -402,7 +403,6 @@ export const DataGridRoot = <TData, TFieldValues extends FieldValues = FieldValu
     const specialFocusHandler = (e: KeyboardEvent) => {
       if (isSpecialFocusKey(e)) {
         handleSpecialFocusKeys(e);
-
         return;
       }
     };
@@ -469,7 +469,8 @@ export const DataGridRoot = <TData, TFieldValues extends FieldValues = FieldValu
       getIsCellDragSelected,
       getCellMetadata,
       getCellErrorMetadata,
-      navigateToField
+      navigateToField,
+      dataTestId
     }),
     [
       anchor,
@@ -490,7 +491,8 @@ export const DataGridRoot = <TData, TFieldValues extends FieldValues = FieldValu
       getIsCellDragSelected,
       getCellMetadata,
       getCellErrorMetadata,
-      navigateToField
+      navigateToField,
+      dataTestId
     ]
   );
 
@@ -521,14 +523,9 @@ export const DataGridRoot = <TData, TFieldValues extends FieldValues = FieldValu
           onHeaderInteractionChange={handleHeaderInteractionChange}
         />
         <div className="size-full overflow-hidden">
-          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
           <div
             ref={containerRef}
-            /* @todo fix a11y */
-            /* eslint-disable-next-line jsx-a11y/no-autofocus */
             autoFocus
-            /* @todo fix a11y */
-            /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
             tabIndex={0}
             className="relative h-full select-none overflow-auto outline-none"
             onFocus={handleRestoreGridFocus}
@@ -653,15 +650,15 @@ type DataGridHeaderProps = {
 };
 
 const DataGridHeader = ({
-  columnOptions,
-  isDisabled,
-  onToggleColumn,
-  onResetColumns,
-  isHighlighted,
-  errorCount,
-  onToggleErrorHighlighting,
-  onHeaderInteractionChange
-}: DataGridHeaderProps) => {
+                          columnOptions,
+                          isDisabled,
+                          onToggleColumn,
+                          onResetColumns,
+                          isHighlighted,
+                          errorCount,
+                          onToggleErrorHighlighting,
+                          onHeaderInteractionChange
+                        }: DataGridHeaderProps) => {
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const { t } = useTranslation();
@@ -679,7 +676,6 @@ const DataGridHeader = ({
     onHeaderInteractionChange(value);
     setColumnsOpen(value);
   };
-
   return (
     <div className="flex items-center justify-between border-b bg-ui-bg-base p-4">
       <div className="flex items-center gap-x-2">
@@ -777,19 +773,24 @@ type DataGridCellProps<TData> = {
 };
 
 const DataGridCell = <TData,>({
-  cell,
-  columnIndex,
-  rowIndex,
-  anchor,
-  onDragToFillStart,
-  multiColumnSelection
-}: DataGridCellProps<TData>) => {
+                                cell,
+                                columnIndex,
+                                rowIndex,
+                                anchor,
+                                onDragToFillStart,
+                                multiColumnSelection
+                              }: DataGridCellProps<TData>) => {
+  const context = useDataGridContext();
   const coords: DataGridCoordinates = {
     row: rowIndex,
     col: columnIndex
   };
 
   const isAnchor = isCellMatch(coords, anchor);
+  const columnId = cell.column.id || `column-${columnIndex}`;
+  const dataTestId = context.dataTestId
+    ? `${context.dataTestId}-cell-row-${rowIndex}-col-${columnId}`
+    : undefined;
 
   return (
     <div
@@ -802,6 +803,7 @@ const DataGridCell = <TData,>({
       }}
       data-row-index={rowIndex}
       data-column-index={columnIndex}
+      data-testid={dataTestId}
       className={clx('relative flex items-center border-b border-r p-0 outline-none')}
       tabIndex={-1}
     >
@@ -810,10 +812,8 @@ const DataGridCell = <TData,>({
           ...cell.getContext(),
           columnIndex,
           rowIndex: rowIndex
-        } as CellContext<TData, unknown>)}
+        } as CellContext<TData, any>)}
         {isAnchor && (
-          //@todo fix a11y
-          // eslint-disable-next-line jsx-a11y/no-static-element-interactions
           <div
             onMouseDown={onDragToFillStart}
             className={clx(
@@ -832,14 +832,10 @@ const DataGridCell = <TData,>({
 type DataGridRowProps<TData> = {
   row: Row<TData>;
   rowIndex: number;
-  //@todo fix type
-  // @ts-expect-error TS2315: Type VirtualItem is not generic.
-  virtualRow: VirtualItem<Element>;
+  virtualRow: VirtualItem;
   virtualPaddingLeft?: number;
   virtualPaddingRight?: number;
-  //@todo fix type
-  // @ts-expect-error TS2315: Type VirtualItem is not generic.
-  virtualColumns: VirtualItem<Element>[];
+  virtualColumns: VirtualItem[];
   flatColumns: Column<TData, unknown>[];
   anchor: DataGridCoordinates | null;
   onDragToFillStart: (e: React.MouseEvent<HTMLElement>) => void;
@@ -847,17 +843,17 @@ type DataGridRowProps<TData> = {
 };
 
 const DataGridRow = <TData,>({
-  row,
-  rowIndex,
-  virtualRow,
-  virtualPaddingLeft,
-  virtualPaddingRight,
-  virtualColumns,
-  flatColumns,
-  anchor,
-  onDragToFillStart,
-  multiColumnSelection
-}: DataGridRowProps<TData>) => {
+                               row,
+                               rowIndex,
+                               virtualRow,
+                               virtualPaddingLeft,
+                               virtualPaddingRight,
+                               virtualColumns,
+                               flatColumns,
+                               anchor,
+                               onDragToFillStart,
+                               multiColumnSelection
+                             }: DataGridRowProps<TData>) => {
   const visibleCells = row.getVisibleCells();
 
   return (

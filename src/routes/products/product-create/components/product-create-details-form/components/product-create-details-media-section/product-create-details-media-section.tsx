@@ -125,8 +125,8 @@ export const ProductCreateMediaSection = ({
   };
 
   return (
-    <div id="media" className="flex flex-col gap-y-2">
-      <UploadMediaFormItem form={form} append={append} showHint={false} />
+    <div id="media" className="flex flex-col gap-y-2" data-testid="product-create-media-section">
+      <UploadMediaFormItem form={form} append={append} showHint={false} data-testid="product-create-media-section-upload" />
       <DndContext
         sensors={sensors}
         onDragEnd={handleDragEnd}
@@ -140,7 +140,7 @@ export const ProductCreateMediaSection = ({
             />
           ) : null}
         </DragOverlay>
-        <ul className="flex flex-col gap-y-2">
+        <ul className="flex flex-col gap-y-2" data-testid="product-create-media-section-list">
           <SortableContext items={fields.map((field) => field.field_id)}>
             {fields.map((field, index) => {
               const { onDelete, onMakeThumbnail } = getItemHandlers(index);
@@ -203,6 +203,7 @@ const MediaItem = ({ field, onDelete, onMakeThumbnail }: MediaItemProps) => {
       className="flex items-center justify-between rounded-lg bg-ui-bg-component px-3 py-2 shadow-elevation-card-rest"
       ref={setNodeRef}
       style={style}
+      data-testid={`product-create-media-section-item-${field.field_id}`}
     >
       <div className="flex items-center gap-x-2">
         <IconButton
@@ -259,12 +260,14 @@ const MediaItem = ({ field, onDelete, onMakeThumbnail }: MediaItemProps) => {
               ],
             },
           ]}
+          data-testid={`product-create-media-section-item-menu-${field.field_id}`}
         />
         <IconButton
           type="button"
           size="small"
           variant="transparent"
           onClick={onDelete}
+          data-testid={`product-create-media-section-item-delete-${field.field_id}`}
         >
           <XMark />
         </IconButton>
