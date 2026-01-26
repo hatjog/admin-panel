@@ -1,7 +1,7 @@
 import type React from 'react';
 import { createContext, useContext } from 'react';
 
-import { useFeatureFlags, type FeatureFlags } from '../../hooks/api/feature-flags';
+import { useFeatureFlags, type FeatureFlags } from '@hooks/api/feature-flags';
 
 interface FeatureFlagContextValue {
   flags: FeatureFlags;

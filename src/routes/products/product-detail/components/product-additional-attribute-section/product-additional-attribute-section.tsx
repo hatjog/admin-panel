@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 
+import { ActionMenu } from '@components/common/action-menu';
+import { SectionRow } from '@components/common/section';
+import { useProduct, useProductAttributes, useUpdateProduct } from '@hooks/api';
 import { InformationCircleSolid, PencilSquare } from '@medusajs/icons';
 import { Button, Container, Drawer, Heading, Label, toast, Tooltip } from '@medusajs/ui';
+import { FormComponents } from '@routes/products/product-detail/components/product-additional-attribute-section/components/form-components.tsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-
-import { ActionMenu } from '../../../../../components/common/action-menu';
-import { SectionRow } from '../../../../../components/common/section';
-import { useProduct, useProductAttributes, useUpdateProduct } from '../../../../../hooks/api';
-import { FormComponents } from './components/form-components';
 
 export const ProductAdditionalAttributeSection = () => {
   const { t } = useTranslation();
@@ -178,6 +177,8 @@ export const ProductAdditionalAttributeSection = () => {
                           name: a.id,
                           value: form.watch(a.id),
                           defaultValue: form.getValues(a.id),
+                          // @todo fix any type
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
                           onChange: (e: any) => {
                             form.setValue(a.id, e.target.value);
                           }

@@ -1,4 +1,16 @@
+import { Form } from '@components/common/form';
+import { SwitchBox } from '@components/common/switch-box';
+import { PercentageInput } from '@components/inputs/percentage-input';
+import {
+  RouteFocusModal,
+  StackedFocusModal,
+  useRouteModal,
+  useStackedModal
+} from '@components/modals';
+import { KeyboundForm } from '@components/utilities/keybound-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateTaxRate } from '@hooks/api';
+import { useDocumentDirection } from '@hooks/use-document-direction';
 import { MagnifyingGlass } from '@medusajs/icons';
 import type { HttpTypes } from '@medusajs/types';
 import {
@@ -13,27 +25,17 @@ import {
   Text,
   toast
 } from '@medusajs/ui';
+import { TargetForm } from '@routes/tax-regions/common/components/target-form';
+import { TargetItem } from '@routes/tax-regions/common/components/target-item';
+import { TaxRateRuleReferenceType } from '@routes/tax-regions/common/constants';
+import {
+  TaxRateRuleReferenceSchema,
+  type TaxRateRuleReference
+} from '@routes/tax-regions/common/schemas';
+import { createTaxRulePayload } from '@routes/tax-regions/common/utils';
 import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-
-import { Form } from '../../../../../components/common/form';
-import { SwitchBox } from '../../../../../components/common/switch-box';
-import { PercentageInput } from '../../../../../components/inputs/percentage-input';
-import {
-  RouteFocusModal,
-  StackedFocusModal,
-  useRouteModal,
-  useStackedModal
-} from '../../../../../components/modals';
-import { KeyboundForm } from '../../../../../components/utilities/keybound-form';
-import { useCreateTaxRate } from '../../../../../hooks/api/tax-rates';
-import { useDocumentDirection } from '../../../../../hooks/use-document-direction';
-import { TargetForm } from '../../../common/components/target-form/target-form';
-import { TargetItem } from '../../../common/components/target-item/target-item';
-import { TaxRateRuleReferenceType } from '../../../common/constants';
-import { TaxRateRuleReferenceSchema, type TaxRateRuleReference } from '../../../common/schemas';
-import { createTaxRulePayload } from '../../../common/utils';
 
 const TaxRegionCreateTaxOverrideSchema = z.object({
   name: z.string().min(1),

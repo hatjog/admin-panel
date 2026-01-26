@@ -1,13 +1,11 @@
+import { RouteDrawer } from '@components/modals';
+import { useRegion, useStore } from '@hooks/api';
+import { usePricePreferences } from '@hooks/api/price-preferences';
+import { currencies } from '@lib/data/currencies';
 import { Heading } from '@medusajs/ui';
+import { EditRegionForm } from '@routes/regions/region-edit/components/edit-region-form';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-
-import { RouteDrawer } from '../../../components/modals';
-import { usePricePreferences } from '../../../hooks/api/price-preferences';
-import { useRegion } from '../../../hooks/api/regions';
-import { useStore } from '../../../hooks/api/store';
-import { currencies } from '../../../lib/data/currencies';
-import { EditRegionForm } from './components/edit-region-form';
 
 export const RegionEdit = () => {
   const { t } = useTranslation();

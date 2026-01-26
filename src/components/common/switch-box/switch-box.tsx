@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react';
 
+import { Form } from '@components/common/form';
 import { Switch } from '@medusajs/ui';
 import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form';
-
-import { Form } from '../../common/form';
 
 interface HeadlessControllerProps<
   TFieldValues extends FieldValues = FieldValues,

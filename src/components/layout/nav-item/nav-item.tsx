@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState, type PropsWithChildren, type ReactNode } from 'react';
 
+import { ConditionalTooltip } from '@components/common/conditional-tooltip';
 import { clx, Kbd, Text } from '@medusajs/ui';
+import { useGlobalShortcuts } from '@providers/keybind-provider/hooks.tsx';
 import { Collapsible as RadixCollapsible } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useLocation } from 'react-router-dom';
-
-import { useGlobalShortcuts } from '../../../providers/keybind-provider/hooks';
-import { ConditionalTooltip } from '../../common/conditional-tooltip';
 
 type ItemType = 'core' | 'extension' | 'setting';
 

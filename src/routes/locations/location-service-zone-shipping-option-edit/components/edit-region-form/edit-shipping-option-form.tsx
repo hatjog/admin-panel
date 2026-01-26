@@ -1,22 +1,21 @@
+import { Form } from '@components/common/form';
+import { SwitchBox } from '@components/common/switch-box';
+import { Combobox } from '@components/inputs/combobox';
+import { RouteDrawer, useRouteModal } from '@components/modals';
+import { KeyboundForm } from '@components/utilities/keybound-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useUpdateShippingOptions } from '@hooks/api';
+import { useComboboxData } from '@hooks/use-combobox-data';
+import { useDocumentDirection } from '@hooks/use-document-direction';
+import { sdk } from '@lib/client';
+import { formatProvider } from '@lib/format-provider';
+import { isOptionEnabledInStore } from '@lib/shipping-options';
 import type { HttpTypes } from '@medusajs/types';
 import { Button, Divider, Input, RadioGroup, toast } from '@medusajs/ui';
+import { FulfillmentSetType, ShippingOptionPriceType } from '@routes/locations/common/constants';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as zod from 'zod';
-
-import { Form } from '../../../../../components/common/form';
-import { SwitchBox } from '../../../../../components/common/switch-box';
-import { Combobox } from '../../../../../components/inputs/combobox';
-import { RouteDrawer, useRouteModal } from '../../../../../components/modals';
-import { KeyboundForm } from '../../../../../components/utilities/keybound-form';
-import { useUpdateShippingOptions } from '../../../../../hooks/api/shipping-options';
-import { useComboboxData } from '../../../../../hooks/use-combobox-data';
-import { useDocumentDirection } from '../../../../../hooks/use-document-direction';
-import { sdk } from '../../../../../lib/client';
-import { formatProvider } from '../../../../../lib/format-provider';
-import { isOptionEnabledInStore } from '../../../../../lib/shipping-options';
-import { FulfillmentSetType, ShippingOptionPriceType } from '../../../common/constants';
 
 type EditShippingOptionFormProps = {
   locationId: string;

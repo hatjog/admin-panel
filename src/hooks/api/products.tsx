@@ -1,3 +1,6 @@
+import { sdk } from '@lib/client';
+import { queryClient } from '@lib/query-client';
+import { queryKeysFactory } from '@lib/query-key-factory';
 import type { FetchError } from '@medusajs/js-sdk';
 import type { HttpTypes } from '@medusajs/types';
 import {
@@ -8,15 +11,13 @@ import {
   type UseQueryOptions
 } from '@tanstack/react-query';
 
-import { sdk } from '../../lib/client';
-import { queryClient } from '../../lib/query-client';
-import { queryKeysFactory } from '../../lib/query-key-factory';
-import type { AttributeDTO } from '../../types/index.ts';
 import type {
   AdminProductResponse,
   AdminProductUpdate,
+  AttributeDTO,
   ExtendedAdminProductListParams
-} from '../../types/product/common.ts';
+} from '@/types';
+
 import { inventoryItemsQueryKeys } from './inventory.tsx';
 
 const PRODUCTS_QUERY_KEY = 'products' as const;
@@ -30,11 +31,15 @@ export const optionsQueryKeys = queryKeysFactory(OPTIONS_QUERY_KEY);
 
 export const useCreateProductOption = (
   productId: string,
+  // @todo fix any type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options?: UseMutationOptions<any, FetchError, any>
 ) => {
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminCreateProductOption) =>
       sdk.admin.product.createOption(productId, payload),
+    // @todo fix any type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({ queryKey: optionsQueryKeys.lists() });
       queryClient.invalidateQueries({

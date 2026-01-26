@@ -389,6 +389,8 @@ export const useAddClaimOutboundItems = (
   return useMutation({
     mutationFn: (payload: HttpTypes.AdminAddClaimOutboundItems) =>
       sdk.admin.claim.addOutboundItems(id, payload),
+    // @todo fix any type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (data: any, variables: any, context: any) => {
       queryClient.invalidateQueries({
         queryKey: ordersQueryKeys.details()

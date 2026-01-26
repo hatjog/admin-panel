@@ -1,17 +1,18 @@
 import { memo } from 'react';
 
+import { NoRecords, type NoResultsProps } from '@components/common/empty-table-content';
+import { TableSkeleton } from '@components/common/skeleton';
 import { clx } from '@medusajs/ui';
 
-import { NoRecords, type NoResultsProps } from '../../common/empty-table-content';
-import { TableSkeleton } from '../../common/skeleton';
 import { DataTableQuery, type DataTableQueryProps } from './data-table-query';
 import { DataTableRoot, type DataTableRootProps } from './data-table-root';
 
 interface DataTableProps<TData>
-  extends Omit<DataTableRootProps<TData>, 'noResults'>,
-    DataTableQueryProps<TData> {
+  extends Omit<DataTableRootProps<TData>, 'noResults'>, DataTableQueryProps<TData> {
   isLoading?: boolean;
   pageSize: number;
+  // @todo fix any type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   queryObject?: Record<string, any>;
   noRecords?: Pick<NoResultsProps, 'title' | 'message'>;
 }

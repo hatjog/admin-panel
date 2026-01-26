@@ -1,11 +1,10 @@
 import { useState } from 'react';
 
+import { useDocumentDirection } from '@hooks/use-document-direction';
 import { DescendingSorting } from '@medusajs/icons';
 import { DropdownMenu, IconButton } from '@medusajs/ui';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-
-import { useDocumentDirection } from '../../../../hooks/use-document-direction';
 
 export type DataTableOrderByKey<TData> = {
   key: keyof TData;

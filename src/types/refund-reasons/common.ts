@@ -80,13 +80,12 @@ export interface AdminRefundReasonResponse {
   refund_reason: AdminRefundReason;
 }
 
-export interface AdminRefundReasonListResponse
-  extends PaginatedResponse<{
-    /**
-     * The list of refund reasons.
-     */
-    refund_reasons: AdminRefundReason[];
-  }> {}
+export interface AdminRefundReasonListResponse extends PaginatedResponse<{
+  /**
+   * The list of refund reasons.
+   */
+  refund_reasons: AdminRefundReason[];
+}> {}
 
 export type AdminBaseRefundReasonPayload = {
   /**

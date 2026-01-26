@@ -1,3 +1,10 @@
+import { NavItem, type INavItem } from '@components//layout/nav-item';
+import { Skeleton } from '@components/common/skeleton';
+import { Shell } from '@components/layout/shell';
+import { UserMenu } from '@components/layout/user-menu';
+import { useLogout, useStore } from '@hooks/api';
+import { useDocumentDirection } from '@hooks/use-document-direction.tsx';
+import { queryClient } from '@lib/query-client';
 import {
   BottomToTop,
   Buildings,
@@ -18,62 +25,49 @@ import {
   Users
 } from '@medusajs/icons';
 import { Avatar, clx, Divider, DropdownMenu, Text } from '@medusajs/ui';
+import { useExtension } from '@providers/extension-provider';
+import { useSearch } from '@providers/search-provider';
 import { Collapsible as RadixCollapsible } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { useLogout } from '../../../hooks/api';
-import { useStore } from '../../../hooks/api/store';
-import { useDocumentDirection } from '../../../hooks/use-document-direction';
-import { queryClient } from '../../../lib/query-client';
-import { useExtension } from '../../../providers/extension-provider';
-import { useSearch } from '../../../providers/search-provider';
-import { Skeleton } from '../../common/skeleton';
-import { NavItem, type INavItem } from '../../layout/nav-item';
-import { Shell } from '../../layout/shell';
-import { UserMenu } from '../user-menu';
+export const MainLayout = () => (
+  <Shell>
+    <MainSidebar />
+  </Shell>
+);
 
-export const MainLayout = () => {
-  return (
-    <Shell>
-      <MainSidebar />
-    </Shell>
-  );
-};
-
-const MainSidebar = () => {
-  return (
-    <aside
-      className="flex flex-1 flex-col justify-between overflow-y-auto"
-      data-testid="sidebar"
-    >
-      <div className="flex flex-1 flex-col">
-        <div
-          className="sticky top-0 bg-ui-bg-subtle"
-          data-testid="sidebar-header-section"
-        >
-          <Header />
-          <div className="px-3">
-            <Divider variant="dashed" />
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col justify-between">
-          <div className="flex flex-1 flex-col">
-            <CoreRouteSection />
-            <ExtensionRouteSection />
-          </div>
-          <UtilitySection />
-        </div>
-        <div
-          className="sticky bottom-0 bg-ui-bg-subtle"
-          data-testid="sidebar-user-section"
-        >
-          <UserSection />
+const MainSidebar = () => (
+  <aside
+    className="flex flex-1 flex-col justify-between overflow-y-auto"
+    data-testid="sidebar"
+  >
+    <div className="flex flex-1 flex-col">
+      <div
+        className="sticky top-0 bg-ui-bg-subtle"
+        data-testid="sidebar-header-section"
+      >
+        <Header />
+        <div className="px-3">
+          <Divider variant="dashed" />
         </div>
       </div>
-    </aside>
-  );
-};
+      <div className="flex flex-1 flex-col justify-between">
+        <div className="flex flex-1 flex-col">
+          <CoreRouteSection />
+          <ExtensionRouteSection />
+        </div>
+        <UtilitySection />
+      </div>
+      <div
+        className="sticky bottom-0 bg-ui-bg-subtle"
+        data-testid="sidebar-user-section"
+      >
+        <UserSection />
+      </div>
+    </div>
+  </aside>
+);
 
 const Logout = () => {
   const { t } = useTranslation();

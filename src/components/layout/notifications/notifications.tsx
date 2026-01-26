@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 
+import { FilePreview } from '@components/common/file-preview';
+import { InfiniteList } from '@components/common/infinite-list';
+import { notificationQueryKeys, useNotifications } from '@hooks/api';
+import { sdk } from '@lib/client';
 import { BellAlert, BellAlertDone, InformationCircleSolid } from '@medusajs/icons';
 import type { HttpTypes } from '@medusajs/types';
 import { clx, Drawer, Heading, IconButton, Text } from '@medusajs/ui';
 import { formatDistance } from 'date-fns';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-
-import { notificationQueryKeys, useNotifications } from '../../../hooks/api';
-import { sdk } from '../../../lib/client';
-import { FilePreview } from '../../common/file-preview';
-import { InfiniteList } from '../../common/infinite-list';
 
 interface NotificationData {
   title: string;

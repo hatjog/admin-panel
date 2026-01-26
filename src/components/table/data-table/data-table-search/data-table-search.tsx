@@ -1,10 +1,9 @@
 import { useCallback, useEffect, type ChangeEvent } from 'react';
 
+import { useSelectedParams } from '@components/table/data-table/hooks';
 import { Input } from '@medusajs/ui';
 import { debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
-
-import { useSelectedParams } from '../hooks';
 
 type DataTableSearchProps = {
   placeholder?: string;

@@ -123,15 +123,7 @@ export function buildTree<T extends TreeItem>(
   };
 
   items.forEach((item, index) => {
-    const {
-      id,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
-      index: _index,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
-      depth: _depth,
-      parentId: _parentId,
-      ...rest
-    } = item;
+    const { id, index: _index, depth: _depth, parentId: _parentId, ...rest } = item;
     const children = (item[childrenProp] || []) as T[];
 
     const parentId = _parentId ?? root.id;

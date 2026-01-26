@@ -13,6 +13,8 @@ const columnHelper =
 
 export const useWorkflowExecutionTableColumns = (): ColumnDef<
   HttpTypes.AdminWorkflowExecutionResponse['workflow_execution'],
+  // @todo fix any type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any
 >[] => {
   const { t } = useTranslation();

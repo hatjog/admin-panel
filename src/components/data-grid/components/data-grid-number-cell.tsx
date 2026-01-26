@@ -58,7 +58,6 @@ const Inner = ({
   max?: number;
   placeholder?: string;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ref, value, onChange: _, onBlur, ...fieldProps } = field;
   const { ref: inputRef, onChange, onBlur: onInputBlur, onFocus, ...attributes } = inputProps;
 

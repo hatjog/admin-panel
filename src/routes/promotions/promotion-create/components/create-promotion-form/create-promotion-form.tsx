@@ -115,7 +115,8 @@ export const CreatePromotionForm = () => {
         ...buyRulesData.filter(r => !!r.disguised),
         ...rules.filter(r => !!r.disguised)
       ];
-
+      // @todo fix any type
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const applicationMethodRuleData: Record<any, any> = {};
 
       for (const rule of disguisedRules) {

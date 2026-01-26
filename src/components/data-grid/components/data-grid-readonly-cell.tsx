@@ -14,6 +14,8 @@ type DataGridReadonlyCellProps<TData, TValue = any> = PropsWithChildren<
   color?: 'muted' | 'normal';
 };
 
+//@todo fix type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DataGridReadonlyCell = <TData, TValue = any>({
   context,
   color = 'muted',

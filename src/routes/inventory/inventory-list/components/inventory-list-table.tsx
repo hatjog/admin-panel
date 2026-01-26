@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
+import { _DataTable } from '@components/table/data-table';
+import { useInventoryItems } from '@hooks/api';
+import { useDataTable } from '@hooks/use-data-table';
 import type { InventoryTypes } from '@medusajs/types';
 import { Button, Container, Heading, Text } from '@medusajs/ui';
+import { INVENTORY_ITEM_IDS_KEY } from '@routes/inventory/common/constants.ts';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { _DataTable } from '../../../../components/table/data-table';
-import { useInventoryItems } from '../../../../hooks/api/inventory';
-import { useDataTable } from '../../../../hooks/use-data-table';
-import { INVENTORY_ITEM_IDS_KEY } from '../../common/constants';
 import { useInventoryTableColumns } from './use-inventory-table-columns';
 import { useInventoryTableFilters } from './use-inventory-table-filters';
 import { useInventoryTableQuery } from './use-inventory-table-query';

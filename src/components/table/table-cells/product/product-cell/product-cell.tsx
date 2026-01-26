@@ -1,7 +1,6 @@
+import { Thumbnail } from '@components/common/thumbnail';
 import type { HttpTypes } from '@medusajs/types';
 import { useTranslation } from 'react-i18next';
-
-import { Thumbnail } from '../../../../common/thumbnail';
 
 type ProductCellProps = {
   product: Pick<HttpTypes.AdminProduct, 'thumbnail' | 'title'>;

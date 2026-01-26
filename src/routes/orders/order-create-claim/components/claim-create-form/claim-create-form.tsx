@@ -1,6 +1,31 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import { Form } from '@components/common/form';
+import { Combobox } from '@components/inputs/combobox';
+import {
+  RouteFocusModal,
+  StackedFocusModal,
+  useRouteModal,
+  useStackedModal
+} from '@components/modals';
+import { KeyboundForm } from '@components/utilities/keybound-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useShippingOptions, useStockLocations } from '@hooks/api';
+import {
+  useAddClaimInboundItems,
+  useAddClaimInboundShipping,
+  useCancelClaimRequest,
+  useClaimConfirmRequest,
+  useDeleteClaimInboundShipping,
+  useRemoveClaimInboundItem,
+  useUpdateClaimInboundItem,
+  useUpdateClaimInboundShipping,
+  useUpdateClaimOutboundShipping
+} from '@hooks/api/claims';
+import { useUpdateReturn } from '@hooks/api/returns';
+import { sdk } from '@lib/client';
+import { currencies } from '@lib/data/currencies';
+import { getStylizedAmount } from '@lib/money-amount-helpers';
 import { PencilSquare } from '@medusajs/icons';
 import type {
   AdminClaim,
@@ -21,37 +46,11 @@ import {
   toast,
   usePrompt
 } from '@medusajs/ui';
+import { ReturnShippingPlaceholder } from '@routes/orders/common/placeholders.tsx';
+import { AddClaimItemsTable } from '@routes/orders/order-create-claim/components/add-claim-items-table';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { Form } from '../../../../../components/common/form';
-import { Combobox } from '../../../../../components/inputs/combobox';
-import {
-  RouteFocusModal,
-  StackedFocusModal,
-  useRouteModal,
-  useStackedModal
-} from '../../../../../components/modals';
-import { KeyboundForm } from '../../../../../components/utilities/keybound-form/keybound-form.tsx';
-import {
-  useAddClaimInboundItems,
-  useAddClaimInboundShipping,
-  useCancelClaimRequest,
-  useClaimConfirmRequest,
-  useDeleteClaimInboundShipping,
-  useRemoveClaimInboundItem,
-  useUpdateClaimInboundItem,
-  useUpdateClaimInboundShipping,
-  useUpdateClaimOutboundShipping
-} from '../../../../../hooks/api/claims';
-import { useUpdateReturn } from '../../../../../hooks/api/returns';
-import { useShippingOptions } from '../../../../../hooks/api/shipping-options';
-import { useStockLocations } from '../../../../../hooks/api/stock-locations';
-import { sdk } from '../../../../../lib/client';
-import { currencies } from '../../../../../lib/data/currencies';
-import { getStylizedAmount } from '../../../../../lib/money-amount-helpers';
-import { ReturnShippingPlaceholder } from '../../../common/placeholders';
-import { AddClaimItemsTable } from '../add-claim-items-table';
 import { ClaimInboundItem } from './claim-inbound-item.tsx';
 import { ClaimOutboundSection } from './claim-outbound-section';
 import { ItemPlaceholder } from './item-placeholder';
@@ -684,26 +683,24 @@ export const ClaimCreateForm = ({ order, preview, claim, orderReturn }: ReturnCr
                   <Form.Field
                     control={form.control}
                     name="location_id"
-                    render={({ field: { value, onChange, ...field } }) => {
-                      return (
-                        <Form.Item>
-                          <Form.Control>
-                            <Combobox
-                              {...field}
-                              value={value ?? undefined}
-                              onChange={v => {
-                                onChange(v);
-                                onLocationChange(v);
-                              }}
-                              options={(stock_locations ?? []).map(stockLocation => ({
-                                label: stockLocation.name,
-                                value: stockLocation.id
-                              }))}
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      );
-                    }}
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <Form.Item>
+                        <Form.Control>
+                          <Combobox
+                            {...field}
+                            value={value ?? undefined}
+                            onChange={v => {
+                              onChange(v);
+                              onLocationChange(v);
+                            }}
+                            options={(stock_locations ?? []).map(stockLocation => ({
+                              label: stockLocation.name,
+                              value: stockLocation.id
+                            }))}
+                          />
+                        </Form.Control>
+                      </Form.Item>
+                    )}
                   />
                 </div>
 
@@ -729,29 +726,27 @@ export const ClaimCreateForm = ({ order, preview, claim, orderReturn }: ReturnCr
                   <Form.Field
                     control={form.control}
                     name="inbound_option_id"
-                    render={({ field: { value, onChange, ...field } }) => {
-                      return (
-                        <Form.Item>
-                          <Form.Control>
-                            <Combobox
-                              allowClear
-                              value={value ?? undefined}
-                              onChange={val => {
-                                onChange(val);
-                                onShippingOptionChange(val);
-                              }}
-                              {...field}
-                              options={inboundShippingOptions.map(so => ({
-                                label: so.name,
-                                value: so.id
-                              }))}
-                              disabled={!locationId}
-                              noResultsPlaceholder={<ReturnShippingPlaceholder />}
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      );
-                    }}
+                    render={({ field: { value, onChange, ...field } }) => (
+                      <Form.Item>
+                        <Form.Control>
+                          <Combobox
+                            allowClear
+                            value={value ?? undefined}
+                            onChange={val => {
+                              onChange(val);
+                              onShippingOptionChange(val);
+                            }}
+                            {...field}
+                            options={inboundShippingOptions.map(so => ({
+                              label: so.name,
+                              value: so.id
+                            }))}
+                            disabled={!locationId}
+                            noResultsPlaceholder={<ReturnShippingPlaceholder />}
+                          />
+                        </Form.Control>
+                      </Form.Item>
+                    )}
                   />
                 </div>
               </div>

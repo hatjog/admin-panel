@@ -1,15 +1,14 @@
 import { useState } from 'react';
 
+import { DataTable } from '@components/data-table';
+import { SaveViewDialog } from '@components/table/save-view-dialog';
+import { SaveViewDropdown } from '@components/table/save-view-dropdown';
+import { useConfigurableTableColumns } from '@hooks/table/columns/use-configurable-table-columns';
+import { useTableConfiguration } from '@hooks/table/use-table-configuration';
+import { getEntityAdapter } from '@lib/table/entity-adapters';
+import type { TableAdapter } from '@lib/table/table-adapters';
 import { Button, Container } from '@medusajs/ui';
 import { useTranslation } from 'react-i18next';
-
-import { useConfigurableTableColumns } from '../../../hooks/table/columns/use-configurable-table-columns';
-import { useTableConfiguration } from '../../../hooks/table/use-table-configuration';
-import { getEntityAdapter } from '../../../lib/table/entity-adapters';
-import type { TableAdapter } from '../../../lib/table/table-adapters';
-import { DataTable } from '../../data-table';
-import { SaveViewDialog } from '../save-view-dialog';
-import { SaveViewDropdown } from './save-view-dropdown';
 
 type DataTableActionProps = {
   label: string;
@@ -44,6 +43,8 @@ export function ConfigurableDataTable<TData>({
 }: ConfigurableDataTableProps<TData>) {
   const { t } = useTranslation();
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  //@todo fix type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [editingView, setEditingView] = useState<any>(null);
 
   const entity = adapter.entity;
@@ -189,6 +190,8 @@ export function ConfigurableDataTable<TData>({
         data={fetchResult.data || []}
         columns={columns}
         filters={filters}
+        //@todo fix type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getRowId={adapter.getRowId || ((row: any) => row.id)}
         rowCount={fetchResult.count}
         enablePagination
@@ -196,6 +199,8 @@ export function ConfigurableDataTable<TData>({
         pageSize={pageSize}
         isLoading={fetchResult.isLoading || isLoadingColumns}
         layout={layout}
+        //@todo fix type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         heading={heading || entityName || (entity ? t(`${entity}.domain` as any) : '')}
         subHeading={subHeading}
         enableColumnVisibility={isViewConfigEnabled}
@@ -207,10 +212,14 @@ export function ConfigurableDataTable<TData>({
         entity={entity}
         currentColumns={currentColumns}
         filterBarContent={filterBarContent}
+        //@todo fix type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rowHref={adapter.getRowHref as ((row: any) => string) | undefined}
         emptyState={
           adapter.emptyState || {
             empty: {
+              //@todo fix type
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               heading: t(`${entity}.list.noRecordsMessage` as any)
             }
           }

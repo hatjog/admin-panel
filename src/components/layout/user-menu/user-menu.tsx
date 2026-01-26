@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+import { Skeleton } from '@components/common/skeleton';
+import { useLogout, useMe } from '@hooks/api';
+import { useDocumentDirection } from '@hooks/use-document-direction';
+import { queryClient } from '@lib/query-client';
 import {
   BookOpen,
   CircleHalfSolid,
@@ -11,16 +15,11 @@ import {
   XMark
 } from '@medusajs/icons';
 import { Avatar, clx, DropdownMenu, Heading, IconButton, Input, Kbd, Text } from '@medusajs/ui';
+import { useGlobalShortcuts } from '@providers/keybind-provider/hooks';
+import { useTheme } from '@providers/theme-provider';
 import { Dialog as RadixDialog } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-import { useLogout, useMe } from '../../../hooks/api';
-import { useDocumentDirection } from '../../../hooks/use-document-direction';
-import { queryClient } from '../../../lib/query-client';
-import { useGlobalShortcuts } from '../../../providers/keybind-provider/hooks';
-import { useTheme } from '../../../providers/theme-provider';
-import { Skeleton } from '../../common/skeleton';
 
 export const UserMenu = () => {
   const { t } = useTranslation();

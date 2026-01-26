@@ -68,7 +68,6 @@ export const useDataGridCellHandlers = <TData, TFieldValues extends FieldValues>
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (_e: MouseEvent<HTMLElement>) => {
         /**
          * If the column is not the same as the anchor col,

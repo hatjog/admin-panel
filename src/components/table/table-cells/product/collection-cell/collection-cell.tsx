@@ -1,7 +1,6 @@
+import { PlaceholderCell } from '@components/table/table-cells/common/placeholder-cell';
 import type { HttpTypes } from '@medusajs/types';
 import { useTranslation } from 'react-i18next';
-
-import { PlaceholderCell } from '../../common/placeholder-cell';
 
 type CollectionCellProps = {
   collection?: HttpTypes.AdminCollection | null;

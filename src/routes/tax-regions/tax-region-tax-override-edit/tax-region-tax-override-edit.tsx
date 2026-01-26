@@ -3,14 +3,14 @@ import type { ExtendedAdminTaxRate } from '@custom-types/tax-rates';
 import { useProducts, useProductTypes, useShippingOptions, useTaxRate } from '@hooks/api';
 import type { HttpTypes } from '@medusajs/types';
 import { Heading } from '@medusajs/ui';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-
-import { TaxRateRuleReferenceType } from '../common/constants';
+import { TaxRateRuleReferenceType } from '@routes/tax-regions/common/constants.ts';
 import {
   DISPLAY_OVERRIDE_ITEMS_LIMIT,
   TaxRegionTaxOverrideEditForm
-} from './components/tax-region-tax-override-edit-form';
+} from '@routes/tax-regions/tax-region-tax-override-edit/components/tax-region-tax-override-edit-form';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+
 import type { InitialRuleValues } from './types';
 
 export const TaxRegionTaxOverrideEdit = () => {

@@ -1,9 +1,11 @@
 import type { HttpTypes } from '@medusajs/types';
 import { Badge, clx, Container, Copy, Heading, StatusBadge, Text } from '@medusajs/ui';
+import { TransactionStepState, type TransactionState } from '@routes/workflow-executions/types';
+import {
+  getTransactionState,
+  getTransactionStateColor
+} from '@routes/workflow-executions/utils.ts';
 import { useTranslation } from 'react-i18next';
-
-import { TransactionStepState, type TransactionState } from '../../../types';
-import { getTransactionState, getTransactionStateColor } from '../../../utils';
 
 type WorkflowExecutionGeneralSectionProps = {
   execution: HttpTypes.AdminWorkflowExecution;

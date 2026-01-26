@@ -1,12 +1,10 @@
+import { ActionMenu } from '@components/common/action-menu';
+import { SectionRow } from '@components/common/section';
+import { useInventoryItem, useStockLocation } from '@hooks/api';
 import { PencilSquare } from '@medusajs/icons';
-import { AdminReservationResponse } from '@medusajs/types';
+import type { AdminReservationResponse } from '@medusajs/types';
 import { Container, Heading } from '@medusajs/ui';
 import { useTranslation } from 'react-i18next';
-
-import { ActionMenu } from '../../../../../components/common/action-menu';
-import { SectionRow } from '../../../../../components/common/section';
-import { useInventoryItem } from '../../../../../hooks/api/inventory';
-import { useStockLocation } from '../../../../../hooks/api/stock-locations';
 
 type ReservationGeneralSectionProps = {
   reservation: AdminReservationResponse['reservation'];

@@ -1,17 +1,16 @@
 import { useState } from 'react';
 
+import { Form } from '@components/common/form';
+import { LogoBox } from '@components/common/logo-box';
+import { i18n } from '@components/utilities/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useResetPasswordForEmailPass, useUpdateProviderForEmailPass } from '@hooks/api';
 import { Alert, Button, Heading, Input, Text, toast } from '@medusajs/ui';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { decodeToken } from 'react-jwt';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import * as z from 'zod';
-
-import { Form } from '../../components/common/form';
-import { LogoBox } from '../../components/common/logo-box';
-import { i18n } from '../../components/utilities/i18n';
-import { useResetPasswordForEmailPass, useUpdateProviderForEmailPass } from '../../hooks/api/auth';
 
 const ResetPasswordInstructionsSchema = z.object({
   email: z.string().email()
@@ -45,7 +44,8 @@ type DecodedResetPasswordToken = {
   exp: string;
   iat: string;
 };
-
+// @todo fix any type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const validateDecodedResetPasswordToken = (decoded: any): decoded is DecodedResetPasswordToken => {
   return ResetPasswordTokenSchema.safeParse(decoded).success;
 };

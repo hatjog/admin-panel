@@ -12,6 +12,9 @@ import {
   type ElementRef
 } from 'react';
 
+import { Skeleton } from '@components/common/skeleton';
+import { Thumbnail } from '@components/common/thumbnail';
+import { useDocumentDirection } from '@hooks/use-document-direction';
 import { ArrowUturnLeft, MagnifyingGlass, Plus, Spinner, TriangleDownMini } from '@medusajs/icons';
 import { Badge, Button, clx, DropdownMenu, IconButton, Kbd, Text } from '@medusajs/ui';
 import { Command } from 'cmdk';
@@ -20,10 +23,8 @@ import { Dialog as RadixDialog } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useDocumentDirection } from '../../hooks/use-document-direction';
-import { useSearch } from '../../providers/search-provider';
-import { Skeleton } from '../common/skeleton';
-import { Thumbnail } from '../common/thumbnail';
+import { useSearch } from '@/providers/search-provider';
+
 import { DEFAULT_SEARCH_LIMIT, SEARCH_AREAS, SEARCH_LIMIT_INCREMENT } from './constants';
 import type { SearchArea } from './types';
 import { useSearchResults } from './use-search-results';

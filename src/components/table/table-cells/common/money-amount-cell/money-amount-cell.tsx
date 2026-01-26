@@ -1,7 +1,6 @@
+import { PlaceholderCell } from '@components/table/table-cells/common/placeholder-cell';
+import { getStylizedAmount } from '@lib/money-amount-helpers';
 import { clx } from '@medusajs/ui';
-
-import { getStylizedAmount } from '../../../../../lib/money-amount-helpers';
-import { PlaceholderCell } from '../placeholder-cell';
 
 type MoneyAmountCellProps = {
   currencyCode: string;

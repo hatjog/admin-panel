@@ -33,6 +33,8 @@ export const getTransactionStateColor = (state: TransactionState): 'green' | 'or
   return statusColor;
 };
 
+// @todo fix any type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getTransactionState = (t: TFunction<'translation', any>, state: TransactionState) => {
   switch (state) {
     case TransactionState.DONE:
@@ -70,6 +72,8 @@ export const getStepStateColor = (state: TransactionStepState) => {
   return statusColor;
 };
 
+// @todo fix any type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getStepState = (t: TFunction<'translation', any>, state: TransactionStepState) => {
   switch (state) {
     case TransactionStepState.DONE:
