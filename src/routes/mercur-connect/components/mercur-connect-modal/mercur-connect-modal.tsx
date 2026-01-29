@@ -40,18 +40,23 @@ export const MercurConnectModal = ({
           </div>
         </Prompt.Header>
         <Prompt.Description
-          data-testid={`${testId}-description`}
+          data-testid={`${testId}-description-wrapper`}
           className="mx-auto mt-10 flex w-full max-w-[464px] flex-col items-center gap-2 text-center"
         >
-          <CurrencyDollar />
+          <CurrencyDollar data-testid={`${testId}-currency-icon`} />
           <Text
             size="small"
             weight="plus"
             className="line-height-[20px] text-ui-fg-base"
+            data-testid={`${testId}-title`}
           >
             Mercur Connect Feature
           </Text>
-          <Text size="small" className="text-ui-fg-subtle">
+          <Text
+            size="small"
+            className="text-ui-fg-subtle"
+            data-testid={`${testId}-description`}
+          >
             Your current plan doesn’t include this feature. Please contact our
             sales team to enable it for your account.
           </Text>
