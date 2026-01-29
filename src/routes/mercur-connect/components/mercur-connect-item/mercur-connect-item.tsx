@@ -52,8 +52,14 @@ export const MercurConnectItem = ({
             )}
           </div>
           <div>
-            <Heading level="h2">{item.name}</Heading>
-            <Text size="small" className="text-ui-fg-subtle">
+            <Heading level="h2" data-testid={`${testId}-name`}>
+              {item.name}
+            </Heading>
+            <Text
+              size="small"
+              className="text-ui-fg-subtle"
+              data-testid={`${testId}-description`}
+            >
               {item.description}
             </Text>
           </div>
@@ -62,14 +68,21 @@ export const MercurConnectItem = ({
         <div className="flex justify-end">
           {item.provider === "more" ? (
             <Link to="https://www.mercurjs.com/connect" target="_blank">
-              <Button variant="secondary" size="small">
+              <Button
+                variant="secondary"
+                size="small"
+                data-testid={`${testId}-contact-us-button`}
+              >
                 Contact us
               </Button>
             </Link>
           ) : item.enabled ? (
-            <StatusBadge color="green">Enabled</StatusBadge>
+            <StatusBadge color="green" data-testid={`${testId}-enabled-badge`}>
+              Enabled
+            </StatusBadge>
           ) : (
             <Button
+              data-testid={`${testId}-enable-button`}
               variant="secondary"
               size="small"
               onClick={() => onOpenPrompt?.(true)}
