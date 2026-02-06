@@ -1119,7 +1119,11 @@
       },
       "shippingAddress": {
         "title": "Verzendadres bewerken",
-        "requestSuccess": "Verzendadres van bestelling bijgewerkt."
+        "requestSuccess": "Verzendadres van bestelling bijgewerkt.",
+        "validation": {
+          "addressRequired": "Voer een adres in",
+          "countryRequired": "Selecteer een land"
+        }
       },
       "billingAddress": {
         "title": "Factuuradres bewerken",
@@ -2660,7 +2664,10 @@
         "placeholder": "verkeerde_maat",
         "tooltip": "De waarde moet een unieke identificatie zijn voor de retourreden."
       },
-      "label": { "label": "Label", "placeholder": "Verkeerde maat" },
+      "label": {
+        "label": "Label",
+        "placeholder": "Verkeerde maat"
+      },
       "description": {
         "label": "Beschrijving",
         "placeholder": "Klant ontving de verkeerde maat"

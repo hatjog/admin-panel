@@ -1030,7 +1030,11 @@
       },
       "shippingAddress": {
         "title": "配送先住所を編集",
-        "requestSuccess": "注文の配送先住所が更新されました。"
+        "requestSuccess": "注文の配送先住所が更新されました。",
+        "validation": {
+          "addressRequired": "住所を入力してください",
+          "countryRequired": "国を選択してください"
+        }
       },
       "billingAddress": {
         "title": "請求先住所を編集",
@@ -2480,7 +2484,10 @@
         "placeholder": "wrong_size",
         "tooltip": "値は返品理由の一意の識別子である必要があります。"
       },
-      "label": { "label": "ラベル", "placeholder": "サイズが合わない" },
+      "label": {
+        "label": "ラベル",
+        "placeholder": "サイズが合わない"
+      },
       "description": {
         "label": "説明",
         "placeholder": "顧客が間違ったサイズを受け取った"

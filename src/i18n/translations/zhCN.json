@@ -966,7 +966,7 @@
   "customerGroups": {
     "domain": "客户群组",
     "subtitle": "将客户组织成群组。群组可以有不同的促销和价格。",
-   "list": {
+    "list": {
       "empty": {
         "heading": "暂无客户组",
         "description": "当前没有可显示的客户组。"
@@ -1123,7 +1123,11 @@
       },
       "shippingAddress": {
         "title": "编辑配送地址",
-        "requestSuccess": "订单配送地址已更新。"
+        "requestSuccess": "订单配送地址已更新。",
+        "validation": {
+          "addressRequired": "请输入地址",
+          "countryRequired": "请选择国家"
+        }
       },
       "billingAddress": {
         "title": "编辑账单地址",
@@ -1998,7 +2002,7 @@
     "toasts": {
       "promotionCreateSuccess": "促销活动 ({{code}}) 创建成功。"
     },
-    "create": { },
+    "create": {},
     "edit": {
       "title": "编辑促销详情",
       "rules": {
@@ -2672,7 +2676,10 @@
         "placeholder": "wrong_size",
         "tooltip": "值应该是退货原因的唯一标识符。"
       },
-      "label": { "label": "标签", "placeholder": "错误尺寸" },
+      "label": {
+        "label": "标签",
+        "placeholder": "错误尺寸"
+      },
       "description": {
         "label": "描述",
         "placeholder": "客户收到错误尺寸"

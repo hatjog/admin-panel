@@ -1119,7 +1119,11 @@
       },
       "shippingAddress": {
         "title": "Szállítási cím szerkesztése",
-        "requestSuccess": "Szállítási cím frissítve."
+        "requestSuccess": "Szállítási cím frissítve.",
+        "validation": {
+          "addressRequired": "Kérjük, adjon meg egy címet",
+          "countryRequired": "Kérjük, válasszon országot"
+        }
       },
       "billingAddress": {
         "title": "Számlázási cím szerkesztése",
@@ -2660,7 +2664,10 @@
         "placeholder": "wrong_size",
         "tooltip": "Az értéknek egyedi azonosítónak kell lennie a visszaküldési okhoz."
       },
-      "label": { "label": "Címke", "placeholder": "Rossz méret" },
+      "label": {
+        "label": "Címke",
+        "placeholder": "Rossz méret"
+      },
       "description": {
         "label": "Leírás",
         "placeholder": "A vásárló rossz méretet kapott"
