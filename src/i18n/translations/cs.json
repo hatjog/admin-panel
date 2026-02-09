@@ -1148,7 +1148,7 @@
     "edit": {
       "email": {
         "title": "Upravit e-mail",
-        "requestSuccess": "E-mail objednávky byl aktualizován na {{email}}."
+        "requestSuccess": "E-mail objednávky byl aktualizován."
       },
       "shippingAddress": {
         "title": "Upravit doručovací adresu",
@@ -1156,7 +1156,11 @@
       },
       "billingAddress": {
         "title": "Upravit fakturační adresu",
-        "requestSuccess": "Fakturační adresa objednávky byla aktualizována."
+        "requestSuccess": "Fakturační adresa objednávky byla aktualizována.",
+        "validation": {
+          "addressRequired": "Prosím zadejte adresu",
+          "countryRequired": "Prosím vyberte zemi"
+        }
       }
     },
     "returns": {

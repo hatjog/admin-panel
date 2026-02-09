@@ -1121,7 +1121,7 @@
     "edit": {
       "email": {
         "title": "Keisti el. paštą",
-        "requestSuccess": "Užsakymo el. paštas pakeitas į {{email}}."
+        "requestSuccess": "El. paštas sėkmingai atnaujintas."
       },
       "shippingAddress": {
         "title": "Keisti pristatymo adresą",
@@ -1133,7 +1133,11 @@
       },
       "billingAddress": {
         "title": "Keisti adresą sąskaitai",
-        "requestSuccess": "Užsakymo adresas sąskaitai pakeistas."
+        "requestSuccess": "Užsakymo adresas sąskaitai pakeistas.",
+        "validation": {
+          "addressRequired": "Prašome įvesti adresą",
+          "countryRequired": "Prašome pasirinkti šalį"
+        }
       }
     },
     "returns": {
