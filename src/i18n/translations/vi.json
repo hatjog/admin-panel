@@ -1145,15 +1145,23 @@
     "edit": {
       "email": {
         "title": "Chỉnh sửa email",
-        "requestSuccess": "Email đơn hàng đã được cập nhật thành {{email}}."
+        "requestSuccess": "Email đã được cập nhật thành công."
       },
       "shippingAddress": {
         "title": "Chỉnh sửa địa chỉ giao hàng",
-        "requestSuccess": "Địa chỉ giao hàng của đơn hàng đã được cập nhật."
+        "requestSuccess": "Địa chỉ giao hàng của đơn hàng đã được cập nhật.",
+        "validation": {
+          "addressRequired": "Vui lòng nhập địa chỉ",
+          "countryRequired": "Vui lòng chọn quốc gia"
+        }
       },
       "billingAddress": {
         "title": "Chỉnh sửa địa chỉ thanh toán",
-        "requestSuccess": "Địa chỉ thanh toán của đơn hàng đã được cập nhật."
+        "requestSuccess": "Địa chỉ thanh toán của đơn hàng đã được cập nhật.",
+        "validation": {
+          "addressRequired": "Vui lòng nhập địa chỉ",
+          "countryRequired": "Vui lòng chọn quốc gia"
+        }
       }
     },
     "returns": {
@@ -2703,7 +2711,10 @@
         "placeholder": "wrong_size",
         "tooltip": "Giá trị nên là một định danh duy nhất cho lý do trả hàng."
       },
-      "label": { "label": "Nhãn", "placeholder": "Kích thước sai" },
+      "label": {
+        "label": "Nhãn",
+        "placeholder": "Kích thước sai"
+      },
       "description": {
         "label": "Mô tả",
         "placeholder": "Khách hàng nhận nhầm kích thước"

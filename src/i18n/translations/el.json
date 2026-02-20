@@ -83,7 +83,6 @@
       "labels": {
         "key": "Κλειδί",
         "value": "Τιμή"
-        
       },
       "complexRow": {
         "label": "Ορισμένες γραμμές είναι απενεργοποιημένες",
@@ -1095,15 +1094,23 @@
     "edit": {
       "email": {
         "title": "Επεξεργασία email",
-        "requestSuccess": "Το email παραγγελίας ενημερώθηκε σε {{email}}."
+        "requestSuccess": "Το email ενημερώθηκε επιτυχώς."
       },
       "shippingAddress": {
         "title": "Επεξεργασία διεύθυνσης αποστολής",
-        "requestSuccess": "Η διεύθυνση αποστολής παραγγελίας ενημερώθηκε."
+        "requestSuccess": "Η διεύθυνση αποστολής παραγγελίας ενημερώθηκε.",
+        "validation": {
+          "addressRequired": "Παρακαλώ εισάγετε μια διεύθυνση",
+          "countryRequired": "Παρακαλώ επιλέξτε μια χώρα"
+        }
       },
       "billingAddress": {
         "title": "Επεξεργασία διεύθυνσης χρέωσης",
-        "requestSuccess": "Η διεύθυνση χρέωσης παραγγελίας ενημερώθηκε."
+        "requestSuccess": "Η διεύθυνση χρέωσης παραγγελίας ενημερώθηκε.",
+        "validation": {
+          "addressRequired": "Παρακαλώ εισάγετε μια διεύθυνση",
+          "countryRequired": "Παρακαλώ επιλέξτε μια χώρα"
+        }
       }
     },
     "returns": {

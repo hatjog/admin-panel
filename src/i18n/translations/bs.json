@@ -599,7 +599,6 @@
       "weight": {
         "label": "Težina"
       },
-
       "options": {
         "label": "Opcije proizvoda",
         "hint": "Opcije se koriste za definisanje boje, veličine itd. proizvoda",
@@ -1120,15 +1119,23 @@
     "edit": {
       "email": {
         "title": "Uredi e-mail",
-        "requestSuccess": "E-mail narudžbe je ažuriran na {{email}}."
+        "requestSuccess": "E-mail je uspješno ažuriran."
       },
       "shippingAddress": {
         "title": "Uredi adresu za dostavu",
-        "requestSuccess": "Adresa za dostavu narudžbe je ažurirana."
+        "requestSuccess": "Adresa za dostavu narudžbe je ažurirana.",
+        "validation": {
+          "addressRequired": "Molimo unesite adresu",
+          "countryRequired": "Molimo odaberite zemlju"
+        }
       },
       "billingAddress": {
         "title": "Uredi adresu za naplatu",
-        "requestSuccess": "Adresa za naplatu narudžbe je ažurirana."
+        "requestSuccess": "Adresa za naplatu narudžbe je ažurirana.",
+        "validation": {
+          "addressRequired": "Molimo unesite adresu",
+          "countryRequired": "Molimo odaberite zemlju"
+        }
       }
     },
     "returns": {
@@ -2671,7 +2678,10 @@
         "placeholder": "pogrešna_veličina",
         "tooltip": "Vrijednost treba biti jedinstveni identifikator za razlog povrata."
       },
-      "label": { "label": "Oznaka", "placeholder": "Pogrešna veličina" },
+      "label": {
+        "label": "Oznaka",
+        "placeholder": "Pogrešna veličina"
+      },
       "description": {
         "label": "Opis",
         "placeholder": "Kupac je primio pogrešnu veličinu"
