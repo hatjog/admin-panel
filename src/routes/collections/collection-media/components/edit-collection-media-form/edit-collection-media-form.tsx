@@ -94,7 +94,7 @@ export const EditCollectionMediaForm = ({
       return undefined
     }
 
-    return collection.collection_detail?.media?.find((m) => m.url === iconId)
+    return collection.collection_detail?.media?.find((m) => m.id === iconId)
   }, [collection.collection_detail?.media, iconId])
 
   const defaultMedia: EditCollectionMediaSchemaType["media"] = useMemo(() => {
@@ -112,11 +112,11 @@ export const EditCollectionMediaForm = ({
     }
 
     return (collection.collection_detail?.media ?? [])
-      .filter((m) => m.url !== iconId)
+      .filter((m) => m.id !== iconId)
       .map((m) => ({
         id: m.id,
         url: m.url,
-        isThumbnail: m.url === thumbnailId,
+        isThumbnail: m.id === thumbnailId,
         file: null,
       }))
   }, [bannerId, collection.collection_detail?.media, iconId, iconMedia, isIconType, thumbnailId])
@@ -189,30 +189,20 @@ export const EditCollectionMediaForm = ({
 
   const handlePromoteToThumbnail = () => {
     const id = Object.keys(selection)[0]
-    const url = collection.collection_detail?.media?.find((m) => m.id === id)?.url
-
-    if (!url) {
-      return
-    }
 
     postCollectionDetailsMutation({
       id: collection.id,
-      payload: { media: { delete: [], create: [] }, thumbnail: url },
+      payload: { media: { delete: [], create: [] }, thumbnail: id },
     })
     setSelection({})
   }
 
   const handlePromoteToBanner = () => {
     const id = Object.keys(selection)[0]
-    const url = collection.collection_detail?.media?.find((m) => m.id === id)?.url
-
-    if (!url) {
-      return
-    }
 
     postCollectionDetailsMutation({
       id: collection.id,
-      payload: { media: { delete: [], create: [] }, banner: url },
+      payload: { media: { delete: [], create: [] }, banner: id },
     })
     setSelection({})
   }
@@ -251,13 +241,21 @@ export const EditCollectionMediaForm = ({
 
     if (isIconType) {
       const deleteIds = iconMedia?.id ? [iconMedia.id] : []
+      let payload = {
+        media: { delete: deleteIds, create: [] },
+      } as {
+        media: { delete: string[]; create: { url: string; alt_text?: string }[] };
+        icon?: { url: string} | string |null;
+      };
+      
+      if (mediaToCreate[0]?.url) {
+        payload = { ...payload, icon: { url: mediaToCreate[0]?.url } }
+      }
+      
       await postCollectionDetailsMutation(
         {
           id: collection.id,
-          payload: {
-            media: { delete: deleteIds, create: mediaToCreate },
-            icon: mediaToCreate[0]?.url ?? null,
-          },
+          payload,
         },
         {
           onSuccess: () => {

@@ -30,9 +30,6 @@ const collectionDetailQuery = (id: string) => ({
         collection_detail: AdminCollectionDetail
       }>(`/admin/collections/${id}/details`, {
         method: "GET",
-        query: {
-          fields: "collection_detail.*,collection_detail.media.*",
-        },
       })
 
       return {

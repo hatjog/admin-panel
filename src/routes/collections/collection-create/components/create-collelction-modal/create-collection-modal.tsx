@@ -88,13 +88,6 @@ export const CreateCollectionModal = () => {
       { title, handle },
       {
         onSuccess: async ({ collection }) => {
-          if (rank !== null) {
-            await postCollectionDetailsMutation({
-              id: collection.id,
-              payload: { media: { create: [], delete: [] }, rank }
-            });
-          }
-
           if (media.length > 0) {
             const { files: uploads } = await sdk.admin.upload
               .create({ files: media.map(m => m.file) as unknown as File[] })
@@ -108,27 +101,35 @@ export const CreateCollectionModal = () => {
               }));
 
               const thumbnailIndex = media.findIndex(m => !!m.isThumbnail);
-              const bannerIndex = media.findIndex(m => !!m.isBanner);
+              const bannerIndex = media.find(m => !!m.isBanner) ? media.findIndex(m => !!m.isBanner) : undefined;
 
               const thumbnail =
                 thumbnailIndex >= 0
-                  ? mediaToCreate[thumbnailIndex]?.url
-                  : mediaToCreate[0]?.url;
-              const banner = bannerIndex >= 0 ? mediaToCreate[bannerIndex]?.url : undefined;
+                  ? { url: mediaToCreate[thumbnailIndex]?.url }
+                  : { url: mediaToCreate[0]?.url };
+              const banner = bannerIndex ? { url: mediaToCreate[bannerIndex]?.url } : undefined;
+
+              let create = mediaToCreate
+
+              const indexesToBeRemoved = [thumbnailIndex, bannerIndex].filter(Boolean);
+    
+              while(indexesToBeRemoved.length) {
+                create.splice(indexesToBeRemoved.pop() as number, 1);
+              }
 
               await postCollectionDetailsMutation({
                 id: collection.id,
                 payload: {
-                  media: { delete: [], create: mediaToCreate },
-                  ...(thumbnail ? { thumbnail } : {}),
-                  ...(banner ? { banner } : {})
+                  media: { delete: [], create },
+                  rank: rank ?? 0,
+                  thumbnail,
+                  banner
                 }
               });
           }
 
           if (icon?.length) {
-            let uploadedIcon: HttpTypes.AdminFile[] = [];
-            const { files: uploads } = await sdk.admin.upload
+            const { files: uploadedIcon } = await sdk.admin.upload
               .create({
                 files: icon.map(i => i.file) as unknown as File[]
               })
@@ -139,12 +140,12 @@ export const CreateCollectionModal = () => {
                 });
                 return { files: [] };
               });
-            uploadedIcon = uploads;
             await postCollectionDetailsMutation({
               id: collection.id,
               payload: {
                 media: { delete: [], create: [] },
-                icon: uploadedIcon[0]?.url
+                rank: rank ?? 0,
+                icon: {url: uploadedIcon[0]?.url}
               }
             });
           }

@@ -42,9 +42,6 @@ const retrieveCollectionWithDetails = async (id: string) => {
       collection_detail: AdminCollectionDetail;
     }>(`/admin/collections/${id}/details`, {
       method: 'GET',
-      query: {
-        fields: 'collection_detail.*,collection_detail.media.*'
-      }
     });
 
     return {
@@ -72,10 +69,10 @@ export const usePostCollectionDetails = () => {
       id: string;
       payload: {
         media: { delete?: string[]; create?: { url: string; alt_text?: string }[] };
-        thumbnail?: string | null;
-        icon?: string | null;
-        banner?: string | null;
-        rank?: number;
+        thumbnail?: { url: string} | string | null;
+        icon?: { url: string} | string |null;
+        banner?: { url: string} | string| null;
+        rank?: number | null;
       };
     }) =>
       sdk.client.fetch<{

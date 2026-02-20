@@ -263,8 +263,8 @@ const getMedia = (
     images?.map(image => ({
       id: image.id,
       url: image.url,
-      isThumbnail: image.url === thumbnail,
-      isBanner: image.url === banner
+      isThumbnail: image.id === thumbnail,
+      isBanner: image.id === banner
     })) || [];
 
   if (thumbnail && !media.some(mediaItem => mediaItem.isThumbnail)) {
@@ -283,5 +283,5 @@ const getMedia = (
     });
   }
 
-  return  media.filter(mediaItem => mediaItem.url !== icon);
+  return  media.filter(mediaItem => mediaItem.id !== icon);
 };

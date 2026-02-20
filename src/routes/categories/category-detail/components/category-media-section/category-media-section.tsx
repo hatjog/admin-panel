@@ -1,32 +1,29 @@
-import type { HttpTypes } from "@medusajs/types"
+import { BannerIcon } from "@assets/icons/BannerIcon"
+import { ActionMenu } from "@components/common/action-menu"
 import { PencilSquare, ThumbnailBadge } from "@medusajs/icons"
-import { Container, Heading, Text, Tooltip } from "@medusajs/ui"
+import { HttpTypes } from "@medusajs/types"
+import { Container, Heading, Tooltip, Text } from "@medusajs/ui"
+import { CategoryDetail } from "@routes/categories/common/types"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
-import { ActionMenu } from "@components/common/action-menu"
 
-import type { CollectionDetail } from "../../types"
-import { BannerIcon } from "@assets/icons/BannerIcon"
-
-type CollectionMediaSectionProps = {
-  collection: HttpTypes.AdminCollection & {
-    collection_detail?: CollectionDetail
+type CategoryMediaSectionProps = {
+    category: HttpTypes.AdminProductCategory & { category_detail?: CategoryDetail }
   }
-}
 
-export const CollectionMediaSection = ({ collection }: CollectionMediaSectionProps) => {
+export const CategoryMediaSection = ({ category }: CategoryMediaSectionProps) => {
   const { t } = useTranslation()
+  console.log({ category })
 
-  const iconId = collection.collection_detail?.icon_id
-  const iconUrl = collection.collection_detail?.media.find((m) => m.id === iconId)?.url
-  const thumbnailId = collection.collection_detail?.thumbnail_id
-  const bannerId = collection.collection_detail?.banner_id
-  const baseMedia = collection.collection_detail?.media.filter(item => item.url !== collection.collection_detail?.icon_id) ?? []
+  const iconId = category?.category_detail?.icon_id ?? ""
+  const thumbnailId = category?.category_detail?.thumbnail_id ?? ""
+  const bannerId = category?.category_detail?.banner_id ?? ""
+  const baseMedia = category?.category_detail?.media.filter(item => item.url !== category.category_detail?.icon_id) ?? []
 
   // If the icon is part of media, exclude it from the grid.
   const media = iconId ? baseMedia.filter((m) => m.id !== iconId) : baseMedia
-
+  
   return (
     <>
       <Container className="divide-y p-0" data-testid="collection-media-section">
@@ -54,8 +51,8 @@ export const CollectionMediaSection = ({ collection }: CollectionMediaSectionPro
             data-testid="collection-media-grid"
           >
             {media.map((i, index) => {
-              const isThumbnail = !!thumbnailId && i.id === thumbnailId
-              const isBanner = !!bannerId && i.id === bannerId
+              const isThumbnail = !!thumbnailId && i.url === thumbnailId
+              const isBanner = !!bannerId && i.url === bannerId
 
               return (
                 <div
@@ -129,7 +126,7 @@ export const CollectionMediaSection = ({ collection }: CollectionMediaSectionPro
             data-testid="collection-media-action-menu"
           />
         </div>
-        {iconUrl ? (
+        {iconId ? (
           <div
             className="grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-4 px-6 py-4"
             data-testid="collection-media-grid"
@@ -139,7 +136,7 @@ export const CollectionMediaSection = ({ collection }: CollectionMediaSectionPro
                   data-testid={`collection-icon`}
                 >
                     <img
-                      src={iconUrl}
+                      src={iconId}
                       alt="Collection icon"
                       className="size-full object-cover"
                       data-testid={`collection-icon-image`}
