@@ -3249,5 +3249,28 @@
   },
   "commissionLines": {
     "domain": "Commission Lines"
+  },
+  "vendors": {
+    "domain": "Vendors",
+    "notifications": {
+      "t30": {
+        "title": "T-30 Migration Notification",
+        "subtitle": "Send pre-flag-flip migration notice to incumbent vendors",
+        "window_opens": "Window opens",
+        "eligible_count": "Eligible vendors",
+        "dry_run_button": "Dry-run preview",
+        "send_button": "Send T-30 notifications",
+        "confirm_modal": {
+          "title": "Confirm T-30 dispatch",
+          "message": "About to dispatch T-30 notifications. Audit log will record each dispatch; already-notified vendors will be skipped.",
+          "confirm_label": "Confirm + send",
+          "cancel_label": "Cancel"
+        },
+        "audit_log": {
+          "title": "Audit log",
+          "empty": "No T-30 notifications dispatched yet."
+        }
+      }
+    }
   }
 }
