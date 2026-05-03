@@ -51,7 +51,21 @@ export default defineConfig(({ mode }) => {
       __TALK_JS_APP_ID__: JSON.stringify(TALK_JS_APP_ID)
     },
     server: {
-      open: true
+      open: true,
+      // Story v160-7-8: CSP headers — defense-in-depth XSS prevention (NFR-SEC-3).
+      // style-src 'unsafe-inline' retained for Tailwind compatibility (T2.2 baseline).
+      headers: {
+        'Content-Security-Policy':
+          "default-src 'self'; " +
+          "script-src 'self' 'unsafe-eval'; " +
+          "style-src 'self' 'unsafe-inline'; " +
+          "img-src 'self' data: https:; " +
+          "font-src 'self' data:; " +
+          `connect-src 'self' ${BACKEND_URL} ws: wss:; ` +
+          "frame-ancestors 'none'; " +
+          "form-action 'self'; " +
+          "base-uri 'self'"
+      }
     }
   };
 });

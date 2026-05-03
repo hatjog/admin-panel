@@ -3202,5 +3202,28 @@
     "seconds_few": "Sekundy",
     "seconds_many": "Sekund",
     "seconds_other": "Sekund"
+  },
+  "vendors": {
+    "domain": "Vendorzy",
+    "notifications": {
+      "t30": {
+        "title": "Powiadomienie migracyjne T-30",
+        "subtitle": "Wyślij powiadomienie pre-flag-flip do dotychczasowych vendorów",
+        "window_opens": "Okno otwiera się",
+        "eligible_count": "Vendorzy do powiadomienia",
+        "dry_run_button": "Podgląd dry-run",
+        "send_button": "Wyślij powiadomienia T-30",
+        "confirm_modal": {
+          "title": "Potwierdź wysyłkę T-30",
+          "message": "Powiadomienia T-30 zostaną wysłane. Każda wysyłka zostanie zapisana w audit logu; vendorzy już powiadomieni zostaną pominięci.",
+          "confirm_label": "Potwierdź i wyślij",
+          "cancel_label": "Anuluj"
+        },
+        "audit_log": {
+          "title": "Audit log",
+          "empty": "Nie wysłano jeszcze żadnych powiadomień T-30."
+        }
+      }
+    }
   }
 }
