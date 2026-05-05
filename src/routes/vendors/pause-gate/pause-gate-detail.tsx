@@ -15,7 +15,7 @@ import {
   Textarea,
   toast,
 } from "@medusajs/ui"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { sdk } from "@lib/client"
 
 type LifecycleStatus = "pending_approval" | "open" | "suspended" | "terminated"
@@ -38,6 +38,20 @@ type ChecklistItem = {
   na: boolean
 }
 
+type PauseGateDetailResponse = {
+  vendor: {
+    id: string
+    handle: string
+    email: string
+    lifecycle_status: LifecycleStatus
+    decision_status: "opted_in" | "opted_out" | "pending"
+    last_action_at: string | null
+  }
+  checklist: ChecklistItem[]
+  completeness: { complete: number; total: number }
+  allowed_transitions: LifecycleStatus[]
+}
+
 const CHECKLIST_LABELS: Record<ChecklistItem["key"], string> = {
   t30_sent: "T-30 notification sent",
   nudges_sent: "Nudge cadence completed",
@@ -54,16 +68,18 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
   const [adrExpanded, setAdrExpanded] = useState(false)
   const [pendingTo, setPendingTo] = useState<LifecycleStatus | null>(null)
 
-  // In production, this is fetched from /admin/vendors/[id]/pause-gate.
-  // For Wave 15 scaffolding, dev fixtures provide stub data.
-  const checklist: ChecklistItem[] = [
-    { key: "t30_sent", done: true, na: false },
-    { key: "nudges_sent", done: true, na: false },
-    { key: "decision_captured", done: true, na: false },
-    { key: "jca_signed", done: false, na: false },
-    { key: "training_verified", done: false, na: false },
-  ]
-  const completeCount = checklist.filter((i) => i.done || i.na).length
+  const { data, isLoading } = useQuery<PauseGateDetailResponse>({
+    queryKey: ["admin-vendors-pause-gate-detail", vendorId],
+    queryFn: () => sdk.client.fetch(`/admin/vendors/${vendorId}/pause-gate`),
+    enabled: vendorId.length > 0,
+    staleTime: 30_000,
+  })
+
+  const checklist = data?.checklist ?? []
+  const completeCount = data?.completeness.complete ?? 0
+  const checklistTotal = data?.completeness.total ?? checklist.length
+  const allowedTransitions = new Set(data?.allowed_transitions ?? [])
+  const vendor = data?.vendor
 
   const transitionMutation = useMutation({
     mutationFn: (to: LifecycleStatus): Promise<TransitionResponse> =>
@@ -72,14 +88,6 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
         body: {
           to_status: to,
           admin_note: adminNote || undefined,
-          current_metadata: {
-            lifecycle_status: "pending_approval",
-            lifecycle_decision: { decision: "opted_in" },
-            t30_sent_at: new Date().toISOString(),
-            nudges_completed: true,
-            jca_signed_at: null,
-            training_verified: false,
-          },
         },
       }),
     onSuccess: (data) => {
@@ -97,15 +105,34 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
     <Container>
       <div className="mb-6">
         <Heading level="h1">Pause Gate Review</Heading>
-        <Text className="text-ui-fg-subtle">Vendor ID: {vendorId}</Text>
+        <Text className="text-ui-fg-subtle">
+          {vendor ? `${vendor.handle} · ${vendor.email}` : `Vendor ID: ${vendorId}`}
+        </Text>
+        {vendor && (
+          <div className="mt-2 flex items-center gap-2">
+            <Badge color={vendor.lifecycle_status === "open" ? "green" : vendor.lifecycle_status === "suspended" ? "orange" : vendor.lifecycle_status === "terminated" ? "red" : "blue"}>
+              {vendor.lifecycle_status}
+            </Badge>
+            <Text className="text-ui-fg-subtle">Decision: {vendor.decision_status}</Text>
+          </div>
+        )}
       </div>
 
-      <div className="space-y-6">
+      {isLoading && <Text>Loading…</Text>}
+
+      {!isLoading && !vendor && (
+        <div className="rounded-md border border-dashed border-ui-border-base p-8 text-center">
+          <Text className="text-ui-fg-subtle">Vendor pause-gate detail is unavailable.</Text>
+        </div>
+      )}
+
+      {vendor && (
+        <div className="space-y-6">
         <section className="rounded-md border border-ui-border-base p-6">
           <Heading level="h2" className="mb-3">
             Completeness checklist
             <span className="ml-2 font-mono text-base">
-              ({completeCount}/{checklist.length})
+              ({completeCount}/{checklistTotal})
             </span>
           </Heading>
           <ul className="space-y-1">
@@ -167,21 +194,31 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
             <Button
               variant="primary"
               onClick={() => setPendingTo("open")}
-              disabled={completeCount < 4 || transitionMutation.isPending}
+              disabled={
+                completeCount < 4 ||
+                transitionMutation.isPending ||
+                !allowedTransitions.has("open")
+              }
             >
               Approve → open
             </Button>
             <Button
               variant="secondary"
               onClick={() => setPendingTo("suspended")}
-              disabled={transitionMutation.isPending}
+              disabled={
+                transitionMutation.isPending ||
+                !allowedTransitions.has("suspended")
+              }
             >
               Suspend → suspended
             </Button>
             <Button
               variant="danger"
               onClick={() => setPendingTo("terminated")}
-              disabled={transitionMutation.isPending}
+              disabled={
+                transitionMutation.isPending ||
+                !allowedTransitions.has("terminated")
+              }
             >
               Terminate → terminated
             </Button>
@@ -189,13 +226,14 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
 
           {completeCount < 4 && (
             <Text size="small" className="mt-2 text-ui-fg-subtle">
-              Approve disabled — completeness {completeCount}/5 (≥4 required)
+              Approve disabled — completeness {completeCount}/{checklistTotal} (≥4 required)
             </Text>
           )}
         </section>
       </div>
+      )}
 
-      {pendingTo && (
+      {vendor && pendingTo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ui-bg-overlay">
           <div className="max-w-md rounded-md bg-ui-bg-base p-6 shadow-elevation-modal">
             <Heading level="h2" className="mb-2">
