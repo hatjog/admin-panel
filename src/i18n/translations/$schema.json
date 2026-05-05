@@ -12121,6 +12121,938 @@
       },
       "required": ["domain"],
       "additionalProperties": false
+    },
+    "vendors": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "notifications": {
+          "type": "object",
+          "properties": {
+            "t30": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "subtitle": {
+                  "type": "string"
+                },
+                "window_opens": {
+                  "type": "string"
+                },
+                "eligible_count": {
+                  "type": "string"
+                },
+                "dry_run_button": {
+                  "type": "string"
+                },
+                "send_button": {
+                  "type": "string"
+                },
+                "confirm_modal": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "confirm_label": {
+                      "type": "string"
+                    },
+                    "cancel_label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "confirm_label",
+                    "cancel_label"
+                  ],
+                  "additionalProperties": false
+                },
+                "audit_log": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "empty": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["title", "empty"],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "title",
+                "subtitle",
+                "window_opens",
+                "eligible_count",
+                "dry_run_button",
+                "send_button",
+                "confirm_modal",
+                "audit_log"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": ["t30"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["domain", "notifications"],
+      "additionalProperties": false
+    },
+    "operator": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "readiness": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "refresh": {
+              "type": "string"
+            },
+            "last_computed": {
+              "type": "string"
+            },
+            "overall_green": {
+              "type": "string"
+            },
+            "overall_yellow": {
+              "type": "string"
+            },
+            "overall_red": {
+              "type": "string"
+            },
+            "reason_green": {
+              "type": "string"
+            },
+            "reason_yellow": {
+              "type": "string"
+            },
+            "reason_red": {
+              "type": "string"
+            },
+            "phase_a1_gate": {
+              "type": "string"
+            },
+            "phase_a2_gate": {
+              "type": "string"
+            },
+            "vendor_lifecycle_distribution": {
+              "type": "string"
+            },
+            "adr_097_capacity_posture": {
+              "type": "string"
+            },
+            "alerting_wired": {
+              "type": "string"
+            },
+            "security_gates_verified": {
+              "type": "string"
+            },
+            "remediate": {
+              "type": "string"
+            },
+            "threshold_label": {
+              "type": "string"
+            },
+            "empty": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            },
+            "retry": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "refresh",
+            "last_computed",
+            "overall_green",
+            "overall_yellow",
+            "overall_red",
+            "reason_green",
+            "reason_yellow",
+            "reason_red",
+            "phase_a1_gate",
+            "phase_a2_gate",
+            "vendor_lifecycle_distribution",
+            "adr_097_capacity_posture",
+            "alerting_wired",
+            "security_gates_verified",
+            "remediate",
+            "threshold_label",
+            "empty",
+            "error",
+            "retry"
+          ],
+          "additionalProperties": false
+        },
+        "kickoff": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "window_not_started": {
+              "type": "string"
+            },
+            "window_started_at": {
+              "type": "string"
+            },
+            "t0_target": {
+              "type": "string"
+            },
+            "days_remaining": {
+              "type": "string"
+            },
+            "trigger_cta": {
+              "type": "string"
+            },
+            "trigger_confirm_title": {
+              "type": "string"
+            },
+            "trigger_confirm_message": {
+              "type": "string"
+            },
+            "admin_note_placeholder": {
+              "type": "string"
+            },
+            "confirm": {
+              "type": "string"
+            },
+            "cancel": {
+              "type": "string"
+            },
+            "already_triggered": {
+              "type": "string"
+            },
+            "consent_table_handle": {
+              "type": "string"
+            },
+            "consent_table_decision": {
+              "type": "string"
+            },
+            "consent_table_decision_at": {
+              "type": "string"
+            },
+            "consent_table_nudges": {
+              "type": "string"
+            },
+            "consent_table_time_remaining": {
+              "type": "string"
+            },
+            "decision_opted_in": {
+              "type": "string"
+            },
+            "decision_opted_out": {
+              "type": "string"
+            },
+            "decision_no_decision": {
+              "type": "string"
+            },
+            "summary_total": {
+              "type": "string"
+            },
+            "refresh": {
+              "type": "string"
+            },
+            "export_csv": {
+              "type": "string"
+            },
+            "empty": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "window_not_started",
+            "window_started_at",
+            "t0_target",
+            "days_remaining",
+            "trigger_cta",
+            "trigger_confirm_title",
+            "trigger_confirm_message",
+            "admin_note_placeholder",
+            "confirm",
+            "cancel",
+            "already_triggered",
+            "consent_table_handle",
+            "consent_table_decision",
+            "consent_table_decision_at",
+            "consent_table_nudges",
+            "consent_table_time_remaining",
+            "decision_opted_in",
+            "decision_opted_out",
+            "decision_no_decision",
+            "summary_total",
+            "refresh",
+            "export_csv",
+            "empty",
+            "error"
+          ],
+          "additionalProperties": false
+        },
+        "flag_flip": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "current_state_off": {
+              "type": "string"
+            },
+            "current_state_shadow": {
+              "type": "string"
+            },
+            "current_state_on": {
+              "type": "string"
+            },
+            "transition_to_shadow": {
+              "type": "string"
+            },
+            "transition_to_on": {
+              "type": "string"
+            },
+            "transition_to_off": {
+              "type": "string"
+            },
+            "transition_blocked": {
+              "type": "string"
+            },
+            "smoke_gate_banner_blocked": {
+              "type": "string"
+            },
+            "confirm_title": {
+              "type": "string"
+            },
+            "confirm_message": {
+              "type": "string"
+            },
+            "admin_note": {
+              "type": "string"
+            },
+            "cache_invalidate_preview": {
+              "type": "string"
+            },
+            "cache_invalidate_outcome_ok": {
+              "type": "string"
+            },
+            "cache_invalidate_outcome_errors": {
+              "type": "string"
+            },
+            "audit_table_when": {
+              "type": "string"
+            },
+            "audit_table_transition": {
+              "type": "string"
+            },
+            "audit_table_by": {
+              "type": "string"
+            },
+            "audit_table_note": {
+              "type": "string"
+            },
+            "audit_table_cache": {
+              "type": "string"
+            },
+            "audit_empty": {
+              "type": "string"
+            },
+            "confirm": {
+              "type": "string"
+            },
+            "cancel": {
+              "type": "string"
+            },
+            "refresh": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "current_state_off",
+            "current_state_shadow",
+            "current_state_on",
+            "transition_to_shadow",
+            "transition_to_on",
+            "transition_to_off",
+            "transition_blocked",
+            "smoke_gate_banner_blocked",
+            "confirm_title",
+            "confirm_message",
+            "admin_note",
+            "cache_invalidate_preview",
+            "cache_invalidate_outcome_ok",
+            "cache_invalidate_outcome_errors",
+            "audit_table_when",
+            "audit_table_transition",
+            "audit_table_by",
+            "audit_table_note",
+            "audit_table_cache",
+            "audit_empty",
+            "confirm",
+            "cancel",
+            "refresh",
+            "error"
+          ],
+          "additionalProperties": false
+        },
+        "cohort_metrics": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "cohort_pre_flip_baseline": {
+              "type": "string"
+            },
+            "cohort_shadow_window": {
+              "type": "string"
+            },
+            "cohort_first_24h_on": {
+              "type": "string"
+            },
+            "cohort_sustained_on": {
+              "type": "string"
+            },
+            "kpi_nps": {
+              "type": "string"
+            },
+            "kpi_conversion": {
+              "type": "string"
+            },
+            "kpi_p95_latency_ms": {
+              "type": "string"
+            },
+            "kpi_error_rate_pct": {
+              "type": "string"
+            },
+            "threshold_label": {
+              "type": "string"
+            },
+            "sample_size_label": {
+              "type": "string"
+            },
+            "status_green": {
+              "type": "string"
+            },
+            "status_yellow": {
+              "type": "string"
+            },
+            "status_red": {
+              "type": "string"
+            },
+            "status_unknown": {
+              "type": "string"
+            },
+            "refresh": {
+              "type": "string"
+            },
+            "computed_at": {
+              "type": "string"
+            },
+            "empty_pre_flip": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            },
+            "trend_label": {
+              "type": "string"
+            },
+            "compare_label": {
+              "type": "string"
+            },
+            "kpi_threshold_nps": {
+              "type": "string"
+            },
+            "kpi_threshold_conversion": {
+              "type": "string"
+            },
+            "kpi_threshold_p95": {
+              "type": "string"
+            },
+            "kpi_threshold_error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "cohort_pre_flip_baseline",
+            "cohort_shadow_window",
+            "cohort_first_24h_on",
+            "cohort_sustained_on",
+            "kpi_nps",
+            "kpi_conversion",
+            "kpi_p95_latency_ms",
+            "kpi_error_rate_pct",
+            "threshold_label",
+            "sample_size_label",
+            "status_green",
+            "status_yellow",
+            "status_red",
+            "status_unknown",
+            "refresh",
+            "computed_at",
+            "empty_pre_flip",
+            "error",
+            "trend_label",
+            "compare_label",
+            "kpi_threshold_nps",
+            "kpi_threshold_conversion",
+            "kpi_threshold_p95",
+            "kpi_threshold_error"
+          ],
+          "additionalProperties": false
+        },
+        "zero_opt_in_cascade": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "active": {
+              "type": "string"
+            },
+            "inactive": {
+              "type": "string"
+            },
+            "current_step_label": {
+              "type": "string"
+            },
+            "step_none": {
+              "type": "string"
+            },
+            "step_retrigger_t30": {
+              "type": "string"
+            },
+            "step_escalate": {
+              "type": "string"
+            },
+            "step_suspend": {
+              "type": "string"
+            },
+            "step_rollback_to_shadow": {
+              "type": "string"
+            },
+            "recommended_action": {
+              "type": "string"
+            },
+            "open_remediation": {
+              "type": "string"
+            },
+            "no_action": {
+              "type": "string"
+            },
+            "opted_in_count": {
+              "type": "string"
+            },
+            "empty": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "active",
+            "inactive",
+            "current_step_label",
+            "step_none",
+            "step_retrigger_t30",
+            "step_escalate",
+            "step_suspend",
+            "step_rollback_to_shadow",
+            "recommended_action",
+            "open_remediation",
+            "no_action",
+            "opted_in_count",
+            "empty",
+            "error"
+          ],
+          "additionalProperties": false
+        },
+        "alerting": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "firing": {
+              "type": "string"
+            },
+            "no_firing": {
+              "type": "string"
+            },
+            "configured": {
+              "type": "string"
+            },
+            "alert_id": {
+              "type": "string"
+            },
+            "severity": {
+              "type": "string"
+            },
+            "severity_p1": {
+              "type": "string"
+            },
+            "severity_p2": {
+              "type": "string"
+            },
+            "severity_p3": {
+              "type": "string"
+            },
+            "nfr_ref": {
+              "type": "string"
+            },
+            "evaluation_window": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string"
+            },
+            "action_auto_rollback": {
+              "type": "string"
+            },
+            "action_page": {
+              "type": "string"
+            },
+            "action_alert": {
+              "type": "string"
+            },
+            "re_evaluate": {
+              "type": "string"
+            },
+            "history_24h": {
+              "type": "string"
+            },
+            "auto_rollback_history": {
+              "type": "string"
+            },
+            "empty": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            },
+            "alert_label_p95_latency": {
+              "type": "string"
+            },
+            "alert_label_5xx_rate": {
+              "type": "string"
+            },
+            "alert_label_zero_opted_in": {
+              "type": "string"
+            },
+            "alert_label_conversion_drop": {
+              "type": "string"
+            },
+            "alert_label_cache_failures": {
+              "type": "string"
+            },
+            "alert_label_lifecycle_anomaly": {
+              "type": "string"
+            },
+            "alert_label_kickoff_no_decision": {
+              "type": "string"
+            },
+            "alert_label_smoke_gate_drift": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "firing",
+            "no_firing",
+            "configured",
+            "alert_id",
+            "severity",
+            "severity_p1",
+            "severity_p2",
+            "severity_p3",
+            "nfr_ref",
+            "evaluation_window",
+            "action",
+            "action_auto_rollback",
+            "action_page",
+            "action_alert",
+            "re_evaluate",
+            "history_24h",
+            "auto_rollback_history",
+            "empty",
+            "error",
+            "alert_label_p95_latency",
+            "alert_label_5xx_rate",
+            "alert_label_zero_opted_in",
+            "alert_label_conversion_drop",
+            "alert_label_cache_failures",
+            "alert_label_lifecycle_anomaly",
+            "alert_label_kickoff_no_decision",
+            "alert_label_smoke_gate_drift"
+          ],
+          "additionalProperties": false
+        },
+        "security_gates": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "gate_rate_limiting": {
+              "type": "string"
+            },
+            "gate_captcha": {
+              "type": "string"
+            },
+            "gate_csrf": {
+              "type": "string"
+            },
+            "gate_gp_config_signing": {
+              "type": "string"
+            },
+            "status_pass": {
+              "type": "string"
+            },
+            "status_fail": {
+              "type": "string"
+            },
+            "status_skip": {
+              "type": "string"
+            },
+            "overall_pass": {
+              "type": "string"
+            },
+            "overall_fail": {
+              "type": "string"
+            },
+            "last_verified": {
+              "type": "string"
+            },
+            "run_all": {
+              "type": "string"
+            },
+            "rerun_gate": {
+              "type": "string"
+            },
+            "detail_label": {
+              "type": "string"
+            },
+            "history_label": {
+              "type": "string"
+            },
+            "empty": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            },
+            "evidence_label": {
+              "type": "string"
+            },
+            "ed25519_pubkey_kid": {
+              "type": "string"
+            },
+            "ed25519_artifact_path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "gate_rate_limiting",
+            "gate_captcha",
+            "gate_csrf",
+            "gate_gp_config_signing",
+            "status_pass",
+            "status_fail",
+            "status_skip",
+            "overall_pass",
+            "overall_fail",
+            "last_verified",
+            "run_all",
+            "rerun_gate",
+            "detail_label",
+            "history_label",
+            "empty",
+            "error",
+            "evidence_label",
+            "ed25519_pubkey_kid",
+            "ed25519_artifact_path"
+          ],
+          "additionalProperties": false
+        },
+        "smoke_gate": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "verdict_pass": {
+              "type": "string"
+            },
+            "verdict_fail": {
+              "type": "string"
+            },
+            "verdict_pending": {
+              "type": "string"
+            },
+            "computed_label": {
+              "type": "string"
+            },
+            "last_ratified_label": {
+              "type": "string"
+            },
+            "ratify_cta": {
+              "type": "string"
+            },
+            "ratify_pass": {
+              "type": "string"
+            },
+            "ratify_fail": {
+              "type": "string"
+            },
+            "ratify_blocked_message": {
+              "type": "string"
+            },
+            "admin_note_required": {
+              "type": "string"
+            },
+            "confirm_modal_title": {
+              "type": "string"
+            },
+            "confirm_modal_message": {
+              "type": "string"
+            },
+            "checklist_item_label": {
+              "type": "string"
+            },
+            "checklist_nfr_ref": {
+              "type": "string"
+            },
+            "checklist_status": {
+              "type": "string"
+            },
+            "checklist_evidence": {
+              "type": "string"
+            },
+            "evidence_view": {
+              "type": "string"
+            },
+            "status_pass": {
+              "type": "string"
+            },
+            "status_fail": {
+              "type": "string"
+            },
+            "status_unknown": {
+              "type": "string"
+            },
+            "refresh": {
+              "type": "string"
+            },
+            "cancel": {
+              "type": "string"
+            },
+            "empty": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "verdict_pass",
+            "verdict_fail",
+            "verdict_pending",
+            "computed_label",
+            "last_ratified_label",
+            "ratify_cta",
+            "ratify_pass",
+            "ratify_fail",
+            "ratify_blocked_message",
+            "admin_note_required",
+            "confirm_modal_title",
+            "confirm_modal_message",
+            "checklist_item_label",
+            "checklist_nfr_ref",
+            "checklist_status",
+            "checklist_evidence",
+            "evidence_view",
+            "status_pass",
+            "status_fail",
+            "status_unknown",
+            "refresh",
+            "cancel",
+            "empty",
+            "error"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "domain",
+        "readiness",
+        "kickoff",
+        "flag_flip",
+        "cohort_metrics",
+        "zero_opt_in_cascade",
+        "alerting",
+        "security_gates",
+        "smoke_gate"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
@@ -12186,7 +13118,9 @@
     "configuration",
     "algolia",
     "commission",
-    "commissionLines"
+    "commissionLines",
+    "vendors",
+    "operator"
   ],
   "additionalProperties": false
 }

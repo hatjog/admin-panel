@@ -5,6 +5,7 @@
 
 import { Badge, Button, Container, Heading, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { sdk } from "@lib/client"
 
 type ReadinessStatus = "green" | "yellow" | "red" | "unknown"
@@ -38,7 +39,8 @@ function badgeColor(s: ReadinessStatus): "green" | "orange" | "red" | "blue" {
 }
 
 export function ReadinessDashboardPage(): React.JSX.Element {
-  const { data, isLoading, refetch } = useQuery<ReadinessResult>({
+  const { t } = useTranslation()
+  const { data, isLoading, isError, refetch } = useQuery<ReadinessResult>({
     queryKey: ["admin-operator-readiness"],
     queryFn: () => sdk.client.fetch("/admin/operator/readiness"),
     staleTime: 30_000,
@@ -48,26 +50,37 @@ export function ReadinessDashboardPage(): React.JSX.Element {
     <Container>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <Heading level="h1">Pre-flag-flip Readiness</Heading>
+          <Heading level="h1">{t("operator.readiness.title")}</Heading>
           <Text className="text-ui-fg-subtle">
-            6-item operator gate; system-level GO/NO-GO aggregator.
+            {t("operator.readiness.subtitle")}
           </Text>
         </div>
         <Button variant="secondary" onClick={() => refetch()}>
-          Refresh
+          {t("operator.readiness.refresh")}
         </Button>
       </div>
 
-      {isLoading && <Text>Loading…</Text>}
+      {isLoading && <Text>{t("labels.loading")}</Text>}
+
+      {isError && (
+        <div className="mb-4 rounded-md border border-ui-border-error bg-ui-bg-error p-4">
+          <Text>{t("operator.readiness.error")}</Text>
+        </div>
+      )}
+
+      {!isLoading && !data && !isError && <Text>{t("operator.readiness.empty")}</Text>}
 
       {data && (
         <>
           <div className="mb-6 rounded-md border border-ui-border-base p-4">
             <Badge color={badgeColor(data.overall)}>
-              {data.overall.toUpperCase()}
+              {t(`operator.readiness.overall_${data.overall}`)}
             </Badge>
             <Text className="ml-3 inline">
-              Last computed: {new Date(data.computed_at).toLocaleString()}
+              {t("operator.readiness.last_computed")}: {new Date(data.computed_at).toLocaleString()}
+            </Text>
+            <Text className="mt-2 block text-ui-fg-subtle" size="small">
+              {t(`operator.readiness.reason_${data.overall}`)}
             </Text>
           </div>
 
@@ -78,14 +91,14 @@ export function ReadinessDashboardPage(): React.JSX.Element {
                 className="rounded-md border border-ui-border-base p-4"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <Text weight="plus">{it.label}</Text>
-                  <Badge color={badgeColor(it.status)}>{it.status}</Badge>
+                  <Text weight="plus">{t(`operator.readiness.${it.key}`)}</Text>
+                  <Badge color={badgeColor(it.status)}>{it.status.toUpperCase()}</Badge>
                 </div>
                 <Text size="small" className="text-ui-fg-subtle">
                   {it.value}
                 </Text>
                 <Text size="xsmall" className="mt-1 text-ui-fg-muted">
-                  Threshold: {it.threshold}
+                  {t("operator.readiness.threshold_label")}: {it.threshold}
                 </Text>
                 <a
                   className="mt-2 inline-block text-ui-fg-interactive underline"
@@ -93,7 +106,7 @@ export function ReadinessDashboardPage(): React.JSX.Element {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  View / Remediate
+                  {t("operator.readiness.remediate")}
                 </a>
               </div>
             ))}
