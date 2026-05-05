@@ -5,6 +5,7 @@
 import { useState } from "react"
 import { Badge, Button, Container, Heading, Input, Text } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { sdk } from "@lib/client"
 
 type ItemStatus = "pass" | "fail" | "unknown"
@@ -35,11 +36,12 @@ function color(s: ItemStatus): "green" | "red" | "blue" {
 }
 
 export function SmokeGatePage(): React.JSX.Element {
+  const { t } = useTranslation()
   const qc = useQueryClient()
   const [adminNote, setAdminNote] = useState("")
   const [confirming, setConfirming] = useState(false)
 
-  const { data } = useQuery<State>({
+  const { data, isLoading, isError, refetch } = useQuery<State>({
     queryKey: ["admin-operator-smoke-gate"],
     queryFn: () => sdk.client.fetch("/admin/operator/smoke-gate-status"),
   })
@@ -62,25 +64,37 @@ export function SmokeGatePage(): React.JSX.Element {
 
   return (
     <Container>
-      <div className="mb-6">
-        <Heading level="h1">Phase B SMOKE GATE</Heading>
-        <Text className="text-ui-fg-subtle">
-          Binary PASS/FAIL ratification — HARD GATE blocking flag flip
-          (Story 8.3).
-        </Text>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <Heading level="h1">{t("operator.smoke_gate.title")}</Heading>
+          <Text className="text-ui-fg-subtle">
+            {t("operator.smoke_gate.subtitle")}
+          </Text>
+        </div>
+        <Button variant="secondary" onClick={() => refetch()}>
+          {t("operator.smoke_gate.refresh")}
+        </Button>
       </div>
+
+      {isLoading && <Text>{t("labels.loading")}</Text>}
+
+      {isError && (
+        <div className="mb-4 rounded-md border border-ui-border-error bg-ui-bg-error p-4">
+          <Text>{t("operator.smoke_gate.error")}</Text>
+        </div>
+      )}
+
+      {!isLoading && !data && !isError && <Text>{t("operator.smoke_gate.empty")}</Text>}
 
       {data && (
         <>
           <div className="mb-4 rounded-md border border-ui-border-base p-4">
             <Badge color={data.computed === "pass" ? "green" : data.computed === "fail" ? "red" : "blue"}>
-              Computed: {data.computed.toUpperCase()}
+              {t("operator.smoke_gate.computed_label")}: {t(`operator.smoke_gate.verdict_${data.computed}`)}
             </Badge>
             {data.last_ratified && (
               <Text className="ml-3 inline">
-                Last ratified: {data.last_ratified.verdict.toUpperCase()} by{" "}
-                {data.last_ratified.admin_id} at{" "}
-                {new Date(data.last_ratified.ratified_at).toLocaleString()}
+                {t("operator.smoke_gate.last_ratified_label")}: {data.last_ratified.verdict.toUpperCase()} {t("fields.by")} {data.last_ratified.admin_id} - {new Date(data.last_ratified.ratified_at).toLocaleString()}
               </Text>
             )}
           </div>
@@ -89,10 +103,10 @@ export function SmokeGatePage(): React.JSX.Element {
             <table className="min-w-full text-sm">
               <thead className="bg-ui-bg-subtle">
                 <tr>
-                  <th className="px-3 py-2 text-left">Item</th>
-                  <th className="px-3 py-2 text-left">NFR</th>
-                  <th className="px-3 py-2 text-left">Status</th>
-                  <th className="px-3 py-2 text-left">Evidence</th>
+                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_item_label")}</th>
+                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_nfr_ref")}</th>
+                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_status")}</th>
+                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_evidence")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,7 +115,7 @@ export function SmokeGatePage(): React.JSX.Element {
                     <td className="px-3 py-2">{it.label}</td>
                     <td className="px-3 py-2">{it.nfr_ref}</td>
                     <td className="px-3 py-2">
-                      <Badge color={color(it.status)}>{it.status}</Badge>
+                      <Badge color={color(it.status)}>{t(`operator.smoke_gate.status_${it.status}`)}</Badge>
                     </td>
                     <td className="px-3 py-2">
                       <a
@@ -110,7 +124,7 @@ export function SmokeGatePage(): React.JSX.Element {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        view
+                        {t("operator.smoke_gate.evidence_view")}
                       </a>
                     </td>
                   </tr>
@@ -121,38 +135,41 @@ export function SmokeGatePage(): React.JSX.Element {
 
           <div className="mt-4">
             {!confirming && (
-              <Button
-                disabled={!allPass}
-                onClick={() => setConfirming(true)}
-              >
-                Ratify verdict
+              <Button disabled={!allPass} onClick={() => setConfirming(true)}>
+                {t("operator.smoke_gate.ratify_cta")}
               </Button>
             )}
             {anyFail && (
               <Text className="ml-3 text-ui-fg-error inline">
-                Cannot ratify PASS while any item has status=fail.
+                {t("operator.smoke_gate.ratify_blocked_message")}
               </Text>
             )}
             {confirming && (
               <div className="mt-3 rounded-md border border-ui-border-base p-3">
+                <Text className="mb-2" weight="plus">
+                  {t("operator.smoke_gate.confirm_modal_title")}
+                </Text>
+                <Text className="mb-3 text-ui-fg-subtle">
+                  {t("operator.smoke_gate.confirm_modal_message")}
+                </Text>
                 <Input
-                  placeholder="Admin note (required)"
+                  placeholder={t("operator.smoke_gate.admin_note_required")}
                   value={adminNote}
                   onChange={(e) => setAdminNote(e.target.value)}
                 />
                 <div className="mt-2 flex gap-2">
                   <Button onClick={() => ratify.mutate("pass")} disabled={ratify.isPending}>
-                    Ratify PASS
+                    {t("operator.smoke_gate.ratify_pass")}
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => ratify.mutate("fail")}
                     disabled={ratify.isPending}
                   >
-                    Ratify FAIL
+                    {t("operator.smoke_gate.ratify_fail")}
                   </Button>
                   <Button variant="secondary" onClick={() => setConfirming(false)}>
-                    Cancel
+                    {t("operator.smoke_gate.cancel")}
                   </Button>
                 </div>
               </div>
