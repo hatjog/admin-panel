@@ -54,7 +54,7 @@ export function VendorDecisionsListPage(): React.JSX.Element {
   const [statusFilter, setStatusFilter] = useState<DecisionStatus | "all">("all")
   const [search, setSearch] = useState("")
 
-  const { data, isLoading } = useQuery<ListResponse>({
+  const { data, error, isLoading } = useQuery<ListResponse>({
     queryKey: ["admin-vendors-decisions", statusFilter, search],
     queryFn: () =>
       sdk.client.fetch("/admin/vendors/decisions", {
@@ -104,7 +104,15 @@ export function VendorDecisionsListPage(): React.JSX.Element {
 
       {isLoading && <Text>Loading…</Text>}
 
-      {!isLoading && vendors.length === 0 && (
+      {!isLoading && error && (
+        <div className="rounded-md border border-ui-border-base p-6">
+          <Text className="text-ui-fg-subtle">
+            Unable to load vendor decisions: {(error as Error).message}
+          </Text>
+        </div>
+      )}
+
+      {!isLoading && !error && vendors.length === 0 && (
         <div className="rounded-md border border-dashed border-ui-border-base p-8 text-center">
           <Text className="text-ui-fg-subtle">
             No vendors require decision capture.
@@ -112,7 +120,7 @@ export function VendorDecisionsListPage(): React.JSX.Element {
         </div>
       )}
 
-      {!isLoading && vendors.length > 0 && (
+      {!isLoading && !error && vendors.length > 0 && (
         <div className="overflow-x-auto rounded-md border border-ui-border-base">
           <table className="min-w-full text-sm">
             <thead className="bg-ui-bg-subtle">
