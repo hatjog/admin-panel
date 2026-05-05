@@ -47,9 +47,15 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
         body: { decision, reason, admin_note: adminNote || undefined },
       }),
     onSuccess: (data) => {
-      toast.success(
-        `Decision captured: ${data.decision} (audit ${data.audit_log_id})`,
-      )
+      if (data.email_dispatched) {
+        toast.success(
+          `Decision captured: ${data.decision} (audit ${data.audit_log_id})`,
+        )
+      } else {
+        toast.warning(
+          `Decision captured: ${data.decision} (audit ${data.audit_log_id}). Confirmation email delivery is not enabled in this environment.`,
+        )
+      }
       void qc.invalidateQueries({ queryKey: ["admin-vendors-decisions"] })
       setConfirmOpen(false)
       window.location.href = "/app/vendors/decisions"
@@ -146,8 +152,9 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
               </Text>
             )}
             <Text className="mt-3 text-ui-fg-error">
-              Vendor will receive a confirmation email. Re-submitting overwrites
-              prior decision but preserves audit history.
+              This action persists the vendor decision immediately.
+              Confirmation email is sent only when backend delivery wiring is
+              enabled.
             </Text>
             <div className="mt-4 flex justify-end gap-2">
               <Button
