@@ -8,13 +8,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { sdk } from "@lib/client"
 
-type ItemStatus = "pass" | "fail" | "unknown"
+import { BinaryVerdictBadge } from "./components/BinaryVerdictBadge"
+import { ChecklistTable } from "./components/ChecklistTable"
+import { RatifyConfirmModal } from "./components/RatifyConfirmModal"
 
 type Item = {
   key: string
   label: string
   nfr_ref: string
-  status: ItemStatus
+  status: "pass" | "fail" | "unknown"
   evidence_url: string
   source: string
 }
@@ -29,10 +31,6 @@ type State = {
     ratified_at: string
   } | null
   computed_at: string
-}
-
-function color(s: ItemStatus): "green" | "red" | "blue" {
-  return s === "pass" ? "green" : s === "fail" ? "red" : "blue"
 }
 
 export function SmokeGatePage(): React.JSX.Element {
@@ -89,9 +87,7 @@ export function SmokeGatePage(): React.JSX.Element {
       {data && (
         <>
           <div className="mb-4 rounded-md border border-ui-border-base p-4">
-            <Badge color={data.computed === "pass" ? "green" : data.computed === "fail" ? "red" : "blue"}>
-              {t("operator.smoke_gate.computed_label")}: {t(`operator.smoke_gate.verdict_${data.computed}`)}
-            </Badge>
+            <BinaryVerdictBadge verdict={data.computed} />
             {data.last_ratified && (
               <Text className="ml-3 inline">
                 {t("operator.smoke_gate.last_ratified_label")}: {data.last_ratified.verdict.toUpperCase()} {t("fields.by")} {data.last_ratified.admin_id} - {new Date(data.last_ratified.ratified_at).toLocaleString()}
@@ -99,39 +95,7 @@ export function SmokeGatePage(): React.JSX.Element {
             )}
           </div>
 
-          <div className="overflow-x-auto rounded-md border border-ui-border-base">
-            <table className="min-w-full text-sm">
-              <thead className="bg-ui-bg-subtle">
-                <tr>
-                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_item_label")}</th>
-                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_nfr_ref")}</th>
-                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_status")}</th>
-                  <th className="px-3 py-2 text-left">{t("operator.smoke_gate.checklist_evidence")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.items.map((it) => (
-                  <tr key={it.key} className="border-t border-ui-border-base">
-                    <td className="px-3 py-2">{it.label}</td>
-                    <td className="px-3 py-2">{it.nfr_ref}</td>
-                    <td className="px-3 py-2">
-                      <Badge color={color(it.status)}>{t(`operator.smoke_gate.status_${it.status}`)}</Badge>
-                    </td>
-                    <td className="px-3 py-2">
-                      <a
-                        className="text-ui-fg-interactive underline"
-                        href={it.evidence_url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {t("operator.smoke_gate.evidence_view")}
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ChecklistTable items={data.items} />
 
           <div className="mt-4">
             {!confirming && (
@@ -145,34 +109,14 @@ export function SmokeGatePage(): React.JSX.Element {
               </Text>
             )}
             {confirming && (
-              <div className="mt-3 rounded-md border border-ui-border-base p-3">
-                <Text className="mb-2" weight="plus">
-                  {t("operator.smoke_gate.confirm_modal_title")}
-                </Text>
-                <Text className="mb-3 text-ui-fg-subtle">
-                  {t("operator.smoke_gate.confirm_modal_message")}
-                </Text>
-                <Input
-                  placeholder={t("operator.smoke_gate.admin_note_required")}
-                  value={adminNote}
-                  onChange={(e) => setAdminNote(e.target.value)}
-                />
-                <div className="mt-2 flex gap-2">
-                  <Button onClick={() => ratify.mutate("pass")} disabled={ratify.isPending}>
-                    {t("operator.smoke_gate.ratify_pass")}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => ratify.mutate("fail")}
-                    disabled={ratify.isPending}
-                  >
-                    {t("operator.smoke_gate.ratify_fail")}
-                  </Button>
-                  <Button variant="secondary" onClick={() => setConfirming(false)}>
-                    {t("operator.smoke_gate.cancel")}
-                  </Button>
-                </div>
-              </div>
+              <RatifyConfirmModal
+                adminNote={adminNote}
+                isPending={ratify.isPending}
+                onAdminNoteChange={setAdminNote}
+                onPass={() => ratify.mutate("pass")}
+                onFail={() => ratify.mutate("fail")}
+                onCancel={() => setConfirming(false)}
+              />
             )}
           </div>
         </>
