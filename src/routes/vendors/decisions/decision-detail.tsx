@@ -49,12 +49,20 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   /**
-   * Stable Idempotency-Key for the current confirm flow.
-   * Generated once per "open confirm modal" event so that the confirm button
-   * can be clicked exactly once (mutation is disabled while pending). If the
-   * user cancels and re-opens, a fresh key is generated in handleOpenConfirm.
+   * Stable Idempotency-Key for the current decision-capture flow.
+   *
+   * Review fix L5: previously regenerated on every confirm-modal open, which
+   * means a network-failed first attempt followed by a re-open would race
+   * with the late-arriving original under a different key. Now the key is
+   * generated lazily (first time it is needed) and persists for the whole
+   * page lifecycle until the mutation succeeds — at which point the page
+   * navigates away. If the user cancels the modal and reopens it WITHOUT
+   * changing the payload, the same key is reused so retries de-duplicate
+   * server-side. If the user mutates the payload (decision/reason/note), the
+   * key is rotated so the new payload is treated as a fresh intent.
    */
   const idempotencyKeyRef = useRef<string>("")
+  const lastPayloadHashRef = useRef<string>("")
 
   function generateUuidV4(): string {
     if (
@@ -64,16 +72,38 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
     ) {
       return globalThis.crypto.randomUUID()
     }
-    // Fallback for older environments (deterministic shape, not cryptographic).
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0
-      const v = c === "x" ? r : (r & 0x3) | 0x8
-      return v.toString(16)
-    })
+    // Fallback for older environments (uses crypto.getRandomValues if present,
+    // else Math.random — uniqueness, not unpredictability, is required).
+    const buf = new Uint8Array(16)
+    if (
+      typeof globalThis !== "undefined" &&
+      globalThis.crypto &&
+      typeof globalThis.crypto.getRandomValues === "function"
+    ) {
+      globalThis.crypto.getRandomValues(buf)
+    } else {
+      for (let i = 0; i < 16; i++) buf[i] = (Math.random() * 256) | 0
+    }
+    buf[6] = (buf[6] & 0x0f) | 0x40 // version 4
+    buf[8] = (buf[8] & 0x3f) | 0x80 // variant 10
+    const hex = Array.from(buf, (b) => b.toString(16).padStart(2, "0")).join("")
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+  }
+
+  function payloadFingerprint(): string {
+    return JSON.stringify({ decision, reason, adminNote })
+  }
+
+  function ensureIdempotencyKey(): void {
+    const fp = payloadFingerprint()
+    if (idempotencyKeyRef.current === "" || fp !== lastPayloadHashRef.current) {
+      idempotencyKeyRef.current = generateUuidV4()
+      lastPayloadHashRef.current = fp
+    }
   }
 
   function handleOpenConfirm(): void {
-    idempotencyKeyRef.current = generateUuidV4()
+    ensureIdempotencyKey()
     setConfirmOpen(true)
   }
 
