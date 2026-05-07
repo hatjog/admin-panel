@@ -52,6 +52,7 @@
     "@medusajs/js-sdk": "2.13.6",
     "@medusajs/ui": "^4.0.33",
     "@mercurjs/admin": "2.1.1",
+    "@mercurjs/dashboard-sdk": "2.1.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dismissable-layer": "^1.1.11",
     "@talkjs/react": "^0.1.11",
