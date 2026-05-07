@@ -1,9 +1,11 @@
 // Mercur 2 SellerStatus values (lowercase). Mercur 1.5 used uppercase "ACTIVE"/"SUSPENDED"/"INACTIVE";
 // Mercur 2 uses SellerStatus.OPEN="open", SellerStatus.SUSPENDED="suspended", SellerStatus.TERMINATED="terminated".
-// "INACTIVE" → "closed" per story v160-cleanup-62a mapping (permanent disable semantics, not temporary).
+// Enum keys renamed to match Mercur 2 SellerStatus vocabulary (OPEN/SUSPENDED instead of
+// ACTIVE/SUSPENDED) so reading code matches semantics. The legacy INACTIVE=>"closed" entry
+// was removed (no callsite consumed it; review-fix AP-1 + AP-3 v160-cleanup-62a).
+// If a future feature needs CLOSED/TERMINATED state, add it explicitly with a Mercur 2 key.
 export enum StoreStatus {
-  ACTIVE = "open",
-  INACTIVE = "closed",
+  OPEN = "open",
   SUSPENDED = "suspended",
 }
 
