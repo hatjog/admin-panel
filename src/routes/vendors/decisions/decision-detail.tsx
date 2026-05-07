@@ -1,13 +1,21 @@
 /**
  * Story v160-7-3: Vendor decision detail page (admin-panel).
+ * Story v160-cleanup-36: Adds Idempotency-Key header (UUIDv4) per-submit.
  *
  * Per-vendor capture form: radio (opt_in | opt_out) + reason textarea +
  * admin_note textarea + confirmation modal + submit → POST /admin/vendors/[id]/decision.
  *
+ * Idempotency (cleanup-36 OQ #1 strict policy):
+ *   - A fresh UUIDv4 Idempotency-Key is generated on each user-initiated submit
+ *     (confirm button click). The same key is reused for retries of that submit
+ *     (not implemented here — network retry happens at the HTTP layer; the
+ *     key is stable for the duration of the confirmation flow).
+ *   - A new key is generated when the user opens the form again after cancelling.
+ *
  * Per Sprint 4 Wave 15 batch — FR34 canonical capture surface (vs Story 7.2 quick force-decision).
  */
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useParams } from "react-router-dom"
 import {
   Button,
@@ -40,10 +48,72 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
   const [adminNote, setAdminNote] = useState("")
   const [confirmOpen, setConfirmOpen] = useState(false)
 
+  /**
+   * Stable Idempotency-Key for the current decision-capture flow.
+   *
+   * Review fix L5: previously regenerated on every confirm-modal open, which
+   * means a network-failed first attempt followed by a re-open would race
+   * with the late-arriving original under a different key. Now the key is
+   * generated lazily (first time it is needed) and persists for the whole
+   * page lifecycle until the mutation succeeds — at which point the page
+   * navigates away. If the user cancels the modal and reopens it WITHOUT
+   * changing the payload, the same key is reused so retries de-duplicate
+   * server-side. If the user mutates the payload (decision/reason/note), the
+   * key is rotated so the new payload is treated as a fresh intent.
+   */
+  const idempotencyKeyRef = useRef<string>("")
+  const lastPayloadHashRef = useRef<string>("")
+
+  function generateUuidV4(): string {
+    if (
+      typeof globalThis !== "undefined" &&
+      globalThis.crypto &&
+      typeof globalThis.crypto.randomUUID === "function"
+    ) {
+      return globalThis.crypto.randomUUID()
+    }
+    // Fallback for older environments (uses crypto.getRandomValues if present,
+    // else Math.random — uniqueness, not unpredictability, is required).
+    const buf = new Uint8Array(16)
+    if (
+      typeof globalThis !== "undefined" &&
+      globalThis.crypto &&
+      typeof globalThis.crypto.getRandomValues === "function"
+    ) {
+      globalThis.crypto.getRandomValues(buf)
+    } else {
+      for (let i = 0; i < 16; i++) buf[i] = (Math.random() * 256) | 0
+    }
+    buf[6] = (buf[6] & 0x0f) | 0x40 // version 4
+    buf[8] = (buf[8] & 0x3f) | 0x80 // variant 10
+    const hex = Array.from(buf, (b) => b.toString(16).padStart(2, "0")).join("")
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+  }
+
+  function payloadFingerprint(): string {
+    return JSON.stringify({ decision, reason, adminNote })
+  }
+
+  function ensureIdempotencyKey(): void {
+    const fp = payloadFingerprint()
+    if (idempotencyKeyRef.current === "" || fp !== lastPayloadHashRef.current) {
+      idempotencyKeyRef.current = generateUuidV4()
+      lastPayloadHashRef.current = fp
+    }
+  }
+
+  function handleOpenConfirm(): void {
+    ensureIdempotencyKey()
+    setConfirmOpen(true)
+  }
+
   const captureMutation = useMutation({
     mutationFn: (): Promise<CaptureResponse> =>
       sdk.client.fetch(`/admin/vendors/${vendorId}/decision`, {
         method: "POST",
+        headers: {
+          "Idempotency-Key": idempotencyKeyRef.current,
+        },
         body: { decision, reason, admin_note: adminNote || undefined },
       }),
     onSuccess: (data) => {
@@ -126,7 +196,7 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
         <div className="flex justify-end gap-2 border-t border-ui-border-base pt-4">
           <Button
             variant="primary"
-            onClick={() => setConfirmOpen(true)}
+            onClick={handleOpenConfirm}
             disabled={!canSubmit}
           >
             Submit decision
