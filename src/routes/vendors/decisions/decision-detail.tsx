@@ -1,13 +1,21 @@
 /**
  * Story v160-7-3: Vendor decision detail page (admin-panel).
+ * Story v160-cleanup-36: Adds Idempotency-Key header (UUIDv4) per-submit.
  *
  * Per-vendor capture form: radio (opt_in | opt_out) + reason textarea +
  * admin_note textarea + confirmation modal + submit → POST /admin/vendors/[id]/decision.
  *
+ * Idempotency (cleanup-36 OQ #1 strict policy):
+ *   - A fresh UUIDv4 Idempotency-Key is generated on each user-initiated submit
+ *     (confirm button click). The same key is reused for retries of that submit
+ *     (not implemented here — network retry happens at the HTTP layer; the
+ *     key is stable for the duration of the confirmation flow).
+ *   - A new key is generated when the user opens the form again after cancelling.
+ *
  * Per Sprint 4 Wave 15 batch — FR34 canonical capture surface (vs Story 7.2 quick force-decision).
  */
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useParams } from "react-router-dom"
 import {
   Button,
@@ -40,10 +48,42 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
   const [adminNote, setAdminNote] = useState("")
   const [confirmOpen, setConfirmOpen] = useState(false)
 
+  /**
+   * Stable Idempotency-Key for the current confirm flow.
+   * Generated once per "open confirm modal" event so that the confirm button
+   * can be clicked exactly once (mutation is disabled while pending). If the
+   * user cancels and re-opens, a fresh key is generated in handleOpenConfirm.
+   */
+  const idempotencyKeyRef = useRef<string>("")
+
+  function generateUuidV4(): string {
+    if (
+      typeof globalThis !== "undefined" &&
+      globalThis.crypto &&
+      typeof globalThis.crypto.randomUUID === "function"
+    ) {
+      return globalThis.crypto.randomUUID()
+    }
+    // Fallback for older environments (deterministic shape, not cryptographic).
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0
+      const v = c === "x" ? r : (r & 0x3) | 0x8
+      return v.toString(16)
+    })
+  }
+
+  function handleOpenConfirm(): void {
+    idempotencyKeyRef.current = generateUuidV4()
+    setConfirmOpen(true)
+  }
+
   const captureMutation = useMutation({
     mutationFn: (): Promise<CaptureResponse> =>
       sdk.client.fetch(`/admin/vendors/${vendorId}/decision`, {
         method: "POST",
+        headers: {
+          "Idempotency-Key": idempotencyKeyRef.current,
+        },
         body: { decision, reason, admin_note: adminNote || undefined },
       }),
     onSuccess: (data) => {
@@ -126,7 +166,7 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
         <div className="flex justify-end gap-2 border-t border-ui-border-base pt-4">
           <Button
             variant="primary"
-            onClick={() => setConfirmOpen(true)}
+            onClick={handleOpenConfirm}
             disabled={!canSubmit}
           >
             Submit decision
