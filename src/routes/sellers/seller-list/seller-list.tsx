@@ -161,11 +161,11 @@ const useColumns = () => {
   const handleSuspend = async (seller: SellersProps) => {
     const res = await dialog({
       title:
-        seller.store_status === "SUSPENDED"
+        seller.store_status === "suspended"
           ? "Activate account"
           : "Suspend account",
       description:
-        seller.store_status === "SUSPENDED"
+        seller.store_status === "suspended"
           ? "Are you sure you want to activate this account?"
           : "Are you sure you want to suspend this account?",
       verificationText: seller.email || seller.name || "",
@@ -175,12 +175,12 @@ const useColumns = () => {
       return;
     }
 
-    if (seller.store_status === "SUSPENDED") {
-      await suspendSeller({ id: seller.id, data: { store_status: "ACTIVE" } });
+    if (seller.store_status === "suspended") {
+      await suspendSeller({ id: seller.id, data: { store_status: "open" } });
     } else {
       await suspendSeller({
         id: seller.id,
-        data: { store_status: "SUSPENDED" },
+        data: { store_status: "suspended" },
       });
     }
   };
@@ -204,7 +204,7 @@ const useColumns = () => {
                 },
                 {
                   label:
-                    row.original.store_status === "SUSPENDED"
+                    row.original.store_status === "suspended"
                       ? "Activate account"
                       : "Suspend account",
                   onClick: () => handleSuspend(row.original as SellersProps),
