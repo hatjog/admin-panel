@@ -2,7 +2,6 @@
  * Vendor management admin page (Story 8.2).
  *
  * Functional vendor list with DataTable + create form + inline actions.
- * Polished dedicated vendor UI deferred to v1.3.0.
  */
 import { useState, useCallback } from "react"
 import {
