@@ -90,14 +90,23 @@ export function VendorJCADetailPage(): React.JSX.Element {
           {generated && (
             <Text size="small" className="mt-2 text-ui-fg-subtle">
               Path: <code>{generated.pdf_path}</code> · Audit:{" "}
-              <code>{generated.audit_log_id}</code>
+              <code>{generated.audit_log_id}</code> · Size: {generated.bytes} bytes
             </Text>
           )}
-          <Text size="small" className="mt-2 text-ui-fg-subtle">
-            Note: full PDF rendering deferred to Sprint 5 polish (Story 7.5
-            AC1 DEFER acceptable). Current output: hydrated markdown as text
-            Buffer. Storage abstraction ready for pdfkit drop-in.
-          </Text>
+          {generated && (
+            <div className="mt-3">
+              <a
+                href={`/api/admin/vendors/${vendorId}/jca/download`}
+                download={`jca-${vendorId}.pdf`}
+                className="text-ui-fg-interactive underline text-sm"
+                aria-label="Download JCA PDF"
+              >
+                Download JCA PDF (.pdf)
+              </a>
+            </div>
+          )}
+          {/* TF-151 resolved (cleanup-41): PDF rendering is now real (pdfkit).
+              Legacy note about text-Buffer deferred has been removed. */}
         </section>
 
         <section className="rounded-md border border-ui-border-base p-6">
