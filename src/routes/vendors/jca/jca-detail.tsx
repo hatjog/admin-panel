@@ -18,9 +18,10 @@ import { sdk } from "@lib/client"
 
 type GenerateResponse = {
   vendor_id: string
-  pdf_path: string
   bytes: number
   audit_log_id: string
+  /** Backend cleanup-41: format flag — "pdf" for v1.6.0+ */
+  format?: "pdf"
 }
 
 type SignResponse = {
@@ -49,6 +50,46 @@ export function VendorJCADetailPage(): React.JSX.Element {
     },
     onError: (err) => toast.error(`Generation failed: ${(err as Error).message}`),
   })
+
+  /**
+   * Download mutation: POSTs to /jca/generate?download=1 which streams the
+   * PDF binary (Content-Type: application/pdf, Content-Disposition: attachment).
+   * Reads response as Blob, builds an Object URL, and triggers a click on a
+   * synthetic <a download> to force a save dialog with the .pdf filename.
+   *
+   * Implements review fix A-1 — the original `<a href=…/jca/download>` pointed
+   * to a non-existent route. Cross-origin safe (uses SDK auth headers).
+   */
+  const downloadMutation = useMutation({
+    mutationFn: async (): Promise<void> => {
+      const blob = (await sdk.client.fetch(
+        `/admin/vendors/${vendorId}/jca/generate?download=1`,
+        {
+          method: "POST",
+          body: { locale: "pl" },
+          headers: { Accept: "application/pdf" },
+        },
+      )) as Blob
+      if (!(blob instanceof Blob)) {
+        throw new Error("Download response was not a Blob")
+      }
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `jca-${vendorId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      // Defer URL revoke until click handler completes.
+      setTimeout(() => URL.revokeObjectURL(url), 5000)
+    },
+    onError: (err) =>
+      toast.error(`Download failed: ${(err as Error).message}`),
+  })
+
+  const downloadPdf = (): void => {
+    downloadMutation.mutate()
+  }
 
   const signMutation = useMutation({
     mutationFn: (): Promise<SignResponse> =>
@@ -89,24 +130,28 @@ export function VendorJCADetailPage(): React.JSX.Element {
           </div>
           {generated && (
             <Text size="small" className="mt-2 text-ui-fg-subtle">
-              Path: <code>{generated.pdf_path}</code> · Audit:{" "}
-              <code>{generated.audit_log_id}</code> · Size: {generated.bytes} bytes
+              Audit: <code>{generated.audit_log_id}</code> · Size:{" "}
+              {generated.bytes} bytes · Format: {generated.format ?? "pdf"}
             </Text>
           )}
           {generated && (
             <div className="mt-3">
-              <a
-                href={`/api/admin/vendors/${vendorId}/jca/download`}
-                download={`jca-${vendorId}.pdf`}
-                className="text-ui-fg-interactive underline text-sm"
+              <Button
+                variant="secondary"
+                onClick={() => downloadPdf()}
+                disabled={downloadMutation.isPending}
                 aria-label="Download JCA PDF"
               >
-                Download JCA PDF (.pdf)
-              </a>
+                {downloadMutation.isPending
+                  ? "…"
+                  : "Download JCA PDF (.pdf)"}
+              </Button>
             </div>
           )}
-          {/* TF-151 resolved (cleanup-41): PDF rendering is now real (pdfkit).
-              Legacy note about text-Buffer deferred has been removed. */}
+          {/* TF-151 resolved (cleanup-41 + review): PDF rendering is real (pdfkit).
+              Download is a POST against /jca/generate?download=1 — Blob URL on the
+              client. Original `<a href=…/jca/download>` pointed to non-existent
+              route (review finding A-1). */}
         </section>
 
         <section className="rounded-md border border-ui-border-base p-6">
