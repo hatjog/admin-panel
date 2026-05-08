@@ -22,6 +22,7 @@
 
     /* Path Aliases */
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@custom-types/*": ["src/types/*"],
       "@hooks/*": ["src/hooks/*"],
