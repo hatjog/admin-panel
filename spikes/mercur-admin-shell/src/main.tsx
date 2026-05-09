@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client"
 
 import MercurAdminApp from "@mercurjs/admin"
 
-import "./spike.css"
+import "./admin-extension-skeleton.css"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
