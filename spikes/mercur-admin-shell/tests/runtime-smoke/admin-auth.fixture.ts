@@ -96,7 +96,15 @@ export async function ensureAdminStorageState(
   // Fill the login form (standard Medusa admin dashboard UI).
   await page.locator('[name="email"], [id="email"], input[type="email"]').first().fill(email)
   await page.locator('[name="password"], [id="password"], input[type="password"]').first().fill(password)
-  await page.getByRole("button", { name: /sign in|log in|login/i }).first().click()
+  // Locale-agnostic submit selector. Mercur dashboard renders PL by default
+  // ("Kontynuuj przez Email" / "Zaloguj się"); EN fallback covers other modes.
+  // We prefer a typed submit button if present; otherwise match common PL/EN labels.
+  const submitButton = page.locator(
+    'button[type="submit"], button:has-text("Kontynuuj"), button:has-text("Zaloguj")'
+  ).or(
+    page.getByRole("button", { name: /sign in|log in|login|kontynuuj|zaloguj/i })
+  )
+  await submitButton.first().click()
 
   // Wait for redirect away from /login (indicates successful auth).
   await page.waitForURL((url) => !url.pathname.startsWith("/login"), {

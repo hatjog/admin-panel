@@ -47,14 +47,41 @@ interface RouteResult {
   next_action?: string
 }
 
-const routeResults: RouteResult[] = []
+const ROUTE_RESULTS_PATH = path.join(
+  __dirname,
+  ".playwright-route-results.json"
+)
+
+function loadRouteResults(): RouteResult[] {
+  try {
+    const raw = fs.readFileSync(ROUTE_RESULTS_PATH, "utf8")
+    const parsed = JSON.parse(raw) as RouteResult[]
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * Append a route result to .playwright-route-results.json IMMEDIATELY (not
+ * deferred to afterAll). This guards against module-scope state being lost
+ * between test runs / module reloads in the Playwright worker — an empty
+ * results file is a worse failure mode than a duplicate row.
+ */
 function recordResult(result: RouteResult): void {
-  routeResults.push(result)
+  const existing = loadRouteResults()
+  // Replace any prior entry with the same id (idempotent across reruns).
+  const filtered = existing.filter((r) => r.id !== result.id)
+  filtered.push(result)
+  fs.writeFileSync(
+    ROUTE_RESULTS_PATH,
+    JSON.stringify(filtered, null, 2),
+    "utf8"
+  )
 }
 
 /**
@@ -92,15 +119,8 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   })
 
   test.afterAll(async () => {
-    // Persist per-route results for the Python report writer.
-    const outputPath = path.join(
-      __dirname,
-      ".playwright-route-results.json"
-    )
-    fs.writeFileSync(outputPath, JSON.stringify(routeResults, null, 2), "utf8")
-
-    // Purge storage state so the next harness run starts with a fresh login
-    // round trip. Guards against stale-cookie false negatives between runs.
+    // Per-route results are now written eagerly inside each test via
+    // recordResult(). afterAll only purges the storage state.
     purgeAdminStorageState()
   })
 
@@ -125,7 +145,13 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
     const passwordInput = page.locator(
       'input[type="password"], [name="password"], [id="password"]'
     ).first()
-    const submit = page.getByRole("button", { name: /sign in|log in|login/i }).first()
+    // Locale-agnostic submit selector (PL default + EN fallback). Mercur dashboard
+    // ships PL "Kontynuuj przez Email" by default; EN renders "Sign in" / "Log in".
+    const submit = page.locator(
+      'button[type="submit"], button:has-text("Kontynuuj"), button:has-text("Zaloguj")'
+    ).or(
+      page.getByRole("button", { name: /sign in|log in|login|kontynuuj|zaloguj/i })
+    ).first()
 
     await expect(emailInput).toBeVisible({ timeout: 10_000 })
     await expect(passwordInput).toBeVisible({ timeout: 10_000 })
