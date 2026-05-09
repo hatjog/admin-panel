@@ -20,7 +20,13 @@
  * To run: npx playwright test mercur-admin-runtime-smoke.spec.ts --project=chromium
  */
 
-import { test, expect } from "./admin-auth.fixture"
+import {
+  test,
+  expect,
+  ensureAdminStorageState,
+  purgeAdminStorageState,
+  resolvePreviewUrl,
+} from "./admin-auth.fixture"
 import * as fs from "fs"
 import * as path from "path"
 
@@ -51,6 +57,23 @@ function recordResult(result: RouteResult): void {
   routeResults.push(result)
 }
 
+/**
+ * Attach a console-error collector BEFORE any navigation. Any error message
+ * emitted by the page during this collector's lifetime is captured.
+ */
+function collectConsoleErrors(page: import("@playwright/test").Page): string[] {
+  const errors: string[] = []
+  page.on("console", (msg) => {
+    if (msg.type() === "error") {
+      errors.push(msg.text())
+    }
+  })
+  page.on("pageerror", (err) => {
+    errors.push(err.message)
+  })
+  return errors
+}
+
 // ---------------------------------------------------------------------------
 // Suite-level setup: ensure auth storage state exists before first route test
 // ---------------------------------------------------------------------------
@@ -59,48 +82,72 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   let storageStatePath: string
 
   test.beforeAll(async ({ browser, adminEmail, adminPassword, backendUrl }) => {
-    const { ensureAdminStorageState } = await import("./admin-auth.fixture")
-    const baseURL =
-      process.env.GP_ADMIN_PREVIEW_URL ??
-      process.env.ADMIN_PANEL_URL ??
-      "http://localhost:4173"
     storageStatePath = await ensureAdminStorageState(
       browser,
-      baseURL,
+      resolvePreviewUrl(),
       backendUrl,
       adminEmail,
       adminPassword
     )
   })
 
+  test.afterAll(async () => {
+    // Persist per-route results for the Python report writer.
+    const outputPath = path.join(
+      __dirname,
+      ".playwright-route-results.json"
+    )
+    fs.writeFileSync(outputPath, JSON.stringify(routeResults, null, 2), "utf8")
+
+    // Purge storage state so the next harness run starts with a fresh login
+    // round trip. Guards against stale-cookie false negatives between runs.
+    purgeAdminStorageState()
+  })
+
   // -------------------------------------------------------------------------
-  // Route 1: /login — login/auth
+  // Route 1: /login — login/auth (real form-fill round trip)
   // -------------------------------------------------------------------------
-  test("route: /login (login-auth)", async ({ page }) => {
+  test("route: /login (login-auth)", async ({ browser, adminEmail, adminPassword }) => {
+    // Use a fresh, unauthenticated context so /login is exercised end-to-end
+    // (separate from beforeAll's storageState capture).
+    const context = await browser.newContext({ baseURL: resolvePreviewUrl() })
+    const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/login")
     await expect(page).toHaveURL(/\/login/)
     checks.push("route-opened")
 
-    // Login form visible
-    const emailInput = page.locator('input[type="email"], [name="email"], [id="email"]').first()
+    const emailInput = page.locator(
+      'input[type="email"], [name="email"], [id="email"]'
+    ).first()
+    const passwordInput = page.locator(
+      'input[type="password"], [name="password"], [id="password"]'
+    ).first()
+    const submit = page.getByRole("button", { name: /sign in|log in|login/i }).first()
+
     await expect(emailInput).toBeVisible({ timeout: 10_000 })
+    await expect(passwordInput).toBeVisible({ timeout: 10_000 })
     checks.push("login-form-visible")
 
-    // No hard console errors (connect errors to backend not shown in UI at login)
-    const consoleErrors: string[] = []
-    page.on("console", (msg) => {
-      if (msg.type() === "error") consoleErrors.push(msg.text())
+    await emailInput.fill(adminEmail)
+    await passwordInput.fill(adminPassword)
+    await submit.click()
+    await page.waitForURL((url) => !url.pathname.startsWith("/login"), {
+      timeout: 15_000,
     })
+    checks.push("login-redirect-on-submit")
+
+    await context.close()
 
     recordResult({
       id: "login-auth",
       path: "/login",
       status: "pass",
       registry_decision: "native supported",
-      evidence: "playwright:login-auth — login page loaded with email input visible",
-      command_output: `route /login opened; email input present; console errors: ${consoleErrors.length}`,
+      evidence: "playwright:login-auth — /login form rendered, credentials accepted, redirect off /login confirmed",
+      command_output: `route /login: form visible, submit succeeded, console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -111,8 +158,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: / (home)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/")
@@ -135,7 +184,7 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       status: "pass",
       registry_decision: "native supported",
       evidence: "playwright:home — dashboard home loaded with navigation sidebar visible",
-      command_output: "route / opened post-auth; navigation sidebar present",
+      command_output: `route / opened post-auth; navigation sidebar present; console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -146,8 +195,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: /orders (orders)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/orders")
@@ -169,7 +220,7 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       status: "pass",
       registry_decision: "native supported",
       evidence: "playwright:orders — /orders page loaded with heading or table visible",
-      command_output: "route /orders opened post-auth; page content present",
+      command_output: `route /orders opened post-auth; page content present; console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -180,8 +231,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: /sellers (sellers)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/sellers")
@@ -202,7 +255,7 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       status: "pass",
       registry_decision: "native supported",
       evidence: "playwright:sellers — /sellers page loaded with heading or table visible",
-      command_output: "route /sellers opened post-auth; page content present",
+      command_output: `route /sellers opened post-auth; page content present; console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -213,8 +266,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: /commission-rates (commission-rates)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/commission-rates")
@@ -235,7 +290,7 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       status: "pass",
       registry_decision: "native supported",
       evidence: "playwright:commission-rates — page loaded with heading or table visible",
-      command_output: "route /commission-rates opened post-auth; page content present",
+      command_output: `route /commission-rates opened post-auth; page content present; console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -246,8 +301,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: /payouts (payouts)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/payouts")
@@ -268,7 +325,7 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       status: "pass",
       registry_decision: "native supported",
       evidence: "playwright:payouts — /payouts page loaded with heading or table visible",
-      command_output: "route /payouts opened post-auth; page content present",
+      command_output: `route /payouts opened post-auth; page content present; console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -279,8 +336,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: /marketplace (marketplace)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/marketplace")
@@ -301,7 +360,7 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       status: "pass",
       registry_decision: "native supported",
       evidence: "playwright:marketplace — /marketplace page loaded with heading or table visible",
-      command_output: "route /marketplace opened post-auth; page content present",
+      command_output: `route /marketplace opened post-auth; page content present; console errors: ${consoleErrors.length}`,
       checks,
     })
   })
@@ -312,8 +371,10 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
   test("route: /gp-extension-skeleton (gp-extension-route)", async ({ browser }) => {
     const context = await browser.newContext({
       storageState: storageStatePath,
+      baseURL: resolvePreviewUrl(),
     })
     const page = await context.newPage()
+    const consoleErrors = collectConsoleErrors(page)
     const checks: string[] = []
 
     await page.goto("/gp-extension-skeleton")
@@ -347,20 +408,8 @@ test.describe("Mercur admin shell — runtime smoke (8 routes)", () => {
       registry_decision: "GP extension",
       evidence:
         "playwright:gp-extension-route — /gp-extension-skeleton loaded; navigation visible; GP content present; PL i18n label confirmed",
-      command_output:
-        "route /gp-extension-skeleton opened post-auth; Mercur shell navigation present; GP extension content visible; i18n-PL-default-loaded",
+      command_output: `route /gp-extension-skeleton opened post-auth; Mercur shell navigation present; GP extension content visible; i18n-PL-default-loaded; console errors: ${consoleErrors.length}`,
       checks,
     })
-  })
-
-  // -------------------------------------------------------------------------
-  // After all: write runtime report for the Python report writer to harvest
-  // -------------------------------------------------------------------------
-  test.afterAll(async () => {
-    const outputPath = path.join(
-      __dirname,
-      ".playwright-route-results.json"
-    )
-    fs.writeFileSync(outputPath, JSON.stringify(routeResults, null, 2), "utf8")
   })
 })
