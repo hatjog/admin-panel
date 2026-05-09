@@ -26,3 +26,10 @@ dist-ssr
 .env
 .yarn
 .pnp*
+
+# Story 1.7 — admin runtime smoke harness runtime artifacts (NEVER COMMIT).
+# .auth-storage-state.json contains live admin session cookies + localStorage;
+# .playwright-results.json and .playwright-route-results.json are per-run outputs.
+spikes/mercur-admin-shell/tests/runtime-smoke/.auth-storage-state.json
+spikes/mercur-admin-shell/tests/runtime-smoke/.playwright-results.json
+spikes/mercur-admin-shell/tests/runtime-smoke/.playwright-route-results.json
