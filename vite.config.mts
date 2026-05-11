@@ -57,7 +57,7 @@ export default defineConfig(({ mode }) => {
       headers: {
         'Content-Security-Policy':
           "default-src 'self'; " +
-          "script-src 'self' 'unsafe-eval'; " +
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline'; " +
           "style-src 'self' 'unsafe-inline'; " +
           "img-src 'self' data: https:; " +
           "font-src 'self' data:; " +
