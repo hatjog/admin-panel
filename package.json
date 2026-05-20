@@ -48,9 +48,9 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "5.2.2",
-    "@medusajs/admin-shared": "2.13.6",
-    "@medusajs/icons": "2.13.6",
-    "@medusajs/js-sdk": "2.13.6",
+    "@medusajs/admin-shared": "2.14.2",
+    "@medusajs/icons": "2.14.2",
+    "@medusajs/js-sdk": "2.14.2",
     "@medusajs/ui": "^4.0.33",
     "@mercurjs/admin": "2.1.1",
     "@mercurjs/dashboard-sdk": "2.1.1",
@@ -88,10 +88,10 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
-    "@medusajs/admin-shared": "2.13.6",
-    "@medusajs/admin-vite-plugin": "2.13.6",
-    "@medusajs/types": "2.13.6",
-    "@medusajs/ui-preset": "2.13.6",
+    "@medusajs/admin-shared": "2.14.2",
+    "@medusajs/admin-vite-plugin": "2.14.2",
+    "@medusajs/types": "2.14.2",
+    "@medusajs/ui-preset": "2.14.2",
     "@playwright/test": "^1.59.1",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/lodash": "^4.17.23",
@@ -130,6 +130,19 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "@medusajs/admin-sdk": "2.14.2",
+      "@medusajs/admin-shared": "2.14.2",
+      "@medusajs/admin-vite-plugin": "2.14.2",
+      "@medusajs/cli": "2.14.2",
+      "@medusajs/dashboard": "2.14.2",
+      "@medusajs/framework": "2.14.2",
+      "@medusajs/icons": "2.14.2",
+      "@medusajs/js-sdk": "2.14.2",
+      "@medusajs/medusa": "2.14.2",
+      "@medusajs/test-utils": "2.14.2",
+      "@medusajs/types": "2.14.2"
+    }
   }
 }
