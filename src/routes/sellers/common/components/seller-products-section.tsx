@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { PencilSquare, Trash } from "@medusajs/icons";
 import { Container, Divider, Heading, toast, usePrompt } from "@medusajs/ui";
 
-import { sdk } from "@lib/client";
+import { mercurAdminClient } from "@lib/mercur-admin-client";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -101,9 +101,8 @@ const useColumns = (refetch: () => void) => {
     }
 
     try {
-      await sdk.client.fetch(`/admin/products/${product.id}`, {
-        method: "DELETE",
-      });
+      // migrated via Story 8.1 golden-PR (FR-Ga.1)
+      await mercurAdminClient.products.delete(product.id);
       toast.success(t("products.toasts.delete.success.header"), {
         description: t("products.toasts.delete.success.description", {
           title: product.title,
