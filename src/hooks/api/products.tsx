@@ -8,6 +8,7 @@ import {
   UseQueryOptions,
 } from "@tanstack/react-query";
 import { sdk } from "../../lib/client";
+import { mercurAdminClient } from "../../lib/mercur-admin-client";
 import { queryClient } from "../../lib/query-client";
 import { queryKeysFactory } from "../../lib/query-key-factory";
 import { inventoryItemsQueryKeys } from "./inventory.tsx";
@@ -428,10 +429,9 @@ export const useConfirmImportProducts = (
 
 export const useProductAttributes = (id: string) => {
   const { data, ...rest } = useQuery<{ attributes: AttributeDTO[] }>({
+    // migrated via Story 8.1 golden-PR (FR-Ga.1)
     queryFn: () =>
-      sdk.client.fetch(`/admin/products/${id}/applicable-attributes`, {
-        method: "GET",
-      }),
+      mercurAdminClient.products.listApplicableAttributes(id),
     queryKey: ["product", id, "product-attributes"],
   });
 

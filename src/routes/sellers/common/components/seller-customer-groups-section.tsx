@@ -5,8 +5,8 @@ import type { AdminCustomerGroup } from "@medusajs/types";
 import { Container, Divider, Heading, usePrompt } from "@medusajs/ui";
 import { toast } from "@medusajs/ui";
 
-import { sdk } from "@lib/client";
 import { formatDate } from "@lib/date";
+import { mercurAdminClient } from "@lib/mercur-admin-client";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 
@@ -100,9 +100,8 @@ const useColumns = (refetch: () => void) => {
     }
 
     try {
-      await sdk.client.fetch(`/admin/customer-groups/${customer_group.id}`, {
-        method: "DELETE",
-      });
+      // migrated via Story 8.1 golden-PR (FR-Ga.1)
+      await mercurAdminClient.customerGroups.delete(customer_group.id);
       toast.success("Customer group deleted successfully", {
         description: `${customer_group.name} deleted successfully`,
       });

@@ -6,6 +6,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import { mercurAdminClient } from "@/lib/mercur-admin-client";
+
 import { sdk } from "../../lib/client";
 import { queryKeysFactory } from "../../lib/query-key-factory";
 import { VendorSeller } from "../../types";
@@ -136,11 +138,9 @@ export const useSellers = (
     { sellers: VendorSeller[]; count?: number }
   >({
     queryKey: sellerQueryKeys.list(query),
+    // migrated via Story 8.1 golden-PR (FR-Ga.1)
     queryFn: () =>
-      sdk.client.fetch("/admin/sellers", {
-        method: "GET",
-        query,
-      }),
+      mercurAdminClient.sellers.list(query),
     ...options,
   });
 
@@ -155,12 +155,9 @@ export const useSeller = (id: string) => {
   return useQuery<{ seller: VendorSeller }, Error, { seller: VendorSeller }>({
     queryKey: sellerQueryKeys.detail(id),
     queryFn: () =>
-      sdk.client.fetch(`/admin/sellers/${id}`, {
-        method: "GET",
-        query: {
+      mercurAdminClient.sellers.retrieve(id, {
           fields:
             "id,email,name,created_at,store_status,description,handle,phone,address_line,city,country_code,postal_code,tax_id",
-        },
       }),
   });
 };
@@ -289,7 +286,7 @@ export const useUpdateSeller = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) =>
-      sdk.client.fetch(`/admin/sellers/${id}`, { method: "POST", body: data }),
+      mercurAdminClient.sellers.update(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: sellerQueryKeys.list() });
       queryClient.invalidateQueries({ queryKey: sellerQueryKeys.detail(id) });
@@ -309,10 +306,7 @@ export const useSellerProducts = (
   >({
     queryKey: ["seller-products", id, query],
     queryFn: () =>
-      sdk.client.fetch(`/admin/sellers/${id}/products`, {
-        method: "GET",
-        query,
-      }),
+      mercurAdminClient.sellers.listProducts(id, query),
   });
 
   if (!data?.products) {
@@ -441,10 +435,7 @@ export const useSellerCustomerGroups = (
   >({
     queryKey: ["seller-customer-groups", id, query],
     queryFn: () =>
-      sdk.client.fetch(`/admin/sellers/${id}/customer-groups`, {
-        method: "GET",
-        query,
-      }),
+      mercurAdminClient.sellers.listCustomerGroups(id, query),
   });
 
   if (!data?.customer_groups) {
@@ -549,10 +540,7 @@ export const useInviteSeller = () => {
       email: string;
       registration_url?: string;
     }) =>
-      sdk.client.fetch("/admin/sellers/invite", {
-        method: "POST",
-        body: { email, registration_url },
-      }),
+      mercurAdminClient.sellers.invite({ email, registration_url }),
   });
 };
 
@@ -564,8 +552,6 @@ export const useOrderGroup = (id: string) => {
   >({
     queryKey: ["order-group", id],
     queryFn: () =>
-      sdk.client.fetch(`/admin/order-groups?order_id=${id}`, {
-        method: "GET",
-      }),
+      mercurAdminClient.orderGroups.listByOrder(id),
   });
 };
