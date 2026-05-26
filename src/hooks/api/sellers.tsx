@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
-import { mercurAdminClient } from "@/lib/mercur-admin-client";
+import { mercurAdminClient, type SellerUpdatePayload } from "@/lib/mercur-admin-client";
 
 import { sdk } from "../../lib/client";
 import { queryKeysFactory } from "../../lib/query-key-factory";
@@ -156,8 +156,8 @@ export const useSeller = (id: string) => {
     queryKey: sellerQueryKeys.detail(id),
     queryFn: () =>
       mercurAdminClient.sellers.retrieve(id, {
-          fields:
-            "id,email,name,created_at,store_status,description,handle,phone,address_line,city,country_code,postal_code,tax_id",
+        fields:
+          "id,email,name,created_at,store_status,description,handle,phone,address_line,city,country_code,postal_code,tax_id",
       }),
   });
 };
@@ -285,7 +285,7 @@ export const useUpdateSeller = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
+    mutationFn: ({ id, data }: { id: string; data: SellerUpdatePayload }) =>
       mercurAdminClient.sellers.update(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: sellerQueryKeys.list() });

@@ -9,7 +9,6 @@
     "preview": "vite preview",
     "runtime-smoke": "npx playwright test mercur-admin-runtime-smoke.spec.ts --project=chromium --config spikes/mercur-admin-shell/playwright.config.ts",
     "test": "vitest --run",
-    "typecheck": "tsc --noEmit",
     "type-check": "tsc --noEmit",
     "i18n:validate": "node ./scripts/i18n/validate-translation.js",
     "i18n:schema": "node ./scripts/i18n/generate-schema.js",

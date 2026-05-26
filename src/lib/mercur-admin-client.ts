@@ -1,17 +1,23 @@
 import type { FetchArgs } from '@medusajs/js-sdk';
 import type { AdminCustomerGroup, AdminOrder, AdminProduct, HttpTypes } from '@medusajs/types';
-import type { FileType as MercurAdminFileType } from '@mercurjs/admin';
+import { PRODUCT_DETAIL_FIELDS, PRODUCT_DETAIL_QUERY } from '@mercurjs/admin';
 
 import { sdk } from '@/lib/client';
 import type { AttributeDTO, VendorSeller } from '@/types';
 import type { OrderGroup } from '@/types/order/common';
 
-export type MercurAdminPackageMarker = Pick<MercurAdminFileType, 'id'>;
+/**
+ * Re-exported Mercur-curated product detail query field set. Consumed via
+ * `@mercurjs/admin` runtime (not just a type marker) so the dual-SDK boundary
+ * is honest: Mercur owns Mercur-specific query shapes, Medusa SDK owns transport.
+ */
+export const MERCUR_PRODUCT_DETAIL_FIELDS = PRODUCT_DETAIL_FIELDS;
+export const MERCUR_PRODUCT_DETAIL_QUERY = PRODUCT_DETAIL_QUERY;
 
 type AdminQueryValue = string | number | boolean | string[] | number[] | undefined;
 
 type AdminQuery = Record<string, AdminQueryValue>;
-type SellerUpdatePayload = Record<string, unknown>;
+export type SellerUpdatePayload = Partial<VendorSeller>;
 type SellerInvitePayload = {
   email: string;
   registration_url?: string;
@@ -63,12 +69,21 @@ const requestAdmin = <TResponse, TBody extends FetchArgs['body'] = never>(
   sdk.client.fetch<TResponse>(path, options);
 
 /**
- * Golden-PR singleton for Story 8.1/FR-Ga.1 typed admin migrations.
+ * Golden-PR singleton for Story 8.1 / FR-Ga.1 typed admin migrations (D-118 Path B).
  *
- * `@mercurjs/admin@2.1.1` is the pinned Mercur admin package, while this panel's
- * authenticated transport already lives in the Medusa SDK instance. Keep cookie
- * and bearer behavior centralized by reusing `sdk.client.fetch`, and add typed
- * endpoint methods here for Story 8.2 replication instead of per-callsite fetches.
+ * Dual-SDK boundary (intentional and honest):
+ *  - Transport / auth: `@medusajs/js-sdk` `sdk.client.fetch` reused so admin-session
+ *    cookies + JWT bearer behavior stay centralized (no second auth path).
+ *  - Mercur surface: `@mercurjs/admin@2.1.1` consumed at value level (e.g.
+ *    {@link MERCUR_PRODUCT_DETAIL_QUERY}, {@link MERCUR_PRODUCT_DETAIL_FIELDS})
+ *    so Mercur owns Mercur-specific query shapes; response/payload aliases below
+ *    re-use `@medusajs/types` for endpoints whose contract Medusa still owns.
+ *
+ * Replication (Story 8.2 / 8.3): add endpoint methods here first, then swap
+ * callsites — do not branch per-callsite `new MercurAdmin(...)`. Codegen path
+ * (Story 8.4 drift validator + potential `pnpm run generate:mercur-admin` from
+ * Mercur OpenAPI) is the proposed long-term replacement for hand-typed response
+ * aliases once the Path B migration completes.
  */
 export const mercurAdminClient = {
   sellers: {
