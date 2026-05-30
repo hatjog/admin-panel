@@ -1,18 +1,22 @@
 import type { FetchArgs } from '@medusajs/js-sdk';
 import type { AdminCustomerGroup, AdminOrder, AdminProduct, HttpTypes } from '@medusajs/types';
-import { PRODUCT_DETAIL_FIELDS, PRODUCT_DETAIL_QUERY } from '@mercurjs/admin';
 
 import { sdk } from '@/lib/client';
 import type { AttributeDTO, VendorSeller } from '@/types';
 import type { OrderGroup } from '@/types/order/common';
 
 /**
- * Re-exported Mercur-curated product detail query field set. Consumed via
- * `@mercurjs/admin` runtime (not just a type marker) so the dual-SDK boundary
- * is honest: Mercur owns Mercur-specific query shapes, Medusa SDK owns transport.
+ * Mercur-curated product detail query field set. Inlined locally as a trivial
+ * string constant (mirrors `@mercurjs/admin`'s `PRODUCT_DETAIL_FIELDS` value)
+ * rather than imported, so the dual-SDK boundary stays transport-layer-only:
+ * Medusa's `@medusajs/js-sdk` `sdk.client.fetch` owns auth/transport, and we do
+ * not pull `@mercurjs/admin` in at value level just to alias a constant.
  */
-export const MERCUR_PRODUCT_DETAIL_FIELDS = PRODUCT_DETAIL_FIELDS;
-export const MERCUR_PRODUCT_DETAIL_QUERY = PRODUCT_DETAIL_QUERY;
+export const MERCUR_PRODUCT_DETAIL_FIELDS =
+  '*seller,*categories,*shipping_profile,-variants' as const;
+export const MERCUR_PRODUCT_DETAIL_QUERY = {
+  fields: MERCUR_PRODUCT_DETAIL_FIELDS
+} as const;
 
 type AdminQueryValue = string | number | boolean | string[] | number[] | undefined;
 
@@ -73,11 +77,13 @@ const requestAdmin = <TResponse, TBody extends FetchArgs['body'] = never>(
  *
  * Dual-SDK boundary (intentional and honest):
  *  - Transport / auth: `@medusajs/js-sdk` `sdk.client.fetch` reused so admin-session
- *    cookies + JWT bearer behavior stay centralized (no second auth path).
- *  - Mercur surface: `@mercurjs/admin@2.1.1` consumed at value level (e.g.
- *    {@link MERCUR_PRODUCT_DETAIL_QUERY}, {@link MERCUR_PRODUCT_DETAIL_FIELDS})
- *    so Mercur owns Mercur-specific query shapes; response/payload aliases below
- *    re-use `@medusajs/types` for endpoints whose contract Medusa still owns.
+ *    cookies + JWT bearer behavior stay centralized (no second auth path). This is
+ *    the genuine D-118 strategy — the boundary lives at the transport layer only.
+ *  - Mercur surface: Mercur-specific query shapes (e.g.
+ *    {@link MERCUR_PRODUCT_DETAIL_QUERY}, {@link MERCUR_PRODUCT_DETAIL_FIELDS}) are
+ *    inlined locally as trivial string constants instead of imported from
+ *    `@mercurjs/admin` at value level; response/payload aliases below re-use
+ *    `@medusajs/types` for endpoints whose contract Medusa still owns.
  *
  * Replication (Story 8.2 / 8.3): add endpoint methods here first, then swap
  * callsites — do not branch per-callsite `new MercurAdmin(...)`. Codegen path
