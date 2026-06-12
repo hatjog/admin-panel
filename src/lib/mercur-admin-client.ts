@@ -178,8 +178,6 @@ export const mercurAdminClient = {
         })
     },
     jca: {
-      list: <TResponse>(query?: AdminQuery) =>
-        requestAdminGet<TResponse>('/admin/vendors/decisions', query),
       generate: <TResponse>(vendorId: string, body: { locale: 'pl' | 'en' }) =>
         requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/jca/generate`, {
           method: 'POST',

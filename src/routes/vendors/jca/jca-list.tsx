@@ -1,21 +1,17 @@
 /**
  * Story v160-7-5: JCA management list page (admin-panel).
+ *
+ * HG-12 note: `jca_status` has no real backend source (jca-detail generates/signs
+ * on-demand without persisting a status field). The status column and filter have
+ * been removed to avoid presenting a dead filter as functional. When a real
+ * `jca_status` field is persisted by the backend, restore the column + filter here.
  */
 
-import { useState } from 'react';
+import { useDeferredValue, useState } from 'react';
 
 import { mercurAdminClient } from '@lib/mercur-admin-client';
-import { Badge, Button, Container, Heading, Input, Select, Text } from '@medusajs/ui';
+import { Button, Container, Heading, Input, Text } from '@medusajs/ui';
 import { useQuery } from '@tanstack/react-query';
-
-type JCAStatus = 'not_generated' | 'generated' | 'signed';
-
-type JCAVendor = {
-  id: string;
-  handle: string;
-  opted_in_date: string | null;
-  jca_status: JCAStatus;
-};
 
 type VendorDecisionListEntry = {
   id: string;
@@ -33,6 +29,12 @@ type JCAListResponse = {
   limit: number;
 };
 
+type JCAVendor = {
+  id: string;
+  handle: string;
+  opted_in_date: string | null;
+};
+
 function formatShortDate(iso: string | null): string {
   if (!iso) return '—';
   const d = new Date(iso);
@@ -48,35 +50,30 @@ function mapToJcaVendor(vendor: VendorDecisionListEntry): JCAVendor | null {
   return {
     id: vendor.id,
     handle: vendor.handle,
-    opted_in_date: vendor.last_action_at,
-    jca_status: 'not_generated'
+    opted_in_date: vendor.last_action_at
   };
 }
 
 export function VendorJCAListPage(): React.JSX.Element {
-  const [statusFilter, setStatusFilter] = useState<JCAStatus | 'all'>('all');
   const [search, setSearch] = useState('');
+  // Debounce search via useDeferredValue — avoids a new HTTP request on every keystroke.
+  const deferredSearch = useDeferredValue(search);
 
   const { data, error, isLoading } = useQuery<JCAListResponse>({
-    queryKey: ['admin-vendors-jca-list', search],
+    queryKey: ['admin-vendors-jca-list', deferredSearch],
     queryFn: () =>
-      mercurAdminClient.vendors.jca.list<JCAListResponse>({
+      mercurAdminClient.vendors.decisions.list<JCAListResponse>({
         status: 'opted_in',
-        search: search.trim() || undefined,
+        search: deferredSearch.trim() || undefined,
         limit: 100
       }),
     staleTime: 30_000
   });
 
-  const vendors = (data?.vendors ?? [])
-    .flatMap(vendor => {
-      const jcaVendor = mapToJcaVendor(vendor);
-      return jcaVendor ? [jcaVendor] : [];
-    })
-    .filter(v => {
-      if (statusFilter !== 'all' && v.jca_status !== statusFilter) return false;
-      return true;
-    });
+  const vendors = (data?.vendors ?? []).flatMap(vendor => {
+    const jcaVendor = mapToJcaVendor(vendor);
+    return jcaVendor ? [jcaVendor] : [];
+  });
 
   return (
     <Container>
@@ -88,21 +85,6 @@ export function VendorJCAListPage(): React.JSX.Element {
       </div>
 
       <div className="mb-4 flex items-center gap-3">
-        <Select
-          value={statusFilter}
-          onValueChange={v => setStatusFilter(v as JCAStatus | 'all')}
-        >
-          <Select.Trigger className="w-48">
-            <Select.Value placeholder="All statuses" />
-          </Select.Trigger>
-          <Select.Content>
-            <Select.Item value="all">All</Select.Item>
-            <Select.Item value="not_generated">Not generated</Select.Item>
-            <Select.Item value="generated">Generated</Select.Item>
-            <Select.Item value="signed">Signed</Select.Item>
-          </Select.Content>
-        </Select>
-
         <Input
           placeholder="Search vendor"
           value={search}
@@ -134,7 +116,6 @@ export function VendorJCAListPage(): React.JSX.Element {
               <tr>
                 <th className="px-3 py-2 text-left">Handle</th>
                 <th className="px-3 py-2 text-left">Opted-in date</th>
-                <th className="px-3 py-2 text-left">JCA status</th>
                 <th className="px-3 py-2 text-left">Action</th>
               </tr>
             </thead>
@@ -146,11 +127,6 @@ export function VendorJCAListPage(): React.JSX.Element {
                 >
                   <td className="px-3 py-2 font-medium">{v.handle}</td>
                   <td className="px-3 py-2">{formatShortDate(v.opted_in_date)}</td>
-                  <td className="px-3 py-2">
-                    <Badge color={v.jca_status === 'signed' ? 'green' : 'blue'}>
-                      {v.jca_status}
-                    </Badge>
-                  </td>
                   <td className="px-3 py-2">
                     <Button
                       size="small"

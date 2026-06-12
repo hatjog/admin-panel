@@ -116,8 +116,14 @@ describe('GP admin feature-routes — smoke + data-shape (zod runtime schema = S
     const client = readFileSync(path.join(process.cwd(), 'src/lib/mercur-admin-client.ts'), 'utf8');
 
     expect(source).toContain('useQuery<JCAListResponse>');
-    expect(source).toContain('mercurAdminClient.vendors.jca.list');
+    // jca-list.tsx uses decisions.list (jca.list alias removed — same endpoint, avoids drift).
+    expect(source).toContain('mercurAdminClient.vendors.decisions.list');
     expect(source).not.toContain('STUB_VENDORS');
+    // HG-12: jca_status hardcoded stub must not exist (column + filter removed; no real source).
+    expect(source).not.toContain("jca_status: 'not_generated'");
+    // HG-12: dead status filter options removed.
+    expect(source).not.toContain("value=\"generated\"");
+    expect(source).not.toContain("value=\"signed\"");
     expect(client).toContain("requestAdminGet<TResponse>('/admin/vendors/decisions'");
   });
 });

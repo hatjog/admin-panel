@@ -170,7 +170,13 @@ export function NudgesDashboardPage() {
       setForceDecisionVendor(null);
       idempotencyKeyRef.current = '';
     },
-    onError: err => toast.error(`Force-decision failed: ${err.message}`)
+    onError: err => {
+      // Reset idempotency key so a subsequent decision attempt with a different
+      // payload does not reuse the key that was already sent (avoids 422
+      // IDEMPOTENCY_KEY_REUSED_WITH_DIFFERENT_PAYLOAD from the backend).
+      idempotencyKeyRef.current = '';
+      toast.error(`Force-decision failed: ${err.message}`);
+    }
   });
 
   const counts = dashboard?.per_step_counts ?? { t21: 0, t14: 0, t7: 0, t3: 0 };
