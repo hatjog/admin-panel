@@ -12365,6 +12365,9 @@
             "consent_table_time_remaining": {
               "type": "string"
             },
+            "consent_table_last_action": {
+              "type": "string"
+            },
             "decision_opted_in": {
               "type": "string"
             },
@@ -12381,6 +12384,30 @@
               "type": "string"
             },
             "export_csv": {
+              "type": "string"
+            },
+            "filter_label": {
+              "type": "string"
+            },
+            "filter_all": {
+              "type": "string"
+            },
+            "sort_label": {
+              "type": "string"
+            },
+            "sort_handle_asc": {
+              "type": "string"
+            },
+            "sort_decision_asc": {
+              "type": "string"
+            },
+            "sort_decision_at_desc": {
+              "type": "string"
+            },
+            "sort_nudges_desc": {
+              "type": "string"
+            },
+            "sort_last_action_desc": {
               "type": "string"
             },
             "empty": {
@@ -12409,12 +12436,21 @@
             "consent_table_decision_at",
             "consent_table_nudges",
             "consent_table_time_remaining",
+            "consent_table_last_action",
             "decision_opted_in",
             "decision_opted_out",
             "decision_no_decision",
             "summary_total",
             "refresh",
             "export_csv",
+            "filter_label",
+            "filter_all",
+            "sort_label",
+            "sort_handle_asc",
+            "sort_decision_asc",
+            "sort_decision_at_desc",
+            "sort_nudges_desc",
+            "sort_last_action_desc",
             "empty",
             "error"
           ],
@@ -12801,6 +12837,9 @@
             },
             "alert_label_smoke_gate_drift": {
               "type": "string"
+            },
+            "refresh": {
+              "type": "string"
             }
           },
           "required": [
@@ -12832,7 +12871,8 @@
             "alert_label_cache_failures",
             "alert_label_lifecycle_anomaly",
             "alert_label_kickoff_no_decision",
-            "alert_label_smoke_gate_drift"
+            "alert_label_smoke_gate_drift",
+            "refresh"
           ],
           "additionalProperties": false
         },
@@ -12901,6 +12941,9 @@
             },
             "ed25519_artifact_path": {
               "type": "string"
+            },
+            "refresh": {
+              "type": "string"
             }
           },
           "required": [
@@ -12924,7 +12967,8 @@
             "error",
             "evidence_label",
             "ed25519_pubkey_kid",
-            "ed25519_artifact_path"
+            "ed25519_artifact_path",
+            "refresh"
           ],
           "additionalProperties": false
         },
