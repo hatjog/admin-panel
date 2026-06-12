@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Badge, Button, Container, Heading, Input, Text } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type FlagState = "off" | "shadow" | "on"
 
@@ -44,18 +44,18 @@ export function FlagFlipPage(): React.JSX.Element {
 
   const { data: status, isLoading, isError, refetch } = useQuery<FlagStatus>({
     queryKey: ["admin-operator-flag-flip"],
-    queryFn: () => sdk.client.fetch("/admin/operator/flag-flip"),
+    queryFn: () => mercurAdminClient.operator.flagFlip.retrieve<FlagStatus>(),
   })
   const { data: gate } = useQuery<SmokeGateStatus>({
     queryKey: ["admin-operator-smoke-gate-status"],
-    queryFn: () => sdk.client.fetch("/admin/operator/smoke-gate-status"),
+    queryFn: () => mercurAdminClient.operator.smokeGate.status<SmokeGateStatus>(),
   })
 
   const transition = useMutation({
     mutationFn: (to: FlagState) =>
-      sdk.client.fetch("/admin/operator/flag-flip", {
-        method: "POST",
-        body: { to_state: to, admin_note: adminNote },
+      mercurAdminClient.operator.flagFlip.transition({
+        to_state: to,
+        admin_note: adminNote,
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-operator-flag-flip"] })

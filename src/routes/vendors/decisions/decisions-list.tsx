@@ -10,7 +10,7 @@
 import { useMemo, useState } from "react"
 import { Badge, Button, Container, Heading, Input, Select, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type DecisionStatus = "pending" | "opted_in" | "opted_out" | "forced"
 
@@ -57,11 +57,9 @@ export function VendorDecisionsListPage(): React.JSX.Element {
   const { data, error, isLoading } = useQuery<ListResponse>({
     queryKey: ["admin-vendors-decisions", statusFilter, search],
     queryFn: () =>
-      sdk.client.fetch("/admin/vendors/decisions", {
-        query: {
-          status: statusFilter,
-          search: search.trim() || undefined,
-        },
+      mercurAdminClient.vendors.decisions.list<ListResponse>({
+        status: statusFilter,
+        search: search.trim() || undefined,
       }),
     staleTime: 30_000,
   })

@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Badge, Button, Container, Heading, Input, Text } from "@medusajs/ui"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type KickoffState = {
   state: {
@@ -66,16 +66,15 @@ function decisionBadgeColor(
   }
 }
 
-function buildConsentUrl(
+function buildConsentQuery(
   filter: DecisionFilter,
   sort: SortOrder,
-): string {
-  const params = new URLSearchParams()
+): Record<string, string> {
+  const query: Record<string, string> = { sort }
   if (filter !== "all") {
-    params.set("decision", filter)
+    query.decision = filter
   }
-  params.set("sort", sort)
-  return `/admin/operator/consents?${params.toString()}`
+  return query
 }
 
 function downloadCsv(vendors: ConsentVendor[]): void {
@@ -120,19 +119,22 @@ export function KickoffPage(): React.JSX.Element {
 
   const kickoffQuery = useQuery<KickoffState>({
     queryKey: ["admin-operator-kickoff"],
-    queryFn: () => sdk.client.fetch("/admin/operator/kickoff"),
+    queryFn: () => mercurAdminClient.operator.kickoff.retrieve<KickoffState>(),
   })
   const consentsQuery = useQuery<ConsentReport>({
     queryKey: ["admin-operator-consents", decisionFilter, sortOrder],
-    queryFn: () => sdk.client.fetch(buildConsentUrl(decisionFilter, sortOrder)),
+    queryFn: () =>
+      mercurAdminClient.operator.consents.list<ConsentReport>(
+        buildConsentQuery(decisionFilter, sortOrder),
+      ),
     staleTime: 30_000,
   })
 
   const triggerMutation = useMutation({
     mutationFn: () =>
-      sdk.client.fetch("/admin/operator/kickoff", {
-        method: "POST",
-        body: { confirm: true, admin_note: adminNote },
+      mercurAdminClient.operator.kickoff.trigger({
+        confirm: true,
+        admin_note: adminNote,
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-operator-kickoff"] })

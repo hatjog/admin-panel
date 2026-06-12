@@ -8,7 +8,7 @@
 import { useMemo, useState } from "react"
 import { Badge, Button, Container, Heading, Input, Select, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type LifecycleStatus = "pending_approval" | "open" | "suspended" | "terminated"
 
@@ -59,13 +59,11 @@ export function VendorPauseGateListPage(): React.JSX.Element {
       search,
     ],
     queryFn: () =>
-      sdk.client.fetch("/admin/vendors/pause-gate", {
-        query: {
-          status: statusFilter,
-          completeness:
-            completenessFilter !== "all" ? completenessFilter : undefined,
-          search: search.trim() || undefined,
-        },
+      mercurAdminClient.vendors.pauseGate.list<ListResponse>({
+        status: statusFilter,
+        completeness:
+          completenessFilter !== "all" ? completenessFilter : undefined,
+        search: search.trim() || undefined,
       }),
     staleTime: 30_000,
   })

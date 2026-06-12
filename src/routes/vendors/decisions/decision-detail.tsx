@@ -27,7 +27,7 @@ import {
   toast,
 } from "@medusajs/ui"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type DecisionType = "opted_in" | "opted_out"
 
@@ -109,13 +109,11 @@ export function VendorDecisionDetailPage(): React.JSX.Element {
 
   const captureMutation = useMutation({
     mutationFn: (): Promise<CaptureResponse> =>
-      sdk.client.fetch(`/admin/vendors/${vendorId}/decision`, {
-        method: "POST",
-        headers: {
-          "Idempotency-Key": idempotencyKeyRef.current,
-        },
-        body: { decision, reason, admin_note: adminNote || undefined },
-      }),
+      mercurAdminClient.vendors.decisions.capture<CaptureResponse>(
+        vendorId,
+        { decision, reason, admin_note: adminNote || undefined },
+        idempotencyKeyRef.current,
+      ),
     onSuccess: (data) => {
       if (data.email_dispatched) {
         toast.success(

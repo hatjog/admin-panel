@@ -3437,7 +3437,8 @@
       "alert_label_cache_failures": "Cache invalidate failures",
       "alert_label_lifecycle_anomaly": "Vendor lifecycle anomaly",
       "alert_label_kickoff_no_decision": "Kickoff no_decision breach",
-      "alert_label_smoke_gate_drift": "Smoke gate drift"
+      "alert_label_smoke_gate_drift": "Smoke gate drift",
+      "refresh": "Refresh"
     },
     "security_gates": {
       "title": "Security Gates",
@@ -3460,7 +3461,8 @@
       "error": "Error running gate verification",
       "evidence_label": "Evidence",
       "ed25519_pubkey_kid": "Pubkey KID",
-      "ed25519_artifact_path": "Artifact path"
+      "ed25519_artifact_path": "Artifact path",
+      "refresh": "Refresh"
     },
     "smoke_gate": {
       "title": "Phase B SMOKE GATE",

@@ -27,7 +27,7 @@ type SellerInvitePayload = {
   registration_url?: string;
 };
 
-type RequestOptions<TBody extends FetchArgs['body'] = never> = {
+type RequestOptions<TBody extends FetchArgs['body'] = never> = Omit<FetchArgs, 'body'> & {
   method: 'GET' | 'POST' | 'DELETE';
   query?: AdminQuery;
   body?: TBody;
@@ -69,8 +69,16 @@ type ProductAttributesResponse = {
 const requestAdmin = <TResponse, TBody extends FetchArgs['body'] = never>(
   path: string,
   options: RequestOptions<TBody>
-) =>
-  sdk.client.fetch<TResponse>(path, options);
+) => sdk.client.fetch<TResponse>(path, options);
+
+const requestAdminGet = <TResponse>(path: string, query?: AdminQuery) =>
+  requestAdmin<TResponse>(path, {
+    method: 'GET',
+    query
+  });
+
+type OperatorFlagState = 'off' | 'shadow' | 'on';
+type VendorLifecycleStatus = 'pending_approval' | 'open' | 'suspended' | 'terminated';
 
 /**
  * Golden-PR singleton for Story 8.1 / FR-Ga.1 typed admin migrations (D-118 Path B).
@@ -92,6 +100,170 @@ const requestAdmin = <TResponse, TBody extends FetchArgs['body'] = never>(
  * aliases once the Path B migration completes.
  */
 export const mercurAdminClient = {
+  operator: {
+    alerting: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/alerting'),
+      evaluate: <TResponse = unknown>() =>
+        requestAdmin<TResponse>('/admin/operator/alerting', {
+          method: 'POST'
+        })
+    },
+    cohortMetrics: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/cohort-metrics'),
+      zeroOptInCascade: <TResponse>() =>
+        requestAdminGet<TResponse>('/admin/operator/zero-opt-in-cascade')
+    },
+    consents: {
+      list: <TResponse>(query?: AdminQuery) =>
+        requestAdminGet<TResponse>('/admin/operator/consents', query)
+    },
+    flagFlip: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/flag-flip'),
+      transition: <TResponse = unknown>(body: {
+        to_state: OperatorFlagState;
+        admin_note?: string;
+      }) =>
+        requestAdmin<TResponse, typeof body>('/admin/operator/flag-flip', {
+          method: 'POST',
+          body
+        })
+    },
+    kickoff: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/kickoff'),
+      trigger: <TResponse = unknown>(body: { confirm: true; admin_note?: string }) =>
+        requestAdmin<TResponse, typeof body>('/admin/operator/kickoff', {
+          method: 'POST',
+          body
+        })
+    },
+    readiness: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/readiness')
+    },
+    securityGates: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/security-gates'),
+      run: <TResponse = unknown>(body?: { gate?: string }) =>
+        requestAdmin<TResponse, { gate?: string }>('/admin/operator/security-gates', {
+          method: 'POST',
+          ...(body ? { body } : {})
+        })
+    },
+    smokeGate: {
+      status: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/smoke-gate-status'),
+      ratify: <TResponse = unknown>(body: { verdict: 'pass' | 'fail'; admin_note?: string }) =>
+        requestAdmin<TResponse, typeof body>('/admin/operator/smoke-gate-ratify', {
+          method: 'POST',
+          body
+        })
+    }
+  },
+  vendors: {
+    decisions: {
+      list: <TResponse>(query?: AdminQuery) =>
+        requestAdminGet<TResponse>('/admin/vendors/decisions', query),
+      capture: <TResponse>(
+        vendorId: string,
+        body: {
+          decision: 'opted_in' | 'opted_out' | '';
+          reason: string;
+          admin_note?: string;
+        },
+        idempotencyKey: string
+      ) =>
+        requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/decision`, {
+          method: 'POST',
+          headers: {
+            'Idempotency-Key': idempotencyKey
+          },
+          body
+        })
+    },
+    jca: {
+      generate: <TResponse>(vendorId: string, body: { locale: 'pl' | 'en' }) =>
+        requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/jca/generate`, {
+          method: 'POST',
+          body
+        }),
+      download: (vendorId: string, body: { locale: 'pl' | 'en' }) =>
+        requestAdmin<Blob, typeof body>(`/admin/vendors/${vendorId}/jca/generate?download=1`, {
+          method: 'POST',
+          headers: { Accept: 'application/pdf' },
+          body
+        }),
+      sign: <TResponse>(vendorId: string, body: { admin_note?: string }) =>
+        requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/jca/sign`, {
+          method: 'POST',
+          body
+        })
+    },
+    lifecycle: {
+      transition: <TResponse>(
+        vendorId: string,
+        body: { to_status: VendorLifecycleStatus; admin_note?: string }
+      ) =>
+        requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/lifecycle-status`, {
+          method: 'POST',
+          body
+        })
+    },
+    notifications: {
+      nudges: {
+        dashboard: <TResponse>() =>
+          requestAdminGet<TResponse>('/admin/vendors/notifications/nudges/dashboard'),
+        trigger: <TResponse>(body: { step: 't21' | 't14' | 't7' | 't3'; dry_run: boolean }) =>
+          requestAdmin<TResponse, typeof body>('/admin/vendors/notifications/nudges', {
+            method: 'POST',
+            body
+          })
+      },
+      t30: {
+        preview: <TResponse>() =>
+          requestAdminGet<TResponse>('/admin/vendors/notifications/t30/preview'),
+        audit: <TResponse>() =>
+          requestAdminGet<TResponse>('/admin/vendors/notifications/t30/audit'),
+        trigger: <TResponse>(body: { dry_run: boolean }) =>
+          requestAdmin<TResponse, typeof body>('/admin/vendors/notifications/t30', {
+            method: 'POST',
+            body
+          })
+      }
+    },
+    pauseGate: {
+      list: <TResponse>(query?: AdminQuery) =>
+        requestAdminGet<TResponse>('/admin/vendors/pause-gate', query),
+      retrieve: <TResponse>(vendorId: string) =>
+        requestAdminGet<TResponse>(`/admin/vendors/${vendorId}/pause-gate`)
+    },
+    trainingCert: {
+      review: <TResponse>(
+        vendorId: string,
+        body: { decision: 'approve' | 'reject'; admin_note?: string; rejection_reason?: string }
+      ) =>
+        requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/training-cert`, {
+          method: 'POST',
+          body
+        })
+    }
+  },
+  v1Admin: {
+    entitlements: {
+      search: <TResponse>(q: string) => requestAdminGet<TResponse>('/v1/admin/entitlements', { q })
+    },
+    health: {
+      retrieve: <TResponse>() => requestAdminGet<TResponse>('/v1/admin/health')
+    },
+    vendors: {
+      list: <TResponse>() => requestAdminGet<TResponse>('/v1/admin/vendors'),
+      create: <TResponse = unknown>(body: {
+        name: string;
+        instance_id: string;
+        market_id: string;
+      }) =>
+        requestAdmin<TResponse, typeof body>('/v1/admin/vendors', {
+          method: 'POST',
+          body
+        })
+    }
+  },
   sellers: {
     list: (query?: AdminQuery) =>
       requestAdmin<SellersResponse>('/admin/sellers', {

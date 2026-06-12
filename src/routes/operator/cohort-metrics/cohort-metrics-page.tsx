@@ -2,10 +2,10 @@
  * Story v160-8-4: Post-flip cohort metrics 4×4 + zero-opt-in cascade.
  */
 
-import { Badge, Container, Heading, Text } from "@medusajs/ui"
+import { Container, Heading, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 import { CohortCompareChart } from "./components/CohortCompareChart"
 import { CohortGrid } from "./components/CohortGrid"
@@ -42,11 +42,11 @@ export function CohortMetricsPage(): React.JSX.Element {
   const { t } = useTranslation()
   const { data, isLoading, isError, refetch } = useQuery<Result>({
     queryKey: ["admin-operator-cohort-metrics"],
-    queryFn: () => sdk.client.fetch("/admin/operator/cohort-metrics"),
+    queryFn: () => mercurAdminClient.operator.cohortMetrics.retrieve<Result>(),
   })
   const { data: cascade } = useQuery<Cascade>({
     queryKey: ["admin-operator-zero-opt-in-cascade"],
-    queryFn: () => sdk.client.fetch("/admin/operator/zero-opt-in-cascade"),
+    queryFn: () => mercurAdminClient.operator.cohortMetrics.zeroOptInCascade<Cascade>(),
   })
 
   return (

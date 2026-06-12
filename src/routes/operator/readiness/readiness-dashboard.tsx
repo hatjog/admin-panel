@@ -6,12 +6,20 @@
 import { Badge, Button, Container, Heading, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type ReadinessStatus = "green" | "yellow" | "red" | "unknown"
 
+type ReadinessItemKey =
+  | "phase_a1_gate"
+  | "phase_a2_gate"
+  | "vendor_lifecycle_distribution"
+  | "adr_097_capacity_posture"
+  | "alerting_wired"
+  | "security_gates_verified"
+
 type ReadinessItem = {
-  key: string
+  key: ReadinessItemKey
   label: string
   status: ReadinessStatus
   value: string
@@ -42,7 +50,7 @@ export function ReadinessDashboardPage(): React.JSX.Element {
   const { t } = useTranslation()
   const { data, isLoading, isError, refetch } = useQuery<ReadinessResult>({
     queryKey: ["admin-operator-readiness"],
-    queryFn: () => sdk.client.fetch("/admin/operator/readiness"),
+    queryFn: () => mercurAdminClient.operator.readiness.retrieve<ReadinessResult>(),
     staleTime: 30_000,
   })
 

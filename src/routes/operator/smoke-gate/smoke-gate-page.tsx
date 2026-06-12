@@ -3,10 +3,10 @@
  */
 
 import { useState } from "react"
-import { Badge, Button, Container, Heading, Input, Text } from "@medusajs/ui"
+import { Button, Container, Heading, Text } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 import { BinaryVerdictBadge } from "./components/BinaryVerdictBadge"
 import { ChecklistTable } from "./components/ChecklistTable"
@@ -41,14 +41,14 @@ export function SmokeGatePage(): React.JSX.Element {
 
   const { data, isLoading, isError, refetch } = useQuery<State>({
     queryKey: ["admin-operator-smoke-gate"],
-    queryFn: () => sdk.client.fetch("/admin/operator/smoke-gate-status"),
+    queryFn: () => mercurAdminClient.operator.smokeGate.status<State>(),
   })
 
   const ratify = useMutation({
     mutationFn: (verdict: "pass" | "fail") =>
-      sdk.client.fetch("/admin/operator/smoke-gate-ratify", {
-        method: "POST",
-        body: { verdict, admin_note: adminNote },
+      mercurAdminClient.operator.smokeGate.ratify({
+        verdict,
+        admin_note: adminNote,
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-operator-smoke-gate"] })

@@ -14,7 +14,7 @@ import {
   Text,
 } from "@medusajs/ui"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -68,10 +68,7 @@ function CreateVendorForm({ onCreated }: { onCreated: () => void }) {
 
   const mutation = useMutation({
     mutationFn: () =>
-      sdk.client.fetch("/v1/admin/vendors", {
-        method: "POST",
-        body: { name, instance_id: instanceId, market_id: marketId },
-      }),
+      mercurAdminClient.v1Admin.vendors.create({ name, instance_id: instanceId, market_id: marketId }),
     onSuccess: () => {
       setName("")
       setInstanceId("")
@@ -173,7 +170,7 @@ export function VendorsPage() {
 
   const { data, isFetching, error } = useQuery<VendorsResponse>({
     queryKey: ["admin-vendors"],
-    queryFn: () => sdk.client.fetch("/v1/admin/vendors"),
+    queryFn: () => mercurAdminClient.v1Admin.vendors.list<VendorsResponse>(),
     staleTime: 30_000,
   })
 

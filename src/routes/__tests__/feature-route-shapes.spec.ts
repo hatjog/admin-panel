@@ -1,0 +1,129 @@
+// @vitest-environment node
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+import { z } from 'zod';
+
+import { contracts } from './feature-route-schemas';
+
+/**
+ * Smoke + data-shape testy GP admin feature-routes (ra-16, AUD-12-22).
+ *
+ * Data-shape jest egzekwowany przez **runtime schema zod** zdefiniowany w `feature-route-schemas.ts`
+ * (SSOT kształtu). Test nie porównuje już ręcznego `sample` z ręcznym `shape` literal (samoreferencja);
+ * parsuje `sample` przez realny schema (`schema.parse`), a `driftSample` dowodzi, że schema FAILuje
+ * przy shape-drift (brakujące / przemianowane / mistyped / nadmiarowe pole). `sourceAnchors` są
+ * weryfikowane jako realne klucze schemy obecne w pliku route (precyzyjny `\bfield\b` match), więc
+ * rename realnego pola — w route albo w schemie — jest łapany jako drift, nie tylko substring.
+ */
+
+/** Zbiera wszystkie klucze obiektów ze schemy zod (rekursywnie przez array/nullable/optional/record). */
+function collectFieldNames(schema: z.ZodTypeAny, acc: Set<string> = new Set()): Set<string> {
+  const def = (
+    schema as {
+      _def?: {
+        typeName?: string;
+        type?: z.ZodTypeAny;
+        innerType?: z.ZodTypeAny;
+        valueType?: z.ZodTypeAny;
+      };
+    }
+  )._def;
+  if (!def) {
+    return acc;
+  }
+  switch (def.typeName) {
+    case 'ZodObject': {
+      const shape = (schema as unknown as { shape: Record<string, z.ZodTypeAny> }).shape;
+      for (const [key, child] of Object.entries(shape)) {
+        acc.add(key);
+        collectFieldNames(child, acc);
+      }
+      break;
+    }
+    case 'ZodArray':
+      if (def.type) collectFieldNames(def.type, acc);
+      break;
+    case 'ZodNullable':
+    case 'ZodOptional':
+      if (def.innerType) collectFieldNames(def.innerType, acc);
+      break;
+    case 'ZodRecord':
+      if (def.valueType) collectFieldNames(def.valueType, acc);
+      break;
+    default:
+      break;
+  }
+  return acc;
+}
+
+describe('GP admin feature-routes — smoke + data-shape (zod runtime schema = SSOT)', () => {
+  it.each(contracts)('$name route module smoke-imports', async contract => {
+    const mod = await import(contract.routeModule);
+    expect(mod[contract.exportedComponent], contract.exportedComponent).toBeTypeOf('function');
+  });
+
+  it.each(contracts)('$name response validates against runtime zod schema (SSOT)', contract => {
+    expect(() => contract.schema.parse(contract.sample)).not.toThrow();
+  });
+
+  it.each(contracts)('$name runtime schema rejects shape-drift', contract => {
+    const result = contract.schema.safeParse(contract.driftSample);
+    expect(
+      result.success,
+      `${contract.name}: drift sample must be rejected by the zod schema`
+    ).toBe(false);
+  });
+
+  it.each(contracts)(
+    '$name source anchors are real schema keys referenced by the route',
+    contract => {
+      const schemaFields = collectFieldNames(contract.schema);
+      const source = readFileSync(path.join(process.cwd(), contract.sourceFile), 'utf8');
+      for (const field of contract.sourceAnchors) {
+        expect(
+          schemaFields.has(field),
+          `${field} must be a key in the zod schema (SSOT) for ${contract.name}`
+        ).toBe(true);
+        expect(
+          new RegExp(`\\b${field}\\b`).test(source),
+          `${contract.sourceFile} should reference contract field ${field}`
+        ).toBe(true);
+      }
+    }
+  );
+
+  it('nudges force-decision uses the real decision capture endpoint', () => {
+    const source = readFileSync(
+      path.join(process.cwd(), 'src/routes/vendors/notifications/nudges/nudges-dashboard.tsx'),
+      'utf8'
+    );
+    const client = readFileSync(path.join(process.cwd(), 'src/lib/mercur-admin-client.ts'), 'utf8');
+
+    expect(source).toContain('mercurAdminClient.vendors.decisions.capture');
+    expect(source).toContain('audit_log_id');
+    expect(source).not.toContain('endpoint stub');
+    expect(source).not.toContain('production wiring');
+    expect(client).toContain('Idempotency-Key');
+  });
+
+  it('JCA list reads real vendor data instead of local stub rows', () => {
+    const source = readFileSync(
+      path.join(process.cwd(), 'src/routes/vendors/jca/jca-list.tsx'),
+      'utf8'
+    );
+    const client = readFileSync(path.join(process.cwd(), 'src/lib/mercur-admin-client.ts'), 'utf8');
+
+    expect(source).toContain('useQuery<JCAListResponse>');
+    // jca-list.tsx uses decisions.list (jca.list alias removed — same endpoint, avoids drift).
+    expect(source).toContain('mercurAdminClient.vendors.decisions.list');
+    expect(source).not.toContain('STUB_VENDORS');
+    // HG-12: jca_status hardcoded stub must not exist (column + filter removed; no real source).
+    expect(source).not.toContain("jca_status: 'not_generated'");
+    // HG-12: dead status filter options removed.
+    expect(source).not.toContain("value=\"generated\"");
+    expect(source).not.toContain("value=\"signed\"");
+    expect(client).toContain("requestAdminGet<TResponse>('/admin/vendors/decisions'");
+  });
+});

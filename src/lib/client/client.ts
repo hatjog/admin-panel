@@ -55,9 +55,6 @@ export const sdk = new Medusa({
 // useful when you want to call the BE from the console and try things out quickly
 // cc-4 finding F-09: gate this on non-production so the convenience handle
 // does not leak the SDK (and its in-flight auth token) into prod XSS surfaces.
-if (
-  typeof window !== "undefined" &&
-  (typeof process === "undefined" || process.env?.NODE_ENV !== "production")
-) {
+if (typeof window !== "undefined" && import.meta.env.DEV) {
   (window as any).__sdk = sdk;
 }
