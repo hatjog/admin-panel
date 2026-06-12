@@ -16,7 +16,7 @@
 import { useState } from "react"
 import { Badge, Button, Container, Heading, Text, toast } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type CadenceStep = "t21" | "t14" | "t7" | "t3"
 
@@ -78,15 +78,15 @@ export function NudgesDashboardPage() {
     useQuery<DashboardResponse>({
       queryKey: ["admin-vendors-nudges-dashboard"],
       queryFn: () =>
-        sdk.client.fetch("/admin/vendors/notifications/nudges/dashboard"),
+        mercurAdminClient.vendors.notifications.nudges.dashboard<DashboardResponse>(),
       staleTime: 30_000,
     })
 
   const triggerMutation = useMutation<TriggerResponse, Error, CadenceStep>({
     mutationFn: (step) =>
-      sdk.client.fetch("/admin/vendors/notifications/nudges", {
-        method: "POST",
-        body: { step, dry_run: false },
+      mercurAdminClient.vendors.notifications.nudges.trigger<TriggerResponse>({
+        step,
+        dry_run: false,
       }),
     onSuccess: (res) => {
       toast.success(
@@ -103,9 +103,9 @@ export function NudgesDashboardPage() {
 
   const dryRunMutation = useMutation<TriggerResponse, Error, CadenceStep>({
     mutationFn: (step) =>
-      sdk.client.fetch("/admin/vendors/notifications/nudges", {
-        method: "POST",
-        body: { step, dry_run: true },
+      mercurAdminClient.vendors.notifications.nudges.trigger<TriggerResponse>({
+        step,
+        dry_run: true,
       }),
     onSuccess: (res) => {
       toast.success(

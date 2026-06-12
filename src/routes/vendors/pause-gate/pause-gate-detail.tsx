@@ -16,7 +16,7 @@ import {
   toast,
 } from "@medusajs/ui"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type LifecycleStatus = "pending_approval" | "open" | "suspended" | "terminated"
 
@@ -70,7 +70,7 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
 
   const { data, isLoading } = useQuery<PauseGateDetailResponse>({
     queryKey: ["admin-vendors-pause-gate-detail", vendorId],
-    queryFn: () => sdk.client.fetch(`/admin/vendors/${vendorId}/pause-gate`),
+    queryFn: () => mercurAdminClient.vendors.pauseGate.retrieve<PauseGateDetailResponse>(vendorId),
     enabled: vendorId.length > 0,
     staleTime: 30_000,
   })
@@ -83,12 +83,9 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
 
   const transitionMutation = useMutation({
     mutationFn: (to: LifecycleStatus): Promise<TransitionResponse> =>
-      sdk.client.fetch(`/admin/vendors/${vendorId}/lifecycle-status`, {
-        method: "POST",
-        body: {
+      mercurAdminClient.vendors.lifecycle.transition<TransitionResponse>(vendorId, {
           to_status: to,
           admin_note: adminNote || undefined,
-        },
       }),
     onSuccess: (data) => {
       toast.success(`Transitioned: ${data.from_status} → ${data.to_status}`)

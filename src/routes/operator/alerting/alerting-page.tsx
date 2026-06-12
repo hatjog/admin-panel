@@ -6,7 +6,7 @@
 import { Badge, Button, Container, Heading, Text } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type AlertConfig = {
   id: string
@@ -63,12 +63,11 @@ export function AlertingPage(): React.JSX.Element {
   const qc = useQueryClient()
   const { data, isLoading, isError, refetch } = useQuery<Result>({
     queryKey: ["admin-operator-alerting"],
-    queryFn: () => sdk.client.fetch("/admin/operator/alerting"),
+    queryFn: () => mercurAdminClient.operator.alerting.retrieve<Result>(),
   })
 
   const reEval = useMutation({
-    mutationFn: () =>
-      sdk.client.fetch("/admin/operator/alerting", { method: "POST" }),
+    mutationFn: () => mercurAdminClient.operator.alerting.evaluate(),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: ["admin-operator-alerting"] }),
   })
@@ -84,7 +83,7 @@ export function AlertingPage(): React.JSX.Element {
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => refetch()} disabled={isLoading}>
-            {t("actions.refresh")}
+            {t("actions.refresh" as any)}
           </Button>
           <Button onClick={() => reEval.mutate()} disabled={reEval.isPending}>
             {t("operator.alerting.re_evaluate")}
@@ -115,11 +114,11 @@ export function AlertingPage(): React.JSX.Element {
                   className="mb-2 rounded-md border border-ui-border-base p-3"
                 >
                   <Badge color={sevColor(a.severity)}>
-                    {t(`operator.alerting.severity_${a.severity.toLowerCase()}`)}
+                    {t(`operator.alerting.severity_${a.severity.toLowerCase()}` as any)}
                   </Badge>
                   <Text className="ml-2 inline">{t(getAlertLabelKey(a.id), { defaultValue: a.id })}</Text>
                   <Text size="small" className="text-ui-fg-subtle">
-                    {a.condition} {"->"} {t("operator.alerting.action")}: {t(`operator.alerting.action_${a.action}`)}
+                    {a.condition} {"->"} {t("operator.alerting.action")}: {t(`operator.alerting.action_${a.action}` as any)}
                   </Text>
                 </li>
               ))}
@@ -151,12 +150,12 @@ export function AlertingPage(): React.JSX.Element {
                     </td>
                     <td className="px-3 py-2">
                       <Badge color={sevColor(a.severity)}>
-                        {t(`operator.alerting.severity_${a.severity.toLowerCase()}`)}
+                        {t(`operator.alerting.severity_${a.severity.toLowerCase()}` as any)}
                       </Badge>
                     </td>
                     <td className="px-3 py-2">{a.nfr_ref}</td>
                     <td className="px-3 py-2">{a.evaluation_window}</td>
-                    <td className="px-3 py-2">{t(`operator.alerting.action_${a.action}`)}</td>
+                    <td className="px-3 py-2">{t(`operator.alerting.action_${a.action}` as any)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -184,8 +183,8 @@ export function AlertingPage(): React.JSX.Element {
                   {data.history_24h.map((entry) => (
                     <tr key={`${entry.alert_id}-${entry.firing_since}`} className="border-t border-ui-border-base">
                       <td className="px-3 py-2">{t(getAlertLabelKey(entry.alert_id), { defaultValue: entry.alert_id })}</td>
-                      <td className="px-3 py-2">{t(`operator.alerting.severity_${entry.severity.toLowerCase()}`)}</td>
-                      <td className="px-3 py-2">{t(`operator.alerting.action_${entry.action}`)}</td>
+                      <td className="px-3 py-2">{t(`operator.alerting.severity_${entry.severity.toLowerCase()}` as any)}</td>
+                      <td className="px-3 py-2">{t(`operator.alerting.action_${entry.action}` as any)}</td>
                       <td className="px-3 py-2">{new Date(entry.firing_since).toLocaleString()}</td>
                     </tr>
                   ))}

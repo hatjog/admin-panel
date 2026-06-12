@@ -14,7 +14,7 @@ import {
   toast,
 } from "@medusajs/ui"
 import { useMutation } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type GenerateResponse = {
   vendor_id: string
@@ -40,10 +40,7 @@ export function VendorJCADetailPage(): React.JSX.Element {
 
   const generateMutation = useMutation({
     mutationFn: (): Promise<GenerateResponse> =>
-      sdk.client.fetch(`/admin/vendors/${vendorId}/jca/generate`, {
-        method: "POST",
-        body: { locale: "pl" },
-      }),
+      mercurAdminClient.vendors.jca.generate<GenerateResponse>(vendorId, { locale: "pl" }),
     onSuccess: (data) => {
       setGenerated(data)
       toast.success(`JCA generated — ${data.bytes} bytes`)
@@ -62,14 +59,7 @@ export function VendorJCADetailPage(): React.JSX.Element {
    */
   const downloadMutation = useMutation({
     mutationFn: async (): Promise<void> => {
-      const blob = (await sdk.client.fetch(
-        `/admin/vendors/${vendorId}/jca/generate?download=1`,
-        {
-          method: "POST",
-          body: { locale: "pl" },
-          headers: { Accept: "application/pdf" },
-        },
-      )) as Blob
+      const blob = await mercurAdminClient.vendors.jca.download(vendorId, { locale: "pl" })
       if (!(blob instanceof Blob)) {
         throw new Error("Download response was not a Blob")
       }
@@ -93,9 +83,8 @@ export function VendorJCADetailPage(): React.JSX.Element {
 
   const signMutation = useMutation({
     mutationFn: (): Promise<SignResponse> =>
-      sdk.client.fetch(`/admin/vendors/${vendorId}/jca/sign`, {
-        method: "POST",
-        body: { admin_note: adminNote || undefined },
+      mercurAdminClient.vendors.jca.sign<SignResponse>(vendorId, {
+        admin_note: adminNote || undefined,
       }),
     onSuccess: (data) => {
       setSignedAt(data.signed_at)

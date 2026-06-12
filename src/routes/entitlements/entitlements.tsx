@@ -22,7 +22,7 @@ import {
   Text,
 } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -291,7 +291,7 @@ export function EntitlementsPage() {
   const { data, isFetching, error } = useQuery<EntitlementsResponse>({
     queryKey: ["admin-entitlements", activeQuery],
     queryFn: () =>
-      sdk.client.fetch(`/v1/admin/entitlements?q=${encodeURIComponent(activeQuery)}`),
+      mercurAdminClient.v1Admin.entitlements.search<EntitlementsResponse>(activeQuery),
     enabled: activeQuery.length >= 3,
     staleTime: 30_000,
   })

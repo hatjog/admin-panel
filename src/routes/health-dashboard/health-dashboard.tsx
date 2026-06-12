@@ -12,7 +12,7 @@ import {
   Text,
 } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -125,7 +125,7 @@ export function HealthDashboardPage() {
 
   const { data, isFetching, error, refetch } = useQuery<HealthResponse>({
     queryKey: ["admin-health"],
-    queryFn: () => sdk.client.fetch("/v1/admin/health"),
+    queryFn: () => mercurAdminClient.v1Admin.health.retrieve<HealthResponse>(),
     refetchInterval: 30_000,
     staleTime: 10_000,
   })

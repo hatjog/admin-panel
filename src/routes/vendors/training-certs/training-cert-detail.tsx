@@ -13,7 +13,7 @@ import {
   toast,
 } from "@medusajs/ui"
 import { useMutation } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type ReviewResponse = {
   vendor_id: string
@@ -31,14 +31,11 @@ export function VendorTrainingCertDetailPage(): React.JSX.Element {
 
   const reviewMutation = useMutation({
     mutationFn: (decision: "approve" | "reject"): Promise<ReviewResponse> =>
-      sdk.client.fetch(`/admin/vendors/${vendorId}/training-cert`, {
-        method: "POST",
-        body: {
+      mercurAdminClient.vendors.trainingCert.review<ReviewResponse>(vendorId, {
           decision,
           admin_note: adminNote || undefined,
           rejection_reason:
             decision === "reject" ? rejectionReason : undefined,
-        },
       }),
     onSuccess: (data) => {
       toast.success(`Cert ${data.decision}`)

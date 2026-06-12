@@ -12,7 +12,7 @@
 import { useState } from "react"
 import { Badge, Button, Container, Heading, Text, toast } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type EligibleVendor = {
   id: string
@@ -67,22 +67,19 @@ export function T30NotificationPage() {
 
   const { data: preview, isLoading: previewLoading } = useQuery<PreviewResponse>({
     queryKey: ["admin-vendors-t30-preview"],
-    queryFn: () => sdk.client.fetch("/admin/vendors/notifications/t30/preview"),
+    queryFn: () => mercurAdminClient.vendors.notifications.t30.preview<PreviewResponse>(),
     staleTime: 30_000,
   })
 
   const { data: log } = useQuery<AuditLogResponse>({
     queryKey: ["admin-vendors-t30-audit"],
-    queryFn: () => sdk.client.fetch("/admin/vendors/notifications/t30/audit"),
+    queryFn: () => mercurAdminClient.vendors.notifications.t30.audit<AuditLogResponse>(),
     staleTime: 30_000,
   })
 
   const dryRunMutation = useMutation({
     mutationFn: () =>
-      sdk.client.fetch("/admin/vendors/notifications/t30", {
-        method: "POST",
-        body: { dry_run: true },
-      }),
+      mercurAdminClient.vendors.notifications.t30.trigger({ dry_run: true }),
     onSuccess: () => {
       toast.success("Dry-run preview generated")
     },
@@ -93,10 +90,7 @@ export function T30NotificationPage() {
 
   const triggerMutation = useMutation<TriggerResponse>({
     mutationFn: () =>
-      sdk.client.fetch("/admin/vendors/notifications/t30", {
-        method: "POST",
-        body: { dry_run: false },
-      }),
+      mercurAdminClient.vendors.notifications.t30.trigger<TriggerResponse>({ dry_run: false }),
     onSuccess: (res: TriggerResponse) => {
       toast.success(
         `T-30 dispatch complete: ${res.triggered} sent, ${res.skipped} skipped, ${res.failed} failed`,

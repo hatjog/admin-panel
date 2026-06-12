@@ -5,7 +5,7 @@
 import { Badge, Button, Container, Heading, Text } from "@medusajs/ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type GateStatus = "pass" | "fail" | "skip"
 
@@ -53,21 +53,17 @@ export function SecurityGatesPage(): React.JSX.Element {
   const qc = useQueryClient()
   const { data, isLoading, isError, refetch } = useQuery<Result>({
     queryKey: ["admin-operator-security-gates"],
-    queryFn: () => sdk.client.fetch("/admin/operator/security-gates"),
+    queryFn: () => mercurAdminClient.operator.securityGates.retrieve<Result>(),
   })
   const run = useMutation({
-    mutationFn: (gate?: string) =>
-      sdk.client.fetch("/admin/operator/security-gates", { method: "POST" }),
+    mutationFn: () => mercurAdminClient.operator.securityGates.run(),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: ["admin-operator-security-gates"] }),
   })
 
   const rerunGate = useMutation({
     mutationFn: (gate: string) =>
-      sdk.client.fetch("/admin/operator/security-gates", {
-        method: "POST",
-        body: { gate },
-      }),
+      mercurAdminClient.operator.securityGates.run({ gate }),
     onSuccess: () =>
       qc.invalidateQueries({ queryKey: ["admin-operator-security-gates"] }),
   })
@@ -83,7 +79,7 @@ export function SecurityGatesPage(): React.JSX.Element {
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => refetch()} disabled={isLoading}>
-            {t("actions.refresh")}
+            {t("actions.refresh" as any)}
           </Button>
           <Button onClick={() => run.mutate()} disabled={run.isPending || rerunGate.isPending}>
             {t("operator.security_gates.run_all")}

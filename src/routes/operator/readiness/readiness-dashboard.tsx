@@ -6,7 +6,7 @@
 import { Badge, Button, Container, Heading, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
-import { sdk } from "@lib/client"
+import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type ReadinessStatus = "green" | "yellow" | "red" | "unknown"
 
@@ -42,7 +42,7 @@ export function ReadinessDashboardPage(): React.JSX.Element {
   const { t } = useTranslation()
   const { data, isLoading, isError, refetch } = useQuery<ReadinessResult>({
     queryKey: ["admin-operator-readiness"],
-    queryFn: () => sdk.client.fetch("/admin/operator/readiness"),
+    queryFn: () => mercurAdminClient.operator.readiness.retrieve<ReadinessResult>(),
     staleTime: 30_000,
   })
 
@@ -91,7 +91,7 @@ export function ReadinessDashboardPage(): React.JSX.Element {
                 className="rounded-md border border-ui-border-base p-4"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <Text weight="plus">{t(`operator.readiness.${it.key}`)}</Text>
+                  <Text weight="plus">{t(`operator.readiness.${it.key}` as any)}</Text>
                   <Badge color={badgeColor(it.status)}>{it.status.toUpperCase()}</Badge>
                 </div>
                 <Text size="small" className="text-ui-fg-subtle">
