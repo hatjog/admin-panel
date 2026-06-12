@@ -38,8 +38,10 @@ const sortOrders = (orders: AdminOrder[], order: string) => {
   const isDesc = order.startsWith("-");
 
   return [...orders].sort((a, b) => {
-    let aValue: string | number | null | undefined = a[field];
-    let bValue: string | number | null | undefined = b[field];
+    // AdminOrder.created_at/updated_at are `string | Date`; widen the accumulator
+    // so the comparator accepts Date without casting (normalised below).
+    let aValue: string | number | Date | null | undefined = a[field];
+    let bValue: string | number | Date | null | undefined = b[field];
 
     // Handle null/undefined values
     if (!aValue && aValue !== "") return isDesc ? -1 : 1;
@@ -207,19 +209,23 @@ export const useSellerOrders = (
     );
   }
 
-  // Filter by region_id
+  // Filter by region_id. Bind the narrowed array to a local const: TS drops
+  // object-property narrowing inside the closure below, so `filters.region_id`
+  // would widen back to the full union (and to `undefined`).
   if (filters?.region_id && Array.isArray(filters.region_id)) {
+    const regionIds = filters.region_id;
     processedOrders = processedOrders.filter(
-      (order) => order.region_id && filters.region_id.includes(order.region_id)
+      (order) => order.region_id && regionIds.includes(order.region_id)
     );
   }
 
   // Filter by sales_channel_id
   if (filters?.sales_channel_id && Array.isArray(filters.sales_channel_id)) {
+    const salesChannelIds = filters.sales_channel_id;
     processedOrders = processedOrders.filter(
       (order) =>
         order.sales_channel_id &&
-        filters.sales_channel_id.includes(order.sales_channel_id)
+        salesChannelIds.includes(order.sales_channel_id)
     );
   }
 
@@ -279,8 +285,8 @@ export const useSellerOrders = (
     }
   }
 
-  const offset = Number(filters.offset) || 0;
-  const limit = Number(filters.limit) || 10;
+  const offset = Number(filters?.offset) || 0;
+  const limit = Number(filters?.limit) || 10;
 
   return {
     data: {
@@ -334,33 +340,38 @@ export const useSellerProducts = (
     );
   }
 
-  // Filter by tag_id
+  // Filter by tag_id. Bind narrowed arrays to local consts — see note in
+  // useSellerOrders: object-property narrowing is lost inside the closures.
   if (filters?.tag_id && Array.isArray(filters.tag_id)) {
+    const tagIds = filters.tag_id;
     processedProducts = processedProducts.filter((product) =>
-      product.tags?.some((tag) => filters.tag_id.includes(tag.id))
+      product.tags?.some((tag) => tagIds.includes(tag.id))
     );
   }
 
   // Filter by type_id
   if (filters?.type_id && Array.isArray(filters.type_id)) {
-    processedProducts = processedProducts.filter((product) =>
-      filters.type_id.includes(product.type_id)
+    const typeIds = filters.type_id;
+    processedProducts = processedProducts.filter(
+      (product) => product.type_id != null && typeIds.includes(product.type_id)
     );
   }
 
   // Filter by sales_channel_id
   if (filters?.sales_channel_id && Array.isArray(filters.sales_channel_id)) {
+    const salesChannelIds = filters.sales_channel_id;
     processedProducts = processedProducts.filter((product) =>
       product.sales_channels?.some((channel) =>
-        filters.sales_channel_id.includes(channel.id)
+        salesChannelIds.includes(channel.id)
       )
     );
   }
 
   // Filter by status
   if (filters?.status && Array.isArray(filters.status)) {
+    const statuses = filters.status;
     processedProducts = processedProducts.filter((product) =>
-      filters.status.includes(product.status)
+      statuses.includes(product.status)
     );
   }
 
