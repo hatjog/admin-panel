@@ -25,7 +25,7 @@ type FiringAlert = AlertConfig & {
 
 type Result = {
   firing: FiringAlert[]
-  history_24h: Array<{ alert_id: string; severity: string; action: string; firing_since: string }>
+  history_24h: Array<{ alert_id: string; severity: "P1" | "P2" | "P3"; action: "auto_rollback" | "page" | "alert"; firing_since: string }>
   auto_rollback_history: Array<{ audit_log_id: string; alert_id: string | null; at: string; reason: string | null }>
   configured: AlertConfig[]
   computed_at: string
@@ -83,7 +83,7 @@ export function AlertingPage(): React.JSX.Element {
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => refetch()} disabled={isLoading}>
-            {t("actions.refresh" as any)}
+            {t("operator.alerting.refresh")}
           </Button>
           <Button onClick={() => reEval.mutate()} disabled={reEval.isPending}>
             {t("operator.alerting.re_evaluate")}
@@ -114,11 +114,11 @@ export function AlertingPage(): React.JSX.Element {
                   className="mb-2 rounded-md border border-ui-border-base p-3"
                 >
                   <Badge color={sevColor(a.severity)}>
-                    {t(`operator.alerting.severity_${a.severity.toLowerCase()}` as any)}
+                    {t(`operator.alerting.severity_${a.severity.toLowerCase() as "p1" | "p2" | "p3"}`)}
                   </Badge>
                   <Text className="ml-2 inline">{t(getAlertLabelKey(a.id), { defaultValue: a.id })}</Text>
                   <Text size="small" className="text-ui-fg-subtle">
-                    {a.condition} {"->"} {t("operator.alerting.action")}: {t(`operator.alerting.action_${a.action}` as any)}
+                    {a.condition} {"->"} {t("operator.alerting.action")}: {t(`operator.alerting.action_${a.action}`)}
                   </Text>
                 </li>
               ))}
@@ -150,12 +150,12 @@ export function AlertingPage(): React.JSX.Element {
                     </td>
                     <td className="px-3 py-2">
                       <Badge color={sevColor(a.severity)}>
-                        {t(`operator.alerting.severity_${a.severity.toLowerCase()}` as any)}
+                        {t(`operator.alerting.severity_${a.severity.toLowerCase() as "p1" | "p2" | "p3"}`)}
                       </Badge>
                     </td>
                     <td className="px-3 py-2">{a.nfr_ref}</td>
                     <td className="px-3 py-2">{a.evaluation_window}</td>
-                    <td className="px-3 py-2">{t(`operator.alerting.action_${a.action}` as any)}</td>
+                    <td className="px-3 py-2">{t(`operator.alerting.action_${a.action}`)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -183,8 +183,8 @@ export function AlertingPage(): React.JSX.Element {
                   {data.history_24h.map((entry) => (
                     <tr key={`${entry.alert_id}-${entry.firing_since}`} className="border-t border-ui-border-base">
                       <td className="px-3 py-2">{t(getAlertLabelKey(entry.alert_id), { defaultValue: entry.alert_id })}</td>
-                      <td className="px-3 py-2">{t(`operator.alerting.severity_${entry.severity.toLowerCase()}` as any)}</td>
-                      <td className="px-3 py-2">{t(`operator.alerting.action_${entry.action}` as any)}</td>
+                      <td className="px-3 py-2">{t(`operator.alerting.severity_${entry.severity.toLowerCase() as "p1" | "p2" | "p3"}`)}</td>
+                      <td className="px-3 py-2">{t(`operator.alerting.action_${entry.action}`)}</td>
                       <td className="px-3 py-2">{new Date(entry.firing_since).toLocaleString()}</td>
                     </tr>
                   ))}

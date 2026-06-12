@@ -10,8 +10,16 @@ import { mercurAdminClient } from "@lib/mercur-admin-client"
 
 type ReadinessStatus = "green" | "yellow" | "red" | "unknown"
 
+type ReadinessItemKey =
+  | "phase_a1_gate"
+  | "phase_a2_gate"
+  | "vendor_lifecycle_distribution"
+  | "adr_097_capacity_posture"
+  | "alerting_wired"
+  | "security_gates_verified"
+
 type ReadinessItem = {
-  key: string
+  key: ReadinessItemKey
   label: string
   status: ReadinessStatus
   value: string
@@ -91,7 +99,7 @@ export function ReadinessDashboardPage(): React.JSX.Element {
                 className="rounded-md border border-ui-border-base p-4"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <Text weight="plus">{t(`operator.readiness.${it.key}` as any)}</Text>
+                  <Text weight="plus">{t(`operator.readiness.${it.key}`)}</Text>
                   <Badge color={badgeColor(it.status)}>{it.status.toUpperCase()}</Badge>
                 </div>
                 <Text size="small" className="text-ui-fg-subtle">

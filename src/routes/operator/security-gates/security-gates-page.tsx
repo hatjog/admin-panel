@@ -79,7 +79,7 @@ export function SecurityGatesPage(): React.JSX.Element {
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => refetch()} disabled={isLoading}>
-            {t("actions.refresh" as any)}
+            {t("operator.security_gates.refresh")}
           </Button>
           <Button onClick={() => run.mutate()} disabled={run.isPending || rerunGate.isPending}>
             {t("operator.security_gates.run_all")}
