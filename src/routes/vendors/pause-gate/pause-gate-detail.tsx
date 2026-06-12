@@ -161,9 +161,8 @@ export function VendorPauseGateDetailPage(): React.JSX.Element {
           {adrExpanded && (
             <div className="mt-3 space-y-2 text-sm text-ui-fg-subtle">
               <Text>
-                <strong>Mercur 2 Vendor Lifecycle Modeling</strong> — see
-                specs/adr/ADR-088-reassess.md (placeholder; reassess content
-                pending authoring).
+                <strong>Mercur 2 Vendor Lifecycle Modeling</strong> — szczegółowy
+                kontekst reassess jest w przygotowaniu (patrz dokumentacja ADR-088).
               </Text>
               <Text>
                 Canonical schema preserves Mercur 2 vendor table; lifecycle
