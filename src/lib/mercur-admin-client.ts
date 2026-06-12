@@ -69,8 +69,7 @@ type ProductAttributesResponse = {
 const requestAdmin = <TResponse, TBody extends FetchArgs['body'] = never>(
   path: string,
   options: RequestOptions<TBody>
-) =>
-  sdk.client.fetch<TResponse>(path, options);
+) => sdk.client.fetch<TResponse>(path, options);
 
 const requestAdminGet = <TResponse>(path: string, query?: AdminQuery) =>
   requestAdmin<TResponse>(path, {
@@ -120,7 +119,10 @@ export const mercurAdminClient = {
     },
     flagFlip: {
       retrieve: <TResponse>() => requestAdminGet<TResponse>('/admin/operator/flag-flip'),
-      transition: <TResponse = unknown>(body: { to_state: OperatorFlagState; admin_note?: string }) =>
+      transition: <TResponse = unknown>(body: {
+        to_state: OperatorFlagState;
+        admin_note?: string;
+      }) =>
         requestAdmin<TResponse, typeof body>('/admin/operator/flag-flip', {
           method: 'POST',
           body
@@ -176,6 +178,8 @@ export const mercurAdminClient = {
         })
     },
     jca: {
+      list: <TResponse>(query?: AdminQuery) =>
+        requestAdminGet<TResponse>('/admin/vendors/decisions', query),
       generate: <TResponse>(vendorId: string, body: { locale: 'pl' | 'en' }) =>
         requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/jca/generate`, {
           method: 'POST',
@@ -216,7 +220,8 @@ export const mercurAdminClient = {
       t30: {
         preview: <TResponse>() =>
           requestAdminGet<TResponse>('/admin/vendors/notifications/t30/preview'),
-        audit: <TResponse>() => requestAdminGet<TResponse>('/admin/vendors/notifications/t30/audit'),
+        audit: <TResponse>() =>
+          requestAdminGet<TResponse>('/admin/vendors/notifications/t30/audit'),
         trigger: <TResponse>(body: { dry_run: boolean }) =>
           requestAdmin<TResponse, typeof body>('/admin/vendors/notifications/t30', {
             method: 'POST',
@@ -243,15 +248,18 @@ export const mercurAdminClient = {
   },
   v1Admin: {
     entitlements: {
-      search: <TResponse>(q: string) =>
-        requestAdminGet<TResponse>('/v1/admin/entitlements', { q })
+      search: <TResponse>(q: string) => requestAdminGet<TResponse>('/v1/admin/entitlements', { q })
     },
     health: {
       retrieve: <TResponse>() => requestAdminGet<TResponse>('/v1/admin/health')
     },
     vendors: {
       list: <TResponse>() => requestAdminGet<TResponse>('/v1/admin/vendors'),
-      create: <TResponse = unknown>(body: { name: string; instance_id: string; market_id: string }) =>
+      create: <TResponse = unknown>(body: {
+        name: string;
+        instance_id: string;
+        market_id: string;
+      }) =>
         requestAdmin<TResponse, typeof body>('/v1/admin/vendors', {
           method: 'POST',
           body

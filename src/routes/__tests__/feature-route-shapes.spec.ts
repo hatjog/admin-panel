@@ -93,4 +93,31 @@ describe('GP admin feature-routes — smoke + data-shape (zod runtime schema = S
       }
     }
   );
+
+  it('nudges force-decision uses the real decision capture endpoint', () => {
+    const source = readFileSync(
+      path.join(process.cwd(), 'src/routes/vendors/notifications/nudges/nudges-dashboard.tsx'),
+      'utf8'
+    );
+    const client = readFileSync(path.join(process.cwd(), 'src/lib/mercur-admin-client.ts'), 'utf8');
+
+    expect(source).toContain('mercurAdminClient.vendors.decisions.capture');
+    expect(source).toContain('audit_log_id');
+    expect(source).not.toContain('endpoint stub');
+    expect(source).not.toContain('production wiring');
+    expect(client).toContain('Idempotency-Key');
+  });
+
+  it('JCA list reads real vendor data instead of local stub rows', () => {
+    const source = readFileSync(
+      path.join(process.cwd(), 'src/routes/vendors/jca/jca-list.tsx'),
+      'utf8'
+    );
+    const client = readFileSync(path.join(process.cwd(), 'src/lib/mercur-admin-client.ts'), 'utf8');
+
+    expect(source).toContain('useQuery<JCAListResponse>');
+    expect(source).toContain('mercurAdminClient.vendors.jca.list');
+    expect(source).not.toContain('STUB_VENDORS');
+    expect(client).toContain("requestAdminGet<TResponse>('/admin/vendors/decisions'");
+  });
 });
