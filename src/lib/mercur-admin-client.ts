@@ -78,7 +78,7 @@ const requestAdminGet = <TResponse>(path: string, query?: AdminQuery) =>
   });
 
 type OperatorFlagState = 'off' | 'shadow' | 'on';
-type VendorLifecycleStatus = 'pending_approval' | 'open' | 'suspended' | 'terminated';
+type SellerLifecycleStatus = 'pending_approval' | 'open' | 'suspended' | 'terminated';
 
 /**
  * Golden-PR singleton for Story 8.1 / FR-Ga.1 typed admin migrations (D-118 Path B).
@@ -198,7 +198,7 @@ export const mercurAdminClient = {
     lifecycle: {
       transition: <TResponse>(
         vendorId: string,
-        body: { to_status: VendorLifecycleStatus; admin_note?: string }
+        body: { to_status: SellerLifecycleStatus; admin_note?: string }
       ) =>
         requestAdmin<TResponse, typeof body>(`/admin/vendors/${vendorId}/lifecycle-status`, {
           method: 'POST',
