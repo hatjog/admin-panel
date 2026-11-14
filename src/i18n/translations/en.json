@@ -3275,6 +3275,52 @@
   },
   "operator": {
     "domain": "Operator",
+    "market_config": {
+      "title": "Market configuration (gp-config projection)",
+      "subtitle": "Read-only view of the runtime projection; errors are never shown as an empty configuration.",
+      "market_label": "Market ID",
+      "market_placeholder": "e.g. bonbeauty",
+      "load": "Load",
+      "read_only_badge": "Read-only",
+      "read_only_notice": "This view is read-only. Configuration changes go through gp-ops config load --apply; this screen never activates a market or financial features.",
+      "reason_label": "Reason",
+      "states": {
+        "loading": {
+          "title": "Loading",
+          "message": "Loading the market configuration projection…",
+          "action": "Refresh"
+        },
+        "ok": {
+          "title": "Current",
+          "message": "The projection matches its provenance record."
+        },
+        "empty": {
+          "title": "Empty",
+          "message": "The market projection exists and is legally empty — no configuration has been loaded.",
+          "action": "Run gp-ops config load --apply for this market"
+        },
+        "stale": {
+          "title": "Stale",
+          "message": "The projection does not match its provenance record (missing, invalid or outdated). Values may not reflect the source.",
+          "action": "Re-run gp-ops config load --apply to regenerate the projection"
+        },
+        "forbidden": {
+          "title": "No access",
+          "message": "You do not have access to this market's configuration.",
+          "action": "Request a market grant from a super-admin"
+        },
+        "invalid_context": {
+          "title": "Invalid market",
+          "message": "The market does not exist in this instance or the market ID is invalid.",
+          "action": "Switch market"
+        },
+        "backend_error": {
+          "title": "Backend error",
+          "message": "The projection could not be read (server error or invalid response). This is not an empty configuration.",
+          "action": "Retry"
+        }
+      }
+    },
     "readiness": {
       "title": "Pre-flag-flip Readiness",
       "subtitle": "6-item operator gate; system-level GO/NO-GO aggregator.",

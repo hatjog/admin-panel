@@ -3228,6 +3228,52 @@
   },
   "operator": {
     "domain": "Operator",
+    "market_config": {
+      "title": "Konfiguracja rynku (projekcja gp-config)",
+      "subtitle": "Widok tylko do odczytu projekcji runtime; błąd nigdy nie jest pokazywany jako pusta konfiguracja.",
+      "market_label": "ID rynku",
+      "market_placeholder": "np. bonbeauty",
+      "load": "Wczytaj",
+      "read_only_badge": "Tylko odczyt",
+      "read_only_notice": "Ten widok jest tylko do odczytu. Zmiany konfiguracji idą przez gp-ops config load --apply; ten ekran nigdy nie aktywuje rynku ani funkcji finansowych.",
+      "reason_label": "Powód",
+      "states": {
+        "loading": {
+          "title": "Wczytywanie",
+          "message": "Wczytywanie projekcji konfiguracji rynku…",
+          "action": "Odśwież"
+        },
+        "ok": {
+          "title": "Aktualna",
+          "message": "Projekcja zgadza się z zapisem proweniencji."
+        },
+        "empty": {
+          "title": "Pusta",
+          "message": "Projekcja rynku istnieje i jest legalnie pusta — nie wczytano konfiguracji.",
+          "action": "Uruchom gp-ops config load --apply dla tego rynku"
+        },
+        "stale": {
+          "title": "Nieaktualna",
+          "message": "Projekcja nie zgadza się z zapisem proweniencji (brak, uszkodzony lub nieaktualny). Wartości mogą nie odpowiadać źródłu.",
+          "action": "Uruchom ponownie gp-ops config load --apply, aby odtworzyć projekcję"
+        },
+        "forbidden": {
+          "title": "Brak dostępu",
+          "message": "Nie masz dostępu do konfiguracji tego rynku.",
+          "action": "Poproś super-admina o grant rynku"
+        },
+        "invalid_context": {
+          "title": "Nieprawidłowy rynek",
+          "message": "Rynek nie istnieje w tej instancji albo ID rynku jest nieprawidłowe.",
+          "action": "Przełącz rynek"
+        },
+        "backend_error": {
+          "title": "Błąd backendu",
+          "message": "Nie udało się odczytać projekcji (błąd serwera lub nieprawidłowa odpowiedź). To nie jest pusta konfiguracja.",
+          "action": "Ponów"
+        }
+      }
+    },
     "readiness": {
       "title": "Gotowość przed flag-flip",
       "subtitle": "6-elementowy gate operatora; agregator GO/NO-GO.",

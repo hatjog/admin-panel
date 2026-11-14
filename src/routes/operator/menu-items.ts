@@ -8,4 +8,5 @@ export const menuItems: MenuItemExtension[] = [
   { label: "Operator: Alerting", path: "/operator/alerting" },
   { label: "Operator: Security Gates", path: "/operator/security-gates" },
   { label: "Operator: Smoke Gate", path: "/operator/smoke-gate" },
+  { label: "Operator: Market Config", path: "/operator/market-config" },
 ]

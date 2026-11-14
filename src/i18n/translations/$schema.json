@@ -12216,6 +12216,198 @@
         "domain": {
           "type": "string"
         },
+        "market_config": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "market_label": {
+              "type": "string"
+            },
+            "market_placeholder": {
+              "type": "string"
+            },
+            "load": {
+              "type": "string"
+            },
+            "read_only_badge": {
+              "type": "string"
+            },
+            "read_only_notice": {
+              "type": "string"
+            },
+            "reason_label": {
+              "type": "string"
+            },
+            "states": {
+              "type": "object",
+              "properties": {
+                "loading": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                "ok": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message"
+                  ],
+                  "additionalProperties": false
+                },
+                "empty": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                "stale": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                "forbidden": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                "invalid_context": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                "backend_error": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "message",
+                    "action"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "loading",
+                "ok",
+                "empty",
+                "stale",
+                "forbidden",
+                "invalid_context",
+                "backend_error"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "title",
+            "subtitle",
+            "market_label",
+            "market_placeholder",
+            "load",
+            "read_only_badge",
+            "read_only_notice",
+            "reason_label",
+            "states"
+          ],
+          "additionalProperties": false
+        },
         "readiness": {
           "type": "object",
           "properties": {
@@ -13094,7 +13286,8 @@
         "zero_opt_in_cascade",
         "alerting",
         "security_gates",
-        "smoke_gate"
+        "smoke_gate",
+        "market_config"
       ],
       "additionalProperties": false
     }
