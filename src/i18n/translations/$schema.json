@@ -12333,12 +12333,16 @@
                     },
                     "action": {
                       "type": "string"
+                    },
+                    "action_sign_in": {
+                      "type": "string"
                     }
                   },
                   "required": [
                     "title",
                     "message",
-                    "action"
+                    "action",
+                    "action_sign_in"
                   ],
                   "additionalProperties": false
                 },

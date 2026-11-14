@@ -191,7 +191,7 @@ const Header = () => {
   );
 };
 
-const useCoreRoutes = (): Omit<INavItem, "pathname">[] => {
+export const useCoreRoutes = (): Omit<INavItem, "pathname">[] => {
   const { t } = useTranslation();
 
   return [
@@ -333,6 +333,11 @@ const useCoreRoutes = (): Omit<INavItem, "pathname">[] => {
       icon: <SquaresPlus />,
       label: "Health Dashboard",
       to: "/health-dashboard",
+    },
+    {
+      icon: <CogSixTooth />,
+      label: "Market Config",
+      to: "/operator/market-config",
     },
   ];
 };

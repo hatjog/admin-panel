@@ -24,6 +24,7 @@ export type RemediationAction =
   | "run_config_load"
   | "rerun_config_load"
   | "request_grant"
+  | "sign_in"
   | "switch_market"
   | "retry"
 
@@ -82,7 +83,15 @@ function view(
 }
 
 function classifyStatus(status: number): MarketConfigView {
-  if (status === 401 || status === 403) return view("forbidden", { httpStatus: status })
+  // 401 = expired / missing session -> sign in again; 403 = authenticated but no market grant.
+  if (status === 401) {
+    return {
+      ...view("forbidden", { httpStatus: status }),
+      action: "sign_in",
+      actionKey: `${KEY_PREFIX}.forbidden.action_sign_in`,
+    }
+  }
+  if (status === 403) return view("forbidden", { httpStatus: status })
   if (status === 400 || status === 404) return view("invalid_context", { httpStatus: status })
   if (status >= 500) return view("backend_error", { httpStatus: status, errorClass: "server_error" })
   return view("backend_error", { httpStatus: status, errorClass: "unexpected_status" })
@@ -119,7 +128,11 @@ export function classifyMarketConfigResponse(outcome: TransportOutcome): MarketC
 
   if (status < 200 || status >= 300) {
     const base = classifyStatus(status)
-    return isRecord(body) && typeof body.reason === "string" ? { ...base, reason: body.reason } : base
+    // Backend error bodies carry `reason` (invalid_context / projection_error) or only `code`
+    // (forbidden: scope_required, read_only_market) — surface whichever is present.
+    if (!isRecord(body)) return base
+    const reason = typeof body.reason === "string" ? body.reason : typeof body.code === "string" ? body.code : null
+    return reason ? { ...base, reason } : base
   }
 
   if (!parsed) return view("backend_error", { httpStatus: status, errorClass: "non_json" })

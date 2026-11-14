@@ -1033,6 +1033,12 @@ export function getRouteMap({
               errorElement: <ErrorBoundary />,
               lazy: () => import("../../routes/health-dashboard"),
             },
+            // Story v1.16.0 7.8 — gp-config market projection (operator view)
+            {
+              path: "/operator/market-config",
+              errorElement: <ErrorBoundary />,
+              lazy: () => import("../../routes/operator/market-config"),
+            },
             ...coreRoutes,
           ],
         },

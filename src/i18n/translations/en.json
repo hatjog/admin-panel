@@ -3307,7 +3307,8 @@
         "forbidden": {
           "title": "No access",
           "message": "You do not have access to this market's configuration.",
-          "action": "Request a market grant from a super-admin"
+          "action": "Request a market grant from a super-admin",
+          "action_sign_in": "Sign in again (session expired)"
         },
         "invalid_context": {
           "title": "Invalid market",

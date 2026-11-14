@@ -3260,7 +3260,8 @@
         "forbidden": {
           "title": "Brak dostępu",
           "message": "Nie masz dostępu do konfiguracji tego rynku.",
-          "action": "Poproś super-admina o grant rynku"
+          "action": "Poproś super-admina o grant rynku",
+          "action_sign_in": "Zaloguj się ponownie (sesja wygasła)"
         },
         "invalid_context": {
           "title": "Nieprawidłowy rynek",

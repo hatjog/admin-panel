@@ -11,6 +11,7 @@ import { Badge, Button, Container, Heading, Input, Text } from "@medusajs/ui"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { fetchMarketConfigOutcome } from "./market-config-api"
 import { classifyMarketConfigResponse, type MarketConfigView } from "./market-config-state"
 
@@ -26,8 +27,12 @@ const STATE_BORDER: Record<MarketConfigView["state"], string> = {
 
 export function MarketConfigPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const [draft, setDraft] = useState("")
-  const [marketId, setMarketId] = useState<string | null>(null)
+  const navigate = useNavigate()
+  // The selected market lives in the URL (`?market_id=`) so the view is linkable and reload-safe.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const marketId = searchParams.get("market_id")?.trim() || null
+  const setMarketId = (next: string | null) => setSearchParams(next ? { market_id: next } : {})
+  const [draft, setDraft] = useState(marketId ?? "")
 
   const query = useQuery({
     queryKey: ["admin-operator-market-config", marketId],
@@ -46,6 +51,7 @@ export function MarketConfigPage(): React.JSX.Element {
   const onAction = () => {
     if (view.action === "retry" || view.action === "wait") void query.refetch()
     if (view.action === "switch_market") setMarketId(null)
+    if (view.action === "sign_in") navigate("/login")
   }
 
   return (
@@ -77,7 +83,7 @@ export function MarketConfigPage(): React.JSX.Element {
       </form>
 
       {marketId !== null && (
-        <div data-state={view.state} className={`mb-4 rounded-md border p-4 ${STATE_BORDER[view.state]}`}>
+        <div data-state={view.state} data-action={view.action} className={`mb-4 rounded-md border p-4 ${STATE_BORDER[view.state]}`}>
           <div className="mb-2 flex items-center gap-2">
             <Badge>{t(`operator.market_config.states.${view.state}.title`)}</Badge>
             {showReadOnly && <Badge color="blue">{t("operator.market_config.read_only_badge")}</Badge>}
@@ -91,7 +97,9 @@ export function MarketConfigPage(): React.JSX.Element {
           )}
           {view.actionKey && view.state !== "ok" && (
             <Button className="mt-3" variant="secondary" size="small" onClick={onAction}>
-              {t(`operator.market_config.states.${view.state}.action`)}
+              {view.action === "sign_in"
+                ? t("operator.market_config.states.forbidden.action_sign_in")
+                : t(`operator.market_config.states.${view.state}.action`)}
             </Button>
           )}
           {showReadOnly && (
